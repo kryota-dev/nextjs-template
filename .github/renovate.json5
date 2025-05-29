@@ -10,7 +10,7 @@
     "group:definitelyTyped"
   ],
   "labels": [":robot: Renovate"],
-  // FIXME: assigneesを設定する
+  // TODO: assigneesを設定する
   // "assignees": ["kryota-dev"],
   "rebaseWhen": "conflicted",
   "automergeType": "pr",
