@@ -57,7 +57,7 @@
     "@types/react": "19.1.6",
     "@types/react-dom": "19.1.5",
     "chokidar-cli": "3.0.0",
-    "chromatic": "12.0.0",
+    "chromatic": "11.28.3",
     "cspell": "9.0.2",
     "eslint": "9.26.0",
     "eslint-config-next": "15.3.2",
