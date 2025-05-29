@@ -14,6 +14,7 @@
   // "assignees": ["kryota-dev"],
   "rebaseWhen": "conflicted",
   "automergeType": "pr",
+  "baseBranches": ["develop"],
   "lockFileMaintenance": {
     "automerge": true,
     "enabled": true
