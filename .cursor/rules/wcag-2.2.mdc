@@ -1,0 +1,226 @@
+---
+description: Web Content Accessibility Guidelines (WCAG) 2.2に基づくコーディングガイドライン。このルールは、アクセシビリティの4つの基本原則（知覚可能、操作可能、理解可能、堅牢）に従い、Next.jsとTypeScriptを使用したWebアプリケーション開発におけるベストプラクティスを提供します。各セクションには具体的なコード例と推奨プラクティスが含まれており、スクリーンリーダー対応、キーボード操作、セマンティックHTML、WAI-ARIA、画像の代替テキスト、フォーム実装など、包括的なアクセシビリティ対応の指針を示しています。
+globs: **/*.tsx
+alwaysApply: false
+---
+
+このファイルが読み込まれたら「wcag-2.2.mdcを読み込みました」とユーザーに必ず伝えてください。
+---
+
+# WCAG 2.2 コーディングガイドライン
+
+## 1. 知覚可能性（Perceivable）
+
+### 1.1 テキストによる代替（Text Alternatives）
+
+- すべての非テキストコンテンツには代替テキストを提供する
+
+```tsx
+// ✅ Good
+<Image src="example.jpg" alt="商品の詳細画像：赤いTシャツ" />
+
+// ❌ Bad
+<Image src="example.jpg" alt="" /> // 意味のある画像に空のalt
+```
+
+### 1.2 マルチメディアの代替コンテンツ
+
+- 動画には字幕を提供する
+- 音声コンテンツには書き起こしテキストを提供する
+
+### 1.3 適応可能（Adaptable）
+
+- 情報や構造を損なうことなく、様々な方法で提供できるようにする
+
+```tsx
+// ✅ Good
+<main>
+  <h1>ページタイトル</h1>
+  <article>
+    <h2>セクションタイトル</h2>
+    <p>コンテンツ</p>
+  </article>
+</main>
+
+// ❌ Bad
+<div>
+  <div class="title">ページタイトル</div>
+  <div class="content">
+    <div class="subtitle">セクションタイトル</div>
+    <div>コンテンツ</div>
+  </div>
+</div>
+```
+
+### 1.4 判別可能（Distinguishable）
+
+- テキストと背景のコントラスト比は4.5:1以上を確保
+- テキストは200%まで拡大可能に
+- 画像内のテキストは避ける
+
+## 2. 操作可能性（Operable）
+
+### 2.1 キーボード操作
+
+- すべての機能をキーボードで利用可能に
+
+```tsx
+// ✅ Good
+<button onClick={handleClick} onKeyDown={handleKeyDown}>
+  クリック
+</button>
+
+// ❌ Bad
+<div onClick={handleClick}> // キーボード操作不可
+  クリック
+</div>
+```
+
+### 2.2 十分な時間
+
+- タイムアウトがある場合は、延長や解除が可能に
+- 自動更新するコンテンツは一時停止可能に
+
+### 2.3 発作の防止
+
+- 点滅するコンテンツは1秒間に3回以下に制限
+
+### 2.4 ナビゲーション
+
+- スキップリンクを提供
+- ページタイトルは明確に
+- フォーカス順序は論理的に
+
+```tsx
+// ✅ Good
+<a href="#main-content" className="skip-link">
+  メインコンテンツへスキップ
+</a>
+
+// ✅ Good
+<nav aria-label="メインナビゲーション">
+  <ul role="menubar">
+    <li role="none"><a role="menuitem" href="/">ホーム</a></li>
+  </ul>
+</nav>
+```
+
+## 3. 理解可能性（Understandable）
+
+### 3.1 読みやすさ
+
+- ページの言語を指定
+
+```tsx
+// ✅ Good
+<html lang="ja">
+
+// ❌ Bad
+<html>
+```
+
+### 3.2 予測可能性
+
+- フォーカス時に予期せぬ変更を発生させない
+- 送信ボタンクリック以外でフォームを自動送信しない
+
+### 3.3 入力支援
+
+- エラーの特定と説明
+- ラベルまたは説明の提供
+
+```tsx
+// ✅ Good
+<div role="alert" aria-live="polite">
+  <p>入力エラーがあります：</p>
+  <ul>
+    <li>メールアドレスを入力してください</li>
+  </ul>
+</div>
+
+// ✅ Good
+<label htmlFor="email">メールアドレス</label>
+<input
+  id="email"
+  type="email"
+  aria-describedby="email-hint"
+  required
+/>
+<span id="email-hint">例：example@domain.com</span>
+```
+
+## 4. 堅牢性（Robust）
+
+### 4.1 互換性
+
+- 適切なHTML要素を使用
+- WAI-ARIAを適切に使用
+
+```tsx
+// ✅ Good
+<button
+  aria-expanded="false"
+  aria-controls="menu-content"
+>
+  メニュー
+</button>
+
+// ❌ Bad
+<div onclick="toggleMenu()">
+  メニュー
+</div>
+```
+
+### 4.2 名前・役割・値
+
+- カスタムコンポーネントには適切なARIA属性を付与
+
+```tsx
+// ✅ Good
+<div role='tablist'>
+  <button role='tab' aria-selected='true' aria-controls='panel-1'>
+    タブ1
+  </button>
+  <div role='tabpanel' id='panel-1' aria-labelledby='tab-1'>
+    コンテンツ1
+  </div>
+</div>
+```
+
+## 5. 実装のベストプラクティス
+
+### 5.1 セマンティックHTML
+
+- 適切なHTML要素を使用する
+- 見出しレベルを適切に構造化する
+- リストには`ul`、`ol`、`dl`を使用する
+
+### 5.2 フォーム
+
+- すべての入力フィールドにラベルを付ける
+- 必須フィールドを明示する
+- エラーメッセージは具体的に
+
+### 5.3 画像
+
+- 装飾的な画像は`alt=""`を使用
+- 意味のある画像には適切な代替テキストを提供
+
+### 5.4 動的コンテンツ
+
+- ローディング状態を適切に通知
+- エラー状態を明確に表示
+- フォーカス管理を適切に行う
+
+## 6. テスト
+
+### 6.1 自動テスト
+
+- ESLintのaccessibilityプラグインを使用
+- Jest + Testing Libraryでアクセシビリティをテスト
+
+### 6.2 手動テスト
+
+- キーボードナビゲーションのテスト
+- スクリーンリーダーでのテスト
+- ハイコントラストモードでのテスト

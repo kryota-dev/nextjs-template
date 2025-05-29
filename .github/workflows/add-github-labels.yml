@@ -1,0 +1,195 @@
+name: 🏷️ GitHubラベル追加
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - '.github/labels.yml'
+      - '.github/workflows/add-github-labels.yml'
+  workflow_dispatch:
+
+jobs:
+  add-labels:
+    name: 🏷️ ラベル追加
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: 🔍 ブランチチェック
+        run: |
+          if [ "${{ github.ref_name }}" != "develop" ]; then
+            echo "❌ このワークフローは develop ブランチでのみ実行可能です"
+            echo "現在のブランチ: ${{ github.ref_name }}"
+            exit 1
+          fi
+
+      - name: 📥 リポジトリのチェックアウト
+        uses: actions/checkout@v4
+
+      - name: 📦 pnpmセットアップ
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: package.json
+          run_install: false
+
+      - name: 📦 Node.jsセットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: 'pnpm'
+
+      # package.jsonをインストールしないように、package.jsonとpackage-lock.jsonと.npmrcを削除し、package.jsonを作成
+      - name: 🗑️ 不要ファイル削除
+        run: |
+          rm -f package.json package-lock.json .npmrc
+          echo "{}" > package.json
+
+      - name: 🔧 yamlモジュールインストール
+        run: pnpm add yaml
+
+      - name: 🏷️ ラベル追加
+        uses: actions/github-script@v7
+        with:
+          script: | #```typescript
+            const fs = require('fs');
+            const path = require('path');
+            const yaml = require('yaml');
+
+            // ロガーの定義
+            const logger = {
+              info: (msg, label) => console.log(`[INFO] 🔵 ${formatLabel(label)} ${msg}`),
+              warn: (msg, label) => console.warn(`[WARN] 🟡 ${formatLabel(label)} ${msg}`),
+              error: (msg, label) => console.error(`[ERROR] 🔴 ${formatLabel(label)} ${msg}`),
+              success: (msg, label) => console.log(`[SUCCESS] 🟢 ${formatLabel(label)} ${msg}`)
+            };
+
+            // ラベル情報のフォーマット
+            const formatLabel = (label) => {
+              if (!label) return '';
+              const color = label.color ?? '';
+              return `[${label.name}${color ? ` (#${color})` : ''}]`;
+            };
+
+            // ラベル定義ファイルの読み込み
+            const labelsPath = path.join(process.env.GITHUB_WORKSPACE, '.github', 'labels.yml');
+            const labelsFile = yaml.parse(fs.readFileSync(labelsPath, 'utf8'));
+            const { labels } = labelsFile;
+
+            // ラベル定義に変更があったかどうかを追跡
+            let hasChanges = false;
+
+            // 既存のラベル一覧を取得
+            const existingLabels = await github.paginate(github.rest.issues.listLabelsForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            }).catch(error => {
+              logger.error(`ラベル一覧の取得に失敗しました: ${error.message || error}`);
+              throw error;
+            });
+
+            // labels.ymlに定義されているラベルのIDを集める
+            const definedLabelIds = labels.map(label => label.id).filter(Boolean);
+
+            // 既存のラベルのうち、labels.ymlに定義されていないものを削除
+            for (const existingLabel of existingLabels) {
+              if (!definedLabelIds.includes(existingLabel.id)) {
+                await github.rest.issues.deleteLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: existingLabel.name
+                }).then(() => {
+                  logger.success('ラベルを削除しました', existingLabel);
+                  hasChanges = true;
+                }).catch(error => {
+                  logger.error(`ラベルの削除に失敗しました: ${error.message || error}`, existingLabel);
+                });
+              }
+            }
+
+            // 新しいラベルの作成または更新
+            for (const label of labels) {
+              try {
+                // 既存のラベルをIDで検索
+                const existingLabel = existingLabels.find(l => l.id === label.id);
+
+                if (existingLabel) {
+                  // 変更が必要かチェック
+                  const changes = [];
+                  // 色コードを小文字に正規化（GitHubのAPIは大文字小文字を区別しない）
+                  const normalizedLabelColor = label.color?.toLowerCase();
+                  const normalizedExistingColor = existingLabel.color?.toLowerCase();
+                  if (existingLabel.name !== label.name) changes.push(`名前を "${label.name}" に変更`);
+                  if (normalizedExistingColor !== normalizedLabelColor) changes.push(`色を "#${label.color}" に変更`);
+                  if (existingLabel.description !== label.description) changes.push(`説明を "${label.description}" に変更`);
+
+                  if (changes.length > 0) {
+                    // 変更がある場合のみ更新
+                    await github.rest.issues.updateLabel({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      name: existingLabel.name,
+                      new_name: label.name,
+                      color: label.color,
+                      description: label.description
+                    });
+                    logger.success(
+                      `${changes.join('、')}し、更新しました`,
+                      { ...existingLabel, newValues: { name: label.name, color: label.color, description: label.description } }
+                    );
+                  } else {
+                    logger.info('変更は必要ありません', label);
+                  }
+                } else {
+                  // 存在しない場合は新規作成
+                  logger.info('ラベルを作成します', label);
+                  if (label.id) {
+                    const oldId = label.id;
+                    delete label.id;
+                    logger.warn(`既存のラベルに存在しないID (${oldId}) が設定されていたため、削除しました`, label);
+                  }
+                  const response = await github.rest.issues.createLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    ...label
+                  });
+                  // レスポンスからIDを取得してラベル定義に追加
+                  label.id = response.data.id;
+                  logger.success('ラベルを作成しました', label);
+                  hasChanges = true;
+                }
+              } catch (error) {
+                logger.error(`処理中にエラーが発生しました: ${error.message || error}`, label);
+                if (error.status === 422) {
+                  logger.warn('APIの制限により処理がスキップされました', label);
+                }
+              }
+            }
+
+            // 変更があった場合のみファイルに書き戻す
+            if (hasChanges) {
+              fs.writeFileSync(labelsPath, yaml.stringify(labelsFile, {
+                defaultStringType: 'QUOTE_SINGLE',
+                defaultKeyType: 'PLAIN'
+              }));
+              logger.info('ラベル定義ファイルを更新しました');
+            } else {
+              logger.info('ラベル定義に変更はありませんでした');
+            }
+          #```
+
+      - name: 💾 変更をコミット
+        run: |
+          # Note: the following account information will not work on GHES
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if [[ -n "$(git status --porcelain .github/labels.yml)" ]]; then
+            git add .github/labels.yml
+            git commit -m "🤖 [CI] ラベルのIDを更新"
+            git push
+          else
+            echo "labels.ymlに変更はありません"
+          fi

@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "seatonjiang.gitmoji-vscode",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "streetsidesoftware.code-spell-checker",
+    "bradlc.vscode-tailwindcss",
+    "yusukehirao.vscode-markuplint"
+  ]
+}

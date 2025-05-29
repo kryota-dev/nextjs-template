@@ -1,0 +1,31 @@
+// https://developer.mend.io/github/kryota-devs/meitobari-homepage
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":pinAllExceptPeerDependencies",
+    "mergeConfidence:all-badges",
+    ":disableRateLimiting",
+    ":prConcurrentLimit10",
+    "group:definitelyTyped"
+  ],
+  "labels": [":robot: Renovate"],
+  // FIXME: assigneesを設定する
+  // "assignees": ["kryota-dev"],
+  "rebaseWhen": "conflicted",
+  "automergeType": "pr",
+  "lockFileMaintenance": {
+    "automerge": true,
+    "enabled": true
+  },
+  "minor": {
+    "automerge": false
+  },
+  "patch": {
+    "automerge": true
+  },
+  "pin": {
+    "automerge": true
+  },
+  "ignoreTests": false
+}

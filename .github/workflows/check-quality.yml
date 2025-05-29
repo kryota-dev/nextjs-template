@@ -1,0 +1,46 @@
+name: ✨ 品質チェック
+
+on: pull_request
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  code:
+    name: ♻️ コードチェック
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: ᛘ リポジトリをチェックアウト
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref}}
+
+      - name: 🔨 pnpmセットアップ
+        uses: ./.github/actions/pnpm-setup
+
+      - name: ✨ Quality check
+        run: pnpm quality:check
+
+  # test:
+  #   name: 🧪 テスト
+  #   runs-on: ubuntu-24.04
+  #   permissions:
+  #     contents: read
+  #     pull-requests: write
+
+  #   steps:
+  #     - name: ᛘ リポジトリをチェックアウト
+  #       uses: actions/checkout@v4
+  #       with:
+  #         ref: ${{ github.head_ref}}
+
+  #     - name: 🔨 pnpmセットアップ
+  #       uses: ./.github/actions/pnpm-setup
+
+  #     - name: ✅ Vitest
+  #       run: pnpm test:coverage
+
+  #     - name: 📝 カバレッジレポートを作成
+  #       uses: davelosert/vitest-coverage-report-action@v2

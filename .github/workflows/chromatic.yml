@@ -1,0 +1,48 @@
+name: 🌈 Chromatic
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, closed]
+    paths:
+      - '.storybook/**'
+      - 'src/**/*.tsx'
+      - 'src/**/*.css'
+      - 'package.json'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chromatic:
+    name: 🌈 Chromatic
+    runs-on: ubuntu-24.04
+    # renovateのPRはChromaticを実行しない
+    if: ${{ !startsWith(github.head_ref, 'renovate/') }}
+    steps:
+      - name: ᛘ リポジトリをチェックアウト
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔨 pnpmセットアップ
+        uses: ./.github/actions/pnpm-setup
+
+      - name: 🌈 Chromatic
+        uses: chromaui/action@v11
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          buildScriptName: 'build:storybook'
+          # ブランチ名の設定:
+          # - workflow_dispatchの場合: 現在のブランチ名(github.ref_name)を使用
+          # - PRがマージされた場合: マージ先のブランチ名(base.ref)を使用
+          # - その他のPRイベント: PRのブランチ名(head_ref)を使用
+          branchName: >-
+            ${{
+              github.event_name == 'workflow_dispatch'
+                && github.ref_name
+                || (github.event.pull_request.merged
+                    && github.event.pull_request.base.ref
+                    || github.head_ref)
+            }}

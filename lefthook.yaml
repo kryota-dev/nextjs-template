@@ -1,0 +1,18 @@
+pre-commit:
+  parallel: true
+  commands:
+    eslint:
+      glob: 'src/**/*.{js,jsx,ts,tsx}'
+      run: pnpm exec next lint --file {staged_files}
+    prettier:
+      glob: 'src/**/*.{js,jsx,ts,tsx,css}'
+      run: pnpm exec prettier --check --cache {staged_files}
+    markuplint:
+      glob: 'src/**/*.{jsx,tsx,html}'
+      run: pnpm exec markuplint {staged_files}
+    spellcheck:
+      glob: 'src/**/*.{js,jsx,ts,tsx,css}'
+      run: pnpm exec cspell --no-progress {staged_files}
+    typecheck:
+      glob: 'src/**/*.{ts,tsx}'
+      run: pnpm exec tsc --noEmit

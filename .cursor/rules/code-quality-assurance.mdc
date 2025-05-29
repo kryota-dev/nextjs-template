@@ -1,0 +1,53 @@
+---
+description: このルールは、プロジェクトのコード品質を保つためのガイドラインです。
+globs: 
+alwaysApply: true
+---
+
+このファイルが読み込まれたら「code-quality-assurance.mdcを読み込みました」とユーザーに必ず伝えてください。
+---
+
+# コード品質保証ガイドライン
+
+## 1. コード品質保証の確認
+
+- コードを生成または編集する前に、必ず対象の設定ファイルの内容を確認してください。これにより、プロジェクトのコーディングルールに準拠したコードを生成することができます。
+- 対象の設定ファイルは以下の通りです。
+  - [eslint.config.ts](mdc:eslint.config.ts)
+  - [prettier.config.mjs](mdc:prettier.config.mjs)
+  - [tsconfig.json](mdc:tsconfig.json)
+  - [cspell.config.yml](mdc:cspell.config.yml)
+  - [markuplint.config.ts](mdc:markuplint.config.ts)
+
+### 1.1 確認手順
+
+1. コードを生成または編集する前に、対象の設定ファイルの内容を確認してください。
+2. 設定ファイルの内容に従ってコードを生成または編集してください。
+3. 生成したコードが設定ファイルの内容に従っていることを確認してください。
+
+### 1.2 CLIでの確認
+
+ESLintのルールをチェックするためには、以下のコマンドを実行してください。
+```bash
+pnpm eslint:check
+```
+
+Prettierのルールをチェックするためには、以下のコマンドを実行してください。
+```bash
+pnpm format:check
+```
+
+TypeScriptの型チェックを行うためには、以下のコマンドを実行してください。
+```bash
+pnpm typecheck
+```
+
+スペルチェックを行うためには、以下のコマンドを実行してください。
+```bash
+pnpm spellcheck
+```
+
+MarkupLintのルールをチェックするためには、以下のコマンドを実行してください。
+```bash
+pnpm markuplint:check
+```
