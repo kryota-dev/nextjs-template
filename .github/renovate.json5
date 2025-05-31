@@ -33,8 +33,10 @@
     {
       "customType": "regex",
       "managerFilePatterns": ["^\\.npmrc$"],
-      "matchStrings": ["use-node-version=(?<currentValue>.*?)\n"],
-      "datasourceTemplate": "node-version"
+      "matchStrings": ["use-node-version=(?<currentValue>.*?)\\n"],
+      "datasourceTemplate": "node-version",
+      "depNameTemplate": "node",
+      "extractVersionTemplate": "^v(?<version>.*)$"
     }
   ]
 }
