@@ -22,7 +22,7 @@ jobs:
     if: ${{ !startsWith(github.head_ref, 'renovate/') }}
     steps:
       - name: ᛘ リポジトリをチェックアウト
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
 
@@ -30,7 +30,7 @@ jobs:
         uses: ./.github/actions/pnpm-setup
 
       - name: 🌈 Chromatic
-        uses: chromaui/action@v11
+        uses: chromaui/action@1cfa065cbdab28f6ca3afaeb3d761383076a35aa # v11.29.0
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           buildScriptName: 'build:storybook'
