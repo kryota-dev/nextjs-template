@@ -16,6 +16,7 @@
 ## CI/CD
 - GitHub Actions
 - Chromatic
+- 自動リリースワークフロー（カレンダーバージョニング）
 
 ## 依存関係・脆弱性管理
 - Mend Renovate

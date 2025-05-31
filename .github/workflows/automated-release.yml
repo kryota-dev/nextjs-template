@@ -169,14 +169,28 @@ jobs:
 
             const tagName = '${{ steps.nextjs-version.outputs.tag }}';
             
-            await github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: `refs/tags/${tagName}`,
-              sha: context.sha
-            });
-
-            logger.success(`Next.jsバージョンタグを作成しました: ${tagName}`);
+            try {
+              await github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `refs/tags/${tagName}`,
+                sha: context.sha
+              });
+              logger.success(`Next.jsバージョンタグを作成しました: ${tagName}`);
+            } catch (error) {
+              if (error.status === 422) {
+                logger.info(`タグ ${tagName} は既に存在します。コミットを更新します。`);
+                await github.rest.git.updateRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: `tags/${tagName}`,
+                  sha: context.sha
+                });
+                logger.success(`Next.jsバージョンタグを更新しました: ${tagName}`);
+              } else {
+                throw error;
+              }
+            }
 
       - name: 📝 リリースノート生成・公開
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
@@ -191,10 +205,7 @@ jobs:
             const nextjsVersionInfo = JSON.parse('${{ steps.nextjs-version.outputs.result }}');
             
             // リリースノートの本文を作成
-            let releaseBody = `## 📅 リリース情報\n\n`;
-            releaseBody += `- **リリース日**: ${new Date().toLocaleDateString('ja-JP')}\n`;
-            releaseBody += `- **カレンダーバージョン**: \`${calendarTag}\`\n`;
-            releaseBody += `- **Next.jsバージョン**: \`${nextjsVersionInfo.currentVersion}\`\n\n`;
+            let releaseBody = '';
 
             if (nextjsVersionInfo.shouldCreateTag) {
               releaseBody += `## 🎉 Next.jsメジャーバージョンアップデート\n\n`;
