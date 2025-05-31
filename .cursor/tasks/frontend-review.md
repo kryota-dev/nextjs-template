@@ -43,7 +43,7 @@
 
 ## レビュー結果の出力形式
 
-レビュー結果は以下の形式で、`.cursor/reviews/review-${PR_NUMBER}.md`に出力してください：
+レビュー結果は以下の形式で、`.cursor/reviews/review-${PR_NUMBER}-${TIMESTAMP}.md`に出力してください：
 
 ```markdown
 # PR レビュー結果
