@@ -1,4 +1,4 @@
-# Next.js Template
+# Next.js Static Export Template
 
 このプロジェクトは、Next.js App Routerを使用した最新のWeb開発のための包括的なテンプレートです。  
 TypeScript、Tailwind CSS、Storybook、および様々な品質保証ツールが組み込まれています。
