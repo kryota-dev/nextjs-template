@@ -10,9 +10,6 @@
 - React
 - Tailwind CSS
 
-## インフラ
-- Cloudflare Pages
-
 ## CI/CD
 - GitHub Actions
 - Chromatic

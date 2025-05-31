@@ -1,4 +1,4 @@
-# Next.js Template Project
+# Next.js Static Export Template
 
 このプロジェクトは、Next.js App Routerを使用した最新のWeb開発のための包括的なテンプレートです。  
 TypeScript、Tailwind CSS、Storybook、および様々な品質保証ツールが組み込まれています。
@@ -95,9 +95,9 @@ Git commit時にはlefthookによる自動チェックが行われます。
 
 ## Deployment
 
-このプロジェクトはCloudflare Pagesを使用してデプロイできます。また、GitHub Actionsを使用した自動化されたCI/CDパイプラインが含まれています。
+このプロジェクトはStatic Exportを使用してデプロイできます。
 
-デプロイの詳細については、[Next.jsのデプロイドキュメント](https://nextjs.org/docs/app/building-your-application/deploying)を参照してください。
+Static Exportの詳細については、[Next.jsのドキュメント](https://nextjs.org/docs/app/guides/static-exports)を参照してください。
 
 ## License
 

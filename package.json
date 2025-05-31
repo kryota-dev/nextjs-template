@@ -6,9 +6,11 @@
     "dev": "pnpm run '/^(dev|watch):.*/'",
     "dev:next": "next dev -p 3000",
     "dev:storybook": "storybook dev -p 6006",
+    "build": "pnpm run '/^build:.*$/'",
     "build:next": "rm -rf .next/cache/fetch-cache && next build",
     "build:storybook": "storybook build",
     "chromatic": "chromatic --build-script-name='build:storybook'",
+    "start": "pnpm run '/^start:.*$/'",
     "start:next": "serve out -p 8000",
     "start:storybook": "serve storybook-static -p 6008",
     "eslint:check": "next lint",
@@ -27,9 +29,7 @@
     "prepare": "lefthook install",
     "imageIndex": "pnpm ts-node scripts/genImageIndex.ts",
     "watch:imageIndex": "chokidar 'src/images/**/*.{png,jpg,jpeg,gif,svg,webp}' -c 'pnpm imageIndex'",
-    "ts-node": "node --experimental-strip-types --experimental-transform-types --experimental-detect-module --no-warnings=ExperimentalWarning",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "ts-node": "node --experimental-strip-types --experimental-transform-types --experimental-detect-module --no-warnings=ExperimentalWarning"
   },
   "dependencies": {
     "@next/third-parties": "15.3.3",
@@ -71,6 +71,7 @@
     "markuplint": "4.12.0",
     "prettier": "3.5.3",
     "prettier-plugin-tailwindcss": "0.6.12",
+    "serve": "14.2.4",
     "storybook": "8.6.14",
     "tailwindcss": "4.1.8",
     "typescript": "5.8.3"
