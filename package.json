@@ -30,8 +30,6 @@
     "imageIndex": "pnpm ts-node scripts/genImageIndex.ts",
     "watch:imageIndex": "chokidar 'src/images/**/*.{png,jpg,jpeg,gif,svg,webp}' -c 'pnpm imageIndex'",
     "ts-node": "node --experimental-strip-types --experimental-transform-types --experimental-detect-module --no-warnings=ExperimentalWarning",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@next/third-parties": "15.3.3",
