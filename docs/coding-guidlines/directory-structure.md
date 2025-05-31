@@ -10,6 +10,10 @@
 │   ├── actions/                        # GitHub Actionsの複合アクション
 │   ├── ISSUE_TEMPLATE/                 # GitHub Issueのテンプレート
 │   └── workflows/                      # GitHub Actionsのワークフロー
+│       ├── automated-release.yml       # 自動リリースワークフロー
+│       ├── add-github-labels.yml       # ラベル管理
+│       ├── check-quality.yml           # コード品質チェック
+│       └── chromatic.yml               # ビジュアルテスト
 ├── .next/                              # Next.jsのキャッシュ
 ├── .storybook/                         # Storybookの設定
 ├── .vscode/                            # VSCodeの設定
