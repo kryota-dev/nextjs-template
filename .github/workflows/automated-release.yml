@@ -89,7 +89,6 @@ jobs:
             };
 
             const fs = require('fs');
-            const { execSync } = require('child_process');
 
             try {
               // 現在のpackage.jsonからNext.jsバージョンを取得
@@ -99,28 +98,45 @@ jobs:
               
               logger.info(`現在のNext.jsバージョン: ${currentNextjsVersion} (メジャー: ${currentMajor})`);
 
-              // 前回コミットのpackage.jsonからNext.jsバージョンを取得
-              let previousNextjsVersion = null;
+              // 既存のnextjs-{version}タグを取得
+              const existingTags = await github.paginate(github.rest.repos.listTags, {
+                owner: context.repo.owner,
+                repo: context.repo.repo
+              }).catch(error => {
+                logger.error(`タグ一覧の取得に失敗しました: ${error.message || error}`);
+                throw error;
+              });
+
+              // nextjs-{version}パターンのタグを抽出し、バージョン番号でソート
+              const nextjsTags = existingTags
+                .filter(tag => tag.name.startsWith('nextjs-'))
+                .map(tag => {
+                  const version = parseInt(tag.name.replace('nextjs-', ''));
+                  return { name: tag.name, version: version };
+                })
+                .filter(tag => !isNaN(tag.version))
+                .sort((a, b) => b.version - a.version); // 降順ソート（最新が先頭）
+
               let previousMajor = null;
-              
-              try {
-                const previousPackageJsonContent = execSync('git show HEAD~1:package.json', { encoding: 'utf8' });
-                const previousPackageJson = JSON.parse(previousPackageJsonContent);
-                previousNextjsVersion = previousPackageJson.dependencies.next;
-                previousMajor = parseInt(previousNextjsVersion.split('.')[0]);
-                
-                logger.info(`前回のNext.jsバージョン: ${previousNextjsVersion} (メジャー: ${previousMajor})`);
-              } catch (error) {
-                logger.warn(`前回のpackage.jsonが取得できませんでした: ${error.message}`);
-                // 初回コミットの場合は前回バージョンなしとして処理
+              let shouldCreateNextjsTag = false;
+
+              if (nextjsTags.length > 0) {
+                previousMajor = nextjsTags[0].version;
+                logger.info(`最新のNext.jsタグ: ${nextjsTags[0].name} (メジャー: ${previousMajor})`);
+                shouldCreateNextjsTag = currentMajor !== previousMajor;
+              } else {
+                logger.info('既存のNext.jsバージョンタグが見つかりません');
+                shouldCreateNextjsTag = true; // 初回作成
               }
 
-              // メジャーバージョンが変更されたかチェック
-              const shouldCreateNextjsTag = previousMajor !== null && currentMajor !== previousMajor;
               const nextjsTag = `nextjs-${currentMajor}`;
 
               if (shouldCreateNextjsTag) {
-                logger.success(`Next.jsメジャーバージョンが変更されました: ${previousMajor} → ${currentMajor}`);
+                if (previousMajor !== null) {
+                  logger.success(`Next.jsメジャーバージョンが変更されました: ${previousMajor} → ${currentMajor}`);
+                } else {
+                  logger.success(`初回Next.jsバージョンタグを作成します: ${currentMajor}`);
+                }
                 logger.success(`Next.jsバージョンタグを作成します: ${nextjsTag}`);
               } else {
                 logger.info('Next.jsメジャーバージョンに変更はありません');
@@ -129,13 +145,13 @@ jobs:
               core.setOutput('should_create_tag', shouldCreateNextjsTag);
               core.setOutput('tag', nextjsTag);
               core.setOutput('current_version', currentNextjsVersion);
-              core.setOutput('previous_version', previousNextjsVersion || 'なし');
+              core.setOutput('previous_version', previousMajor ? `nextjs-${previousMajor}` : 'なし');
 
               return {
                 shouldCreateTag: shouldCreateNextjsTag,
                 tag: nextjsTag,
                 currentVersion: currentNextjsVersion,
-                previousVersion: previousNextjsVersion
+                previousVersion: previousMajor ? `nextjs-${previousMajor}` : 'なし'
               };
             } catch (error) {
               logger.error(`Next.jsバージョンチェック中にエラーが発生しました: ${error.message}`);
