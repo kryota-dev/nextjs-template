@@ -32,9 +32,9 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@next/third-parties": "15.3.2",
+    "@next/third-parties": "15.3.3",
     "dayjs": "1.11.13",
-    "next": "15.3.2",
+    "next": "15.3.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "tailwind-variants": "1.0.0"
@@ -53,14 +53,14 @@
     "@storybook/react": "8.6.14",
     "@storybook/test": "8.6.14",
     "@tailwindcss/postcss": "4.1.8",
-    "@types/node": "22.15.24",
+    "@types/node": "22.15.29",
     "@types/react": "19.1.6",
     "@types/react-dom": "19.1.5",
     "chokidar-cli": "3.0.0",
-    "chromatic": "11.28.3",
+    "chromatic": "11.29.0",
     "cspell": "9.0.2",
-    "eslint": "9.26.0",
-    "eslint-config-next": "15.3.2",
+    "eslint": "9.28.0",
+    "eslint-config-next": "15.3.3",
     "eslint-config-prettier": "10.1.5",
     "eslint-plugin-import": "2.31.0",
     "eslint-plugin-react-hooks": "5.2.0",
@@ -70,7 +70,7 @@
     "lefthook": "1.11.13",
     "markuplint": "4.12.0",
     "prettier": "3.5.3",
-    "prettier-plugin-tailwindcss": "0.6.11",
+    "prettier-plugin-tailwindcss": "0.6.12",
     "storybook": "8.6.14",
     "tailwindcss": "4.1.8",
     "typescript": "5.8.3"
@@ -79,10 +79,5 @@
     "node": "22",
     "pnpm": "10"
   },
-  "packageManager": "pnpm@10.11.0",
-  "pnpm": {
-    "executionEnv": {
-      "nodeVersion": "22.14.0"
-    }
-  }
+  "packageManager": "pnpm@10.11.0"
 }

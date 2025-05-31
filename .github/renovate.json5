@@ -28,5 +28,13 @@
   "pin": {
     "automerge": true
   },
-  "ignoreTests": false
+  "ignoreTests": false,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["^\\.npmrc$"],
+      "matchStrings": ["use-node-version=(?<currentValue>.*?)\n"],
+      "datasourceTemplate": "node-version"
+    }
+  ]
 }
