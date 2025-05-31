@@ -85,6 +85,13 @@ Git commit時にはlefthookによる自動チェックが行われます。
 - [技術スタック](docs/coding-guidlines/technology-stack.md) - 使用している技術とバージョン情報
 - [ディレクトリ構造](docs/coding-guidlines/directory-structure.md) - プロジェクトのファイル構成
 - [コーディング規約](docs/coding-guidlines/coding-rule.md) - 開発時の規約とガイドライン
+- [リリースプロセス](docs/coding-guidlines/release-process.md) - 自動リリースとバージョニングの仕組み
+
+## Release Process
+
+このプロジェクトでは、カレンダーバージョニング（YYYY.MM.DD形式）を使用した自動リリースシステムを採用しています。
+
+詳細なリリースプロセスについては[リリースプロセス](docs/coding-guidlines/release-process.md)を参照してください。
 
 ## Deployment
 
