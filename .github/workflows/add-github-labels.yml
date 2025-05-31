@@ -34,8 +34,14 @@ jobs:
         with:
           node-version: '22.16.0'
 
+      # 既存のpackage.jsonとpnpm-lock.yamlと.npmrcを削除し、package.jsonを作成
+      - name: 🗑️ 不要ファイル削除
+        run: |
+          rm -f package.json pnpm-lock.yaml .npmrc
+          echo "{}" > package.json
+
       - name: 🔧 yamlモジュールインストール
-        run: npm install -g yaml
+        run: npm install yaml
 
       - name: 🏷️ ラベル追加
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
