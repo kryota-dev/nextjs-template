@@ -41,7 +41,7 @@
 # PR レビュー結果
 
 > 🤖 **AI Code Review**  
-> このレビューは ${AI_MODEL_NAME} によって自動実行されました。  
+> このレビューは ${AI_MODEL_NAME} (Cursor) によって実行されました。  
 > 日時: ${REVIEW_DATE}
 
 ## レビュー概要
