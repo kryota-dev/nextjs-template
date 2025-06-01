@@ -89,7 +89,9 @@ Git commit時にはlefthookによる自動チェックが行われます。
 
 ## DeepWiki
 
-このプロジェクトのより詳細な情報、FAQ、ベストプラクティスについては、[DeepWiki](https://deepwiki.com/kryota-dev/nextjs-static-export-template) をご覧ください。
+このプロジェクトのより詳細な情報、FAQ、ベストプラクティスについては、DeepWiki をご覧ください。
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/kryota-dev/nextjs-static-export-template)
 
 ## Release Process
 
