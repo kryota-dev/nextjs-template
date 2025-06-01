@@ -48,6 +48,6 @@ storybook-static/
 # cursor
 .cursor/reviews/**/*.md
 !.cursor/reviews/.gitkeep
-.cursor/pull_requests/**/*.md
-!.cursor/pull_requests/drafts/.gitkeep
+.cursor/pull-requests/**/*.md
+!.cursor/pull-requests/drafts/.gitkeep
 
