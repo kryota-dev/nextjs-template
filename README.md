@@ -87,6 +87,10 @@ Git commit時にはlefthookによる自動チェックが行われます。
 - [コーディング規約](docs/coding-guidlines/coding-rule.md) - 開発時の規約とガイドライン
 - [リリースプロセス](docs/coding-guidlines/release-process.md) - 自動リリースとバージョニングの仕組み
 
+## DeepWiki
+
+このプロジェクトのより詳細な情報、FAQ、ベストプラクティスについては、[DeepWiki](https://deepwiki.com/kryota-dev/nextjs-static-export-template) をご覧ください。
+
 ## Release Process
 
 このプロジェクトでは、カレンダーバージョニング（YYYY.MM.DD形式）を使用した自動リリースシステムを採用しています。
