@@ -49,7 +49,7 @@
 4. その他のタスク (generic)
 5. インフラに関するタスク (infrastructure)
 
-番号またはキーワードを入力してください: 
+番号またはキーワードを入力してください：
 ```
 
 ### 3. 基本情報の取得
@@ -74,6 +74,7 @@
 ```
 
 関連ファイルが指定された場合：
+
 - ファイルの内容を読み込んで分析
 - コードの構造、依存関係、潜在的な問題点を特定
 - 具体的な改善提案を生成
@@ -185,16 +186,16 @@
 
 テンプレートタイプに応じて以下のラベルを自動設定：
 
-- **backend**: `:gear: Backend`, `:rabbit: Priority: Medium`, `:timer_clock: Story Points: 1`
-- **design**: `:lipstick: Design`, `:rabbit: Priority: Medium`, `:timer_clock: Story Points: 1`
-- **frontend**: `:art: Frontend`, `:rabbit: Priority: Medium`, `:timer_clock: Story Points: 1`
-- **generic**: `:rabbit: Priority: Medium`, `:timer_clock: Story Points: 1`
-- **infrastructure**: `:hammer: Infrastructure`, `:rabbit: Priority: Medium`, `:timer_clock: Story Points: 1`
+- **backend**: `` `:gear: Backend` ``, `` `:rabbit: Priority: Medium` ``, `` `:timer_clock: Story Points: 1` ``
+- **design**: `` `:lipstick: Design` ``, `` `:rabbit: Priority: Medium` ``, `` `:timer_clock: Story Points: 1` ``
+- **frontend**: `` `:art: Frontend` ``, `` `:rabbit: Priority: Medium` ``, `` `:timer_clock: Story Points: 1` ``
+- **generic**: `` `:rabbit: Priority: Medium` ``, `` `:timer_clock: Story Points: 1` ``
+- **infrastructure**: `` `:hammer: Infrastructure` ``, `` `:rabbit: Priority: Medium` ``, `` `:timer_clock: Story Points: 1` ``
 
 ユーザーが優先度やストーリーポイントを指定した場合は、デフォルト値を上書き：
 
-- **優先度**: `:rabbit: Priority: Low/Medium/High`
-- **ストーリーポイント**: `:timer_clock: Story Points: 1/2/3/5/8`
+- **優先度**: `` `:rabbit: Priority: Low/Medium/High` ``
+- **ストーリーポイント**: `` `:timer_clock: Story Points: 1/2/3/5/8` ``
 
 ## ファイル分析ルール
 
