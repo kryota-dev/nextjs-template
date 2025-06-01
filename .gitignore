@@ -46,4 +46,8 @@ next-env.d.ts
 storybook-static/
 
 # cursor
-.cursor/reviews/
+.cursor/reviews/**/*.md
+!.cursor/reviews/.gitkeep
+.cursor/pull_requests/**/*.md
+!.cursor/pull_requests/drafts/.gitkeep
+
