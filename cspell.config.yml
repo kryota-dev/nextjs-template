@@ -5,9 +5,11 @@ allowCompoundWords: true
 useGitignore: true
 words:
   - embla
+  - Kaneko
   - kryota
   - noarchive
   - noto
+  - Ryota
   - vitest
 ignorePaths:
   - package.json

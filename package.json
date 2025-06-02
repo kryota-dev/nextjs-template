@@ -36,11 +36,13 @@
   },
   "dependencies": {
     "@next/third-parties": "15.3.3",
+    "clsx": "2.1.1",
     "dayjs": "1.11.13",
     "jsdom": "26.1.0",
     "next": "15.3.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "tailwind-merge": "3.3.0",
     "tailwind-variants": "1.0.0"
   },
   "devDependencies": {

@@ -4,6 +4,7 @@ import {
   GoogleTagManager,
   GoogleTagManagerNoscript,
 } from '@/libs/GoogleTagManager'
+import { cn } from '@/libs/stylings'
 
 import { geistMono, geistSans } from '@/styles/fonts'
 
@@ -69,10 +70,10 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='en'>
+    <html lang='ja'>
       <GoogleTagManager />
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={cn(geistSans.variable, geistMono.variable, 'antialiased')}
       >
         {children}
         <GoogleTagManagerNoscript />
