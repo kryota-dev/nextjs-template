@@ -1,4 +1,8 @@
+import { GoogleTagManager } from '@next/third-parties/google'
+
 import { geistMono, geistSans } from '@/styles/fonts'
+
+import { GTM_ID } from '@/config'
 
 import type { Metadata } from 'next'
 
@@ -16,10 +20,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
+      {GTM_ID && <GoogleTagManager gtmId={GTM_ID} />}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        {GTM_ID && (
+          <noscript>
+            <iframe
+              title='Google Tag Manager'
+              loading='lazy'
+              src={`//www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+              height='0'
+              width='0'
+              style={{ display: 'none', visibility: 'hidden' }}
+            />
+          </noscript>
+        )}
       </body>
     </html>
   )
