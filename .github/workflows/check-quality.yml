@@ -44,3 +44,6 @@ jobs:
 
       - name: 📝 Create coverage report
         uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          json-summary-path: .vitest/coverage-summary.json
+          json-final-path: .vitest/coverage-final.json
