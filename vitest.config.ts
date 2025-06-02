@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url'
 
 import react from '@vitejs/plugin-react'
 
-import { defineConfig, defineWorkspace } from 'vitest/config'
+import { defineConfig } from 'vitest/config'
 
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin'
 
@@ -49,6 +49,29 @@ const unitConfig = defineConfig({
     name: 'unit',
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
+    include: ['src/**/*.{spec,test}.ts?(x)'],
+    exclude: [
+      'src/app/**/*.{e2e,vrt}.{spec,test}.ts?(x)',
+      'src/**/_*.{spec,test}.ts?(x)',
+    ],
+  },
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+      },
+    },
+  },
+})
+
+// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
+export default defineConfig({
+  test: {
     coverage: {
       enabled: true,
       reportsDirectory: '.vitest',
@@ -71,25 +94,6 @@ const unitConfig = defineConfig({
         'src/mocks/node.ts',
       ],
     },
-    include: ['src/**/*.{spec,test}.ts?(x)'],
-    exclude: [
-      'src/app/**/*.{e2e,vrt}.{spec,test}.ts?(x)',
-      'src/**/_*.{spec,test}.ts?(x)',
-    ],
-  },
-  resolve: {
-    alias: {
-      '@': '/src',
-    },
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: 'modern-compiler',
-      },
-    },
+    projects: [unitConfig, storybookConfig],
   },
 })
-
-// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
-export default defineWorkspace([storybookConfig, unitConfig])
