@@ -44,7 +44,7 @@
     "tailwind-variants": "1.0.0"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "3.2.6",
+    "@chromatic-com/storybook": "4.0.0",
     "@eslint/eslintrc": "3.3.1",
     "@markuplint/jsx-parser": "4.7.19",
     "@markuplint/ml-config": "4.8.11",
