@@ -1,6 +1,6 @@
-# Next.js Static Export Template
+# Next.js Static Export Boilerplate
 
-このプロジェクトは、Next.js App Routerを使用した最新のWeb開発のための包括的なテンプレートです。  
+このプロジェクトは、Next.js App Routerを使用した最新のWeb開発のための包括的なボイラープレートです。  
 TypeScript、Tailwind CSS、Storybook、および様々な品質保証ツールが組み込まれています。
 
 ## Tech Stack
