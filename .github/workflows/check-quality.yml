@@ -15,7 +15,7 @@ jobs:
       - name: ᛘ Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          ref: ${{ github.head_ref}}
+          persist-credentials: false
 
       - name: 🔨 Setup pnpm
         uses: ./.github/actions/pnpm-setup
@@ -34,7 +34,7 @@ jobs:
       - name: ᛘ Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          ref: ${{ github.head_ref}}
+          persist-credentials: false
 
       - name: 🔨 Setup pnpm
         uses: ./.github/actions/pnpm-setup
@@ -51,10 +51,6 @@ jobs:
   test-storybook:
     name: 🧪 Storybook Test
     runs-on: ubuntu-24.04
-    container:
-      # Make sure to grab the latest version of the Playwright image
-      # https://playwright.dev/docs/docker#pull-the-image
-      image: mcr.microsoft.com/playwright:v1.52.0-noble
     permissions:
       contents: read
       pull-requests: write
@@ -63,16 +59,21 @@ jobs:
       - name: ᛘ Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          ref: ${{ github.head_ref}}
-
-      - name: 🔨 Setup git
-        env:
-          REPO_NAME: ${{ github.repository }}
-        run: |
-          git config --global --add safe.directory /__w/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}
+          persist-credentials: false
 
       - name: 🔨 Setup pnpm
         uses: ./.github/actions/pnpm-setup
+
+      - name: 📦 Cache Playwright
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: 🌐 Install Playwright
+        run: pnpm exec playwright install --with-deps
 
       - name: 🧪 Storybook Test
         run: pnpm test:storybook
