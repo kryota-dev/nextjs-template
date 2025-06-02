@@ -65,6 +65,12 @@ jobs:
         with:
           ref: ${{ github.head_ref}}
 
+      - name: 🔨 Setup git
+        env:
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          git config --global --add safe.directory /__w/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}
+
       - name: 🔨 Setup pnpm
         uses: ./.github/actions/pnpm-setup
 
