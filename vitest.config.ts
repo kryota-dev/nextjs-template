@@ -41,6 +41,18 @@ const storybookConfig = defineConfig({
     },
     setupFiles: ['.storybook/vitest.setup.ts'],
   },
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+      },
+    },
+  },
 })
 
 const unitConfig = defineConfig({
