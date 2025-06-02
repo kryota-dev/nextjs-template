@@ -1,3 +1,8 @@
+import {
+  GoogleTagManager,
+  GoogleTagManagerNoscript,
+} from '@/libs/GoogleTagManager'
+
 import { geistMono, geistSans } from '@/styles/fonts'
 
 import type { Metadata } from 'next'
@@ -16,10 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
+      <GoogleTagManager />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <GoogleTagManagerNoscript />
       </body>
     </html>
   )
