@@ -66,11 +66,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  jsonld,
 }: Readonly<{
   children: React.ReactNode
+  jsonld: React.ReactNode | null
 }>) {
   return (
     <html lang='ja'>
+      <head>{jsonld}</head>
       <GoogleTagManager />
       <body
         className={cn(geistSans.variable, geistMono.variable, 'antialiased')}
