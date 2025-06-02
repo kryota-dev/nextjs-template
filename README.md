@@ -16,6 +16,15 @@ TypeScript、Tailwind CSS、Storybook、および様々な品質保証ツール�
 
 ## Getting Started
 
+### Environment Variables
+
+プロジェクトで使用する環境変数を設定してください：
+
+```bash
+# .envファイルを作成
+cp .env.example .env
+```
+
 ### Installation
 
 ```bash
@@ -36,10 +45,10 @@ pnpm dev:storybook
 pnpm dev
 ```
 
-| ポート | 説明 |
-| --- | --- |
-| 3000 | Next.js開発サーバー |
-| 6006 | Storybook開発サーバー |
+| ポート | 説明                  |
+| ------ | --------------------- |
+| 3000   | Next.js開発サーバー   |
+| 6006   | Storybook開発サーバー |
 
 ### Build
 
@@ -67,10 +76,10 @@ pnpm start:storybook
 pnpm start
 ```
 
-| ポート | 説明 |
-| --- | --- |
-| 8000 | Next.jsのビルドプレビュー |
-| 6008 | Storybookのビルドプレビュー |
+| ポート | 説明                        |
+| ------ | --------------------------- |
+| 8000   | Next.jsのビルドプレビュー   |
+| 6008   | Storybookのビルドプレビュー |
 
 ## Code Quality
 

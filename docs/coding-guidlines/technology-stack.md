@@ -10,6 +10,9 @@
 - React
 - Tailwind CSS
 
+## アナリティクス・計測
+- Google Tag Manager
+
 ## CI/CD
 - GitHub Actions
 
