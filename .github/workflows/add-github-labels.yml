@@ -32,7 +32,7 @@ jobs:
       - name: 📦 Node.jsセットアップ
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: '22.16.0'
+          node-version-file: .node-version
 
       # 既存のpackage.jsonとpnpm-lock.yamlと.npmrcを削除し、package.jsonを作成
       - name: 🗑️ 不要ファイル削除
