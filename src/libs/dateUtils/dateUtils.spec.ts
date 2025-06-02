@@ -323,7 +323,8 @@ describe('dateUtils', () => {
     it('日付文字列をISOフォーマットに変換する', () => {
       const dateString = '2024-01-15'
       const result = toISOFormat(dateString)
-      // JST(Asia/Tokyo)で解釈された日付がUTCに変換されるため、UTC時刻になる
+      // dayjsの設定により、日付文字列は日本時間(JST)として解釈される
+      // '2024-01-15'はJST 00:00:00として解釈され、UTC時刻では2024-01-14T15:00:00.000Zになる
       expect(result).toBe('2024-01-14T15:00:00.000Z')
     })
   })
