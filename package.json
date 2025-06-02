@@ -97,5 +97,5 @@
     "node": "22",
     "pnpm": "10"
   },
-  "packageManager": "pnpm@10.11.0"
+  "packageManager": "pnpm@10.11.1"
 }
