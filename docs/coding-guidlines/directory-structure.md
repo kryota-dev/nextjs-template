@@ -35,6 +35,7 @@
 ├── .env.example                        # 環境変数のサンプルファイル
 ├── .git                                # Gitリポジトリ
 ├── .gitignore                          # Git除外設定
+├── .node-version                      # Node.jsのバージョン
 ├── .npmrc                              # pnpmの設定
 ├── .prettierignore                     # Prettierの除外設定
 ├── cspell.config.yml                   # cspellの設定
