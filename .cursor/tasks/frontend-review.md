@@ -146,11 +146,7 @@
 
 ユーザーの確認後、以下の順序で投稿：
 
-1. **全体コメント**: `gh pr comment <PR_NUMBER> --body "レビューコメント内容"` でPRに総合コメントを投稿
-2. **行レベルコメント**:
-   - `gh pr review <PR_NUMBER> --comment` でレビューを開始
-   - レビューコメントには行レベルの指摘をまとめて記載
-   - 必要に応じて `--approve`, `--request-changes`, `--comment` オプションを使用
+`gh pr comment <PR_NUMBER> --body-file .cursor/reviews/review-${PR_NUMBER}-${TIMESTAMP}.md` でPRにコメントを投稿
 
 ## 行レベル指摘の記録項目
 

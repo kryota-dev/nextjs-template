@@ -26,7 +26,7 @@ vi.mock('next/script', () => ({
 
 describe('JsonLD', () => {
   it('Script要素が正しい属性でレンダリングされる', () => {
-    const mockJsonLD: WithContext<Article> = {
+    const mockJsonLD = {
       '@context': 'https://schema.org',
       '@type': 'Article',
       headline: 'テスト記事のタイトル',
@@ -34,7 +34,7 @@ describe('JsonLD', () => {
         '@type': 'Person',
         name: 'テスト太郎',
       },
-    }
+    } as const satisfies WithContext<Article>
 
     const { container } = render(<JsonLD jsonld={mockJsonLD} />)
 
@@ -45,7 +45,7 @@ describe('JsonLD', () => {
   })
 
   it('JSON-LDデータが正しくJSONとして埋め込まれる', () => {
-    const mockJsonLD: WithContext<Article> = {
+    const mockJsonLD = {
       '@context': 'https://schema.org',
       '@type': 'Article',
       headline: 'テスト記事のタイトル',
@@ -53,7 +53,7 @@ describe('JsonLD', () => {
         '@type': 'Person',
         name: 'テスト太郎',
       },
-    }
+    } as const satisfies WithContext<Article>
 
     const { container } = render(<JsonLD jsonld={mockJsonLD} />)
 
@@ -64,12 +64,12 @@ describe('JsonLD', () => {
   })
 
   it('useIdで生成されたIDがScript要素に設定される', () => {
-    const mockJsonLD: WithContext<WebPage> = {
+    const mockJsonLD = {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
       name: 'テストページ',
       url: 'https://example.com/test',
-    }
+    } as const satisfies WithContext<WebPage>
 
     const { container } = render(<JsonLD jsonld={mockJsonLD} />)
 
@@ -83,17 +83,17 @@ describe('JsonLD', () => {
   })
 
   it('複数のJsonLDコンポーネントがそれぞれ異なるIDを持つ', () => {
-    const mockJsonLD1: WithContext<Article> = {
+    const mockJsonLD1 = {
       '@context': 'https://schema.org',
       '@type': 'Article',
       headline: '記事1',
-    }
+    } as const satisfies WithContext<Article>
 
-    const mockJsonLD2: WithContext<Article> = {
+    const mockJsonLD2 = {
       '@context': 'https://schema.org',
       '@type': 'Article',
       headline: '記事2',
-    }
+    } as const satisfies WithContext<Article>
 
     const { container } = render(
       <>
@@ -116,7 +116,7 @@ describe('JsonLD', () => {
   })
 
   it('ネストされたオブジェクトを含むJSON-LDが正しく処理される', () => {
-    const complexJsonLD: WithContext<Article> = {
+    const complexJsonLD = {
       '@context': 'https://schema.org',
       '@type': 'Article',
       headline: '複雑なテスト記事',
@@ -135,7 +135,7 @@ describe('JsonLD', () => {
       },
       datePublished: '2024-01-01',
       dateModified: '2024-01-02',
-    }
+    } as const satisfies WithContext<Article>
 
     const { container } = render(<JsonLD jsonld={complexJsonLD} />)
 
@@ -152,7 +152,7 @@ describe('JsonLD', () => {
   })
 
   it('配列を含むJSON-LDが正しく処理される', () => {
-    const jsonLDWithArray: WithContext<Article> = {
+    const jsonLDWithArray = {
       '@context': 'https://schema.org',
       '@type': 'Article',
       headline: '配列を含むテスト記事',
@@ -167,7 +167,7 @@ describe('JsonLD', () => {
           name: '著者2',
         },
       ],
-    }
+    } as const satisfies WithContext<Article>
 
     const { container } = render(<JsonLD jsonld={jsonLDWithArray} />)
 
@@ -184,11 +184,11 @@ describe('JsonLD', () => {
   })
 
   it('type属性がapplication/ld+jsonに設定される', () => {
-    const mockJsonLD: WithContext<Article> = {
+    const mockJsonLD = {
       '@context': 'https://schema.org',
       '@type': 'Article',
       headline: 'テスト記事',
-    }
+    } as const satisfies WithContext<Article>
 
     const { container } = render(<JsonLD jsonld={mockJsonLD} />)
 
@@ -197,10 +197,10 @@ describe('JsonLD', () => {
   })
 
   it('空のJSON-LDオブジェクトでも正常に動作する', () => {
-    const emptyJsonLD: WithContext<WebPage> = {
+    const emptyJsonLD = {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-    }
+    } as const satisfies WithContext<WebPage>
 
     const { container } = render(<JsonLD jsonld={emptyJsonLD} />)
 
