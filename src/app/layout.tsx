@@ -1,3 +1,5 @@
+import { HOME_URL } from '@/constants/HOME_URL'
+
 import {
   GoogleTagManager,
   GoogleTagManagerNoscript,
@@ -5,20 +7,11 @@ import {
 
 import { geistMono, geistSans } from '@/styles/fonts'
 
-import { NEXT_PUBLIC_HOME_URL } from '@/config'
 import { SITE_DESCRIPTION, SITE_NAME } from '@/constants'
 
 import type { Metadata } from 'next'
 
 import '@/styles/globals.css'
-
-if (!NEXT_PUBLIC_HOME_URL) {
-  throw new Error('NEXT_PUBLIC_HOME_URL is not set')
-}
-
-const HOME_URL = NEXT_PUBLIC_HOME_URL.endsWith('/')
-  ? NEXT_PUBLIC_HOME_URL
-  : `${NEXT_PUBLIC_HOME_URL}/`
 
 export const metadata: Metadata = {
   title: {
@@ -56,7 +49,7 @@ export const metadata: Metadata = {
     locale: 'ja_JP',
     images: [
       {
-        url: `${HOME_URL}/ogp.png`,
+        url: `${HOME_URL}ogp.png`,
         alt: SITE_NAME,
       },
     ],
