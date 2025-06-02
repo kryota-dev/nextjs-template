@@ -55,9 +55,18 @@ pnpm build:storybook
 ```bash
 # リントチェック
 pnpm lint:check
+# リントチェック（自動修正）
+pnpm lint:fix
+
+# マークアップチェック
+pnpm markuplint:check
+# マークアップチェック（自動修正）
+pnpm markuplint:fix
 
 # フォーマットチェック
 pnpm format:check
+# フォーマットチェック（自動修正）
+pnpm format:fix
 
 # 型チェック
 pnpm typecheck
@@ -67,7 +76,6 @@ pnpm spellcheck
 
 # 全てのチェックを実行
 pnpm quality:check
-
 # 自動修正を適用
 pnpm quality:fix
 ```
