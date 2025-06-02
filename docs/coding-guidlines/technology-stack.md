@@ -12,8 +12,6 @@
 
 ## CI/CD
 - GitHub Actions
-- Chromatic
-- 自動リリースワークフロー（カレンダーバージョニング）
 
 ## 依存関係・脆弱性管理
 - Mend Renovate
@@ -21,10 +19,15 @@
 
 ## 開発ツール
 - pnpm
+- lefthook
+
+## 静的解析
 - ESLint
 - Prettier
+- CSpell
+- Markuplint
+
+## テスト
+- Vitest
 - Storybook
 - Chromatic
-- CSpell
-- lefthook
-- Markuplint
