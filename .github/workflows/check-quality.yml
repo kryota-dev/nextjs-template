@@ -62,7 +62,7 @@ jobs:
           json-final-path: .vitest/coverage-final.json
 
   test-storybook:
-    name: 🧪 Storybook Test
+    name: 🎨 Storybook Test
     runs-on: ubuntu-24.04
     permissions:
       contents: read
