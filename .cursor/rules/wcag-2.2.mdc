@@ -217,7 +217,7 @@ alwaysApply: false
 ### 6.1 自動テスト
 
 - ESLintのaccessibilityプラグインを使用
-- Jest + Testing Libraryでアクセシビリティをテスト
+- Vitest + Testing Libraryでアクセシビリティをテスト
 
 ### 6.2 手動テスト
 
