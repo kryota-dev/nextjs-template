@@ -29,12 +29,12 @@ alwaysApply: true
 
 ESLintのルールをチェックするためには、以下のコマンドを実行してください。
 ```bash
-pnpm eslint:check
+pnpm eslint:fix
 ```
 
 Prettierのルールをチェックするためには、以下のコマンドを実行してください。
 ```bash
-pnpm format:check
+pnpm format:fix
 ```
 
 TypeScriptの型チェックを行うためには、以下のコマンドを実行してください。
@@ -49,5 +49,5 @@ pnpm spellcheck
 
 MarkupLintのルールをチェックするためには、以下のコマンドを実行してください。
 ```bash
-pnpm markuplint:check
+pnpm markuplint:fix
 ```
