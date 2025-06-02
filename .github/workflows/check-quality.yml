@@ -40,7 +40,7 @@ jobs:
         uses: ./.github/actions/pnpm-setup
 
       - name: ✅ Vitest
-        run: pnpm test:coverage
+        run: pnpm test:unit-coverage
 
       - name: 📝 Create coverage report
         uses: davelosert/vitest-coverage-report-action@v2
