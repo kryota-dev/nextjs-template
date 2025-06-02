@@ -4,11 +4,12 @@
 
 ## 概要
 
-このタスクは、Pull Requestに対して、フロントエンド開発の観点からコードレビューを行います。GitHub MCP Serverを使用してPRの情報取得と結果の反映を行います。
+このタスクは、Pull Requestに対して、フロントエンド開発の観点からコードレビューを行います。gh CLIを使用してPRの情報取得と結果の反映を行います。
 
 ## 前提条件
 
-- GitHub MCP Serverが利用可能であること
+- gh CLI (GitHub CLI) がインストールされていること
+- `gh auth login` でGitHubにログイン済みであること
 - GitHubリポジトリへのアクセス権限があること
 - 現在のブランチがPull Requestと紐づいていること
 
@@ -102,19 +103,18 @@
 
 以下の手順で現在のブランチに紐づくPR番号を特定してください：
 
-1. **現在のブランチ名を取得**: `git branch --show-current` または環境変数から取得
-2. **リポジトリ情報の取得**: `git remote get-url origin` からowner/repoを抽出
-3. **PRの検索**: `mcp_github_list_pull_requests()` で現在のブランチに対応するPRを検索
-   - `head` パラメータに `owner:branch_name` 形式で指定
-   - `state: "open"` で開いているPRのみを対象
+1. **現在のブランチ名を取得**: `git branch --show-current` で現在のブランチ名を取得
+2. **PRの検索**: `gh pr list --head <branch_name> --state open --json number,title,headRefName` で現在のブランチに対応するPRを検索
+   - 開いているPRのみを対象とする
+   - JSON形式で情報を取得して解析
 
 ### 2. PR詳細情報の取得
 
-特定したPR番号を使用して以下の情報を GitHub MCP Server から取得してください：
+特定したPR番号を使用して以下の情報を gh CLI から取得してください：
 
-- `mcp_github_get_pull_request()` でPR詳細情報
-- `mcp_github_get_pull_request_files()` で変更ファイル一覧  
-- `mcp_github_get_pull_request_diff()` で差分データ
+- `gh pr view <PR_NUMBER> --json title,body,baseRefName,headRefName,number,state,author` でPR詳細情報
+- `gh pr diff <PR_NUMBER> --name-only` で変更ファイル一覧  
+- `gh pr diff <PR_NUMBER>` で差分データ
 
 ### 3. レビュー対象ファイルの特定
 
@@ -146,11 +146,11 @@
 
 ユーザーの確認後、以下の順序で投稿：
 
-1. **全体コメント**: `mcp_github_add_issue_comment()` でPRに総合コメントを投稿
+1. **全体コメント**: `gh pr comment <PR_NUMBER> --body "レビューコメント内容"` でPRに総合コメントを投稿
 2. **行レベルコメント**:
-   - `mcp_github_create_pending_pull_request_review()` でペンディングレビューを作成
-   - 各指摘に対して行レベルコメントを追加
-   - `mcp_github_submit_pending_pull_request_review()` で最終的にsubmit
+   - `gh pr review <PR_NUMBER> --comment` でレビューを開始
+   - レビューコメントには行レベルの指摘をまとめて記載
+   - 必要に応じて `--approve`, `--request-changes`, `--comment` オプションを使用
 
 ## 行レベル指摘の記録項目
 
@@ -171,8 +171,9 @@
 - プロジェクトの設定ファイル（ESLint, Prettier, TypeScript等）の内容を考慮してレビューを行ってください
 - Next.jsのベストプラクティスに基づいた提案を行ってください  
 - パフォーマンスとアクセシビリティを重視したレビューを心がけてください
-- GitHub MCP Serverの利用制限やレート制限に注意してください
+- gh CLIのレート制限に注意してください
 - レビュー結果の投稿前には必ずユーザーの確認を取ってください
 - 行レベルコメントには適切なprefixを必ず付与してください
 - レビューの最後に行レベルコメントをsubmitしてください
 - **レビューを実行するAIは、自身の正確なモデル名を記載してください**
+- **gh CLI がインストールされ、認証が完了していることを事前に確認してください**
