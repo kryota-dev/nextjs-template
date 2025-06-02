@@ -1,5 +1,13 @@
 # Next.js Static Export Boilerplate
 
+![GitHub Release](https://img.shields.io/github/v/release/kryota-dev/nextjs-static-export-boilerplate)
+
+
+[![✨ Check Quality](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/check-quality.yml/badge.svg?branch=main)](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/check-quality.yml)
+[![🚀 Automated Release](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/automated-release.yml/badge.svg?branch=main)](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/automated-release.yml)
+[![🏷️ Add GitHub Labels](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/add-github-labels.yml/badge.svg?branch=develop)](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/add-github-labels.yml)
+[![🌈 Chromatic](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/chromatic.yml/badge.svg?branch=main)](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/chromatic.yml)
+
 このプロジェクトは、Next.js App Routerを使用した最新のWeb開発のための包括的なボイラープレートです。  
 TypeScript、Tailwind CSS、Storybook、および様々な品質保証ツールが組み込まれています。
 
