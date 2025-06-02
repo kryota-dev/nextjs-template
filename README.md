@@ -1,6 +1,6 @@
-# Next.js Static Export Template
+# Next.js Static Export Boilerplate
 
-このプロジェクトは、Next.js App Routerを使用した最新のWeb開発のための包括的なテンプレートです。  
+このプロジェクトは、Next.js App Routerを使用した最新のWeb開発のための包括的なボイラープレートです。  
 TypeScript、Tailwind CSS、Storybook、および様々な品質保証ツールが組み込まれています。
 
 ## Tech Stack
@@ -15,6 +15,15 @@ TypeScript、Tailwind CSS、Storybook、および様々な品質保証ツール�
 - Storybook
 
 ## Getting Started
+
+### Environment Variables
+
+プロジェクトで使用する環境変数を設定してください：
+
+```bash
+# .envファイルを作成
+cp .env.example .env
+```
 
 ### Installation
 
@@ -36,7 +45,10 @@ pnpm dev:storybook
 pnpm dev
 ```
 
-[http://localhost:3000](http://localhost:3000) をブラウザで開いて結果を確認できます。
+| ポート | 説明                  |
+| ------ | --------------------- |
+| 3000   | Next.js開発サーバー   |
+| 6006   | Storybook開発サーバー |
 
 ### Build
 
@@ -46,7 +58,28 @@ pnpm build:next
 
 # Storybookのビルド
 pnpm build:storybook
+
+# または全て同時にビルド
+pnpm build
 ```
+
+### Preview
+
+```bash
+# Next.jsのビルドをプレビュー
+pnpm start:next
+
+# Storybookのビルドをプレビュー
+pnpm start:storybook
+
+# または全て同時にプレビュー
+pnpm start
+```
+
+| ポート | 説明                        |
+| ------ | --------------------------- |
+| 8000   | Next.jsのビルドプレビュー   |
+| 6008   | Storybookのビルドプレビュー |
 
 ## Code Quality
 
@@ -81,6 +114,21 @@ pnpm quality:fix
 ```
 
 Git commit時にはlefthookによる自動チェックが行われます。
+
+## Test
+
+このプロジェクトでは、以下のテストが実行できます：
+
+```bash
+# ユニットテスト
+pnpm test:unit
+
+# ユニットテストのカバレッジ
+pnpm test:unit-coverage
+
+# ユニットテストのブラウザUI
+pnpm test:unit-ui
+```
 
 ## Project Structure
 

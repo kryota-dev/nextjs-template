@@ -1,5 +1,5 @@
 {
-  "name": "meitobari-homepage",
+  "name": "nextjs-static-export-boilerplate",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,6 +13,9 @@
     "start": "pnpm run '/^start:.*$/'",
     "start:next": "serve out -p 8000",
     "start:storybook": "serve storybook-static -p 6008",
+    "test:unit": "vitest",
+    "test:unit-coverage": "vitest run --coverage",
+    "test:unit-ui": "vitest --reporter='html' --outputFile='.vitest/ui/index.html' --ui",
     "eslint:check": "next lint",
     "eslint:fix": "next lint --fix",
     "markuplint:check": "markuplint 'src/**/*.{jsx,tsx,html}' -p",
@@ -33,10 +36,13 @@
   },
   "dependencies": {
     "@next/third-parties": "15.3.3",
+    "clsx": "2.1.1",
     "dayjs": "1.11.13",
+    "jsdom": "26.1.0",
     "next": "15.3.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "tailwind-merge": "3.3.0",
     "tailwind-variants": "1.0.0"
   },
   "devDependencies": {
@@ -45,17 +51,26 @@
     "@markuplint/jsx-parser": "4.7.19",
     "@markuplint/ml-config": "4.8.11",
     "@markuplint/react-spec": "4.5.19",
+    "@storybook/addon-a11y": "9.0.4",
     "@storybook/addon-essentials": "8.6.14",
     "@storybook/addon-interactions": "8.6.14",
-    "@storybook/addon-onboarding": "8.6.14",
+    "@storybook/addon-links": "9.0.4",
     "@storybook/blocks": "8.6.14",
     "@storybook/nextjs": "8.6.14",
     "@storybook/react": "8.6.14",
     "@storybook/test": "8.6.14",
     "@tailwindcss/postcss": "4.1.8",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.3.0",
+    "@testing-library/user-event": "14.6.1",
+    "@types/jsdom": "21.1.7",
     "@types/node": "22.15.29",
     "@types/react": "19.1.6",
     "@types/react-dom": "19.1.5",
+    "@vitejs/plugin-react": "4.5.0",
+    "@vitest/coverage-v8": "3.1.4",
+    "@vitest/eslint-plugin": "1.2.1",
+    "@vitest/ui": "3.1.4",
     "chokidar-cli": "3.0.0",
     "chromatic": "11.29.0",
     "cspell": "9.0.2",
@@ -74,7 +89,8 @@
     "serve": "14.2.4",
     "storybook": "8.6.14",
     "tailwindcss": "4.1.8",
-    "typescript": "5.8.3"
+    "typescript": "5.8.3",
+    "vitest": "3.1.4"
   },
   "engines": {
     "node": "22",

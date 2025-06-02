@@ -35,6 +35,7 @@
 ├── .env.example                        # 環境変数のサンプルファイル
 ├── .git                                # Gitリポジトリ
 ├── .gitignore                          # Git除外設定
+├── .node-version                      # Node.jsのバージョン
 ├── .npmrc                              # pnpmの設定
 ├── .prettierignore                     # Prettierの除外設定
 ├── cspell.config.yml                   # cspellの設定
@@ -47,5 +48,9 @@
 ├── pnpm-lock.yaml                      # 依存関係ロックファイル
 ├── postcss.config.mjs                  # PostCSSの設定
 ├── prettier.config.mjs                 # Prettierの設定
-└── tsconfig.json                       # TypeScriptの設定
+├── tsconfig.json                       # TypeScriptの設定
+├── vitest.config.ts                    # Vitestの設定
+└── vitest.setup.ts                     # Vitestのセットアップ
+
+
 ```
