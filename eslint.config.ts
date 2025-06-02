@@ -8,6 +8,7 @@ import eslintConfigPrettier from 'eslint-config-prettier/flat'
 import importPlugin from 'eslint-plugin-import'
 import storybook from 'eslint-plugin-storybook'
 import unusedImportsPlugin from 'eslint-plugin-unused-imports'
+import vitestPlugin from '@vitest/eslint-plugin'
 
 import type { Linter } from 'eslint'
 
@@ -28,6 +29,7 @@ const eslintConfig = [
     plugins: {
       import: importPlugin,
       'unused-imports': unusedImportsPlugin,
+      vitest: vitestPlugin,
     },
     rules: {
       // consoleをエラーにする
@@ -109,6 +111,21 @@ const eslintConfig = [
       ],
       // process.envの参照を禁止
       'no-process-env': 'error',
+      // ネストしたdescribeの最大深度を3に制限する
+      'vitest/max-nested-describe': ['error', { max: 3 }],
+      // expectの呼び出しを任意にする
+      'vitest/expect-expect': 'off',
+      // テストのコメントアウトを許可する
+      'vitest/no-commented-out-tests': 'off',
+      // テストの関数を`it`に統一する
+      'vitest/consistent-test-it': [
+        'error',
+        {
+          fn: 'it',
+        },
+      ],
+      // テストのdisableを禁止
+      'vitest/no-disabled-tests': 'error',
     },
   },
   {

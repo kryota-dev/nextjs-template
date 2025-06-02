@@ -51,3 +51,6 @@ storybook-static/
 .cursor/pull-requests/**/*.md
 !.cursor/pull-requests/drafts/.gitkeep
 
+# vitest
+/coverage
+/.vitest
