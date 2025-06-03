@@ -16,6 +16,7 @@
     "editor.defaultFormatter": null,
     "editor.formatOnSave": false
   },
+  "biome.enabled": false,
   "files.insertFinalNewline": true,
   "gitmoji.outputType": "code",
   "gitmoji.showEmojiCode": true,
