@@ -68,6 +68,11 @@ export default function (plop) {
     return ''
   }
 
+  // App Routerページ用のstoryTitle生成関数
+  const generatePageStoryTitle = (pagePath) => {
+    return `app/${pagePath}/page`
+  }
+
   // コンポーネント名生成
   const generateComponentNameFromPath = (path) => {
     const segments = path.split('/').filter(Boolean)
@@ -246,11 +251,20 @@ export default function (plop) {
       },
       {
         type: 'confirm',
+        name: 'includeStory',
+        message: 'Storybookファイルも生成しますか？',
+        default: true,
+      },
+      {
+        type: 'confirm',
         name: 'confirmGeneration',
         message: (answers) => {
           const files = [`src/app/${answers.pagePath}/page.tsx`]
           if (answers.includeLayout) {
             files.push(`src/app/${answers.pagePath}/layout.tsx`)
+          }
+          if (answers.includeStory) {
+            files.push(`src/app/${answers.pagePath}/page.stories.tsx`)
           }
 
           const details = [
@@ -258,6 +272,28 @@ export default function (plop) {
             ['📦', 'コンポーネント名', `${answers.componentName}Page`],
             ['📐', 'レイアウト生成', answers.includeLayout ? 'あり' : 'なし'],
           ]
+
+          if (answers.includeLayout) {
+            details.push([
+              '📐',
+              'レイアウトコンポーネント名',
+              `${answers.componentName}Layout`,
+            ])
+          }
+
+          details.push([
+            '📚',
+            'Storybook生成',
+            answers.includeStory ? 'あり' : 'なし',
+          ])
+
+          if (answers.includeStory) {
+            details.push([
+              '📚',
+              'Storybookタイトル',
+              generatePageStoryTitle(answers.pagePath),
+            ])
+          }
 
           return generateConfirmMessage(
             '以下の内容でページを生成します',
@@ -284,6 +320,17 @@ export default function (plop) {
           type: 'add',
           path: 'src/app/{{pagePath}}/layout.tsx',
           templateFile: '.plop/app_component/layout.tsx.hbs',
+        })
+      }
+
+      if (data.includeStory) {
+        actions.push({
+          type: 'add',
+          path: 'src/app/{{pagePath}}/page.stories.tsx',
+          templateFile: '.plop/app_component/page.stories.tsx.hbs',
+          data: {
+            storyTitle: generatePageStoryTitle(data.pagePath),
+          },
         })
       }
 
