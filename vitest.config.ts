@@ -93,6 +93,8 @@ export default defineConfig({
       ],
       include: ['src/**/*.ts?(x)'],
       exclude: [
+        'src/config.ts',
+        'src/styles/',
         'src/**/*.stories.ts?(x)',
         'src/**/index.ts',
         'src/**/*.d.ts',
