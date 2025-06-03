@@ -44,7 +44,7 @@ pnpm generate:component
 
 ### 2. page - App Routerページ生成
 
-Next.js App Routerのページコンポーネント（とオプションでレイアウト）を生成します。
+Next.js App Routerのページコンポーネント（とオプションでレイアウト・Storybookファイル）を生成します。
 
 ```bash
 pnpm generate:page
@@ -54,13 +54,21 @@ pnpm generate:page
 
 - `src/app/[path]/page.tsx` - ページコンポーネント
 - `src/app/[path]/layout.tsx` - レイアウトコンポーネント（オプション）
+- `src/app/[path]/page.stories.tsx` - Storybookファイル（オプション）
 
 **入力項目:**
 
 - **ページのパス**: 例: `about`, `blog/[slug]`, `dashboard/settings`
 - **ページコンポーネント名** (PascalCase): パスから自動生成されるデフォルト値使用可能
 - **レイアウトファイル生成**: `true`/`false`
+- **Storybookファイル生成**: `true`/`false`（デフォルト: `true`）
 - **生成確認**: 生成内容の最終確認
+
+**Storybookタイトルの自動生成:**
+
+- `about` → `app/about/page`
+- `blog/[slug]` → `app/blog/[slug]/page`
+- `dashboard/settings` → `app/dashboard/settings/page`
 
 ### 3. layout - App Routerレイアウト生成
 
@@ -89,11 +97,11 @@ pnpm generate:layout
 3. **📋 生成内容の確認**: 以下の情報が表示されます
    - 📦 コンポーネント名
    - 📁 配置場所
-   - 📚 Storybookタイトル（コンポーネントの場合）
+   - 📚 Storybookタイトル（コンポーネント・ページStorybookの場合）
    - 🔗 生成されるファイル一覧
 4. **✅ 最終承認**: 「はい」を選択するとファイルが生成されます
 
-**確認画面の例:**
+**確認画面の例（コンポーネント生成）:**
 
 ```
 以下の内容でコンポーネントを生成します:
@@ -107,6 +115,24 @@ pnpm generate:layout
   - src/components/common/Button/Button.spec.tsx
   - src/components/common/Button/Button.stories.tsx
   - src/components/common/Button/index.ts
+
+上記の内容で生成しますか？ (Y/n)
+```
+
+**確認画面の例（ページ生成）:**
+
+```
+以下の内容でページを生成します:
+
+📄 ページパス: /about
+📦 コンポーネント名: AboutPage
+📐 レイアウト生成: なし
+📚 Storybook生成: あり
+📚 Storybookタイトル: app/about/page
+
+🔗 生成されるファイル:
+  - src/app/about/page.tsx
+  - src/app/about/page.stories.tsx
 
 上記の内容で生成しますか？ (Y/n)
 ```
@@ -171,15 +197,19 @@ pnpm generate:component
 **生成先**: `src/app/_components/MainCarousel/`
 **Storybookタイトル**: `app/_components/MainCarousel`
 
-#### Aboutページの生成
+#### Aboutページの生成（Storybookあり）
 
 ```bash
 pnpm generate:page
 # ページのパス: about
 # ページコンポーネント名: About (デフォルト)
 # レイアウトファイル生成: false
+# Storybookファイル生成: true (デフォルト)
 # 生成確認: はい
 ```
+
+**生成先**: `src/app/about/`
+**Storybookタイトル**: `app/about/page`
 
 #### 動的ルートのブログページ生成
 
@@ -188,8 +218,12 @@ pnpm generate:page
 # ページのパス: blog/[slug]
 # ページコンポーネント名: Slug (デフォルト)
 # レイアウトファイル生成: true
+# Storybookファイル生成: true (デフォルト)
 # 生成確認: はい
 ```
+
+**生成先**: `src/app/blog/[slug]/`
+**Storybookタイトル**: `app/blog/[slug]/page`
 
 #### レイアウトファイルの生成
 
@@ -229,6 +263,7 @@ pnpm generate:layout
 │   └── index.ts.hbs              # エクスポートファイル
 └── app_component/
     ├── page.tsx.hbs              # ページコンポーネント
+    ├── page.stories.tsx.hbs      # ページStorybookファイル
     └── layout.tsx.hbs            # レイアウトコンポーネント
 ```
 
@@ -241,6 +276,7 @@ pnpm generate:layout
 - 確認画面で「いいえ」を選択すると、ファイルは生成されません
 - 生成後は適宜コードを調整してプロジェクトの要件に合わせてください
 - Storybookのタイトルは配置場所に応じて自動生成されます
+- ページStorybook生成時は、テンプレートに含まれるTODOコメントを確認し、必要に応じてレイアウトを追加してください
 
 ## カスタマイズ
 
