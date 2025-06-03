@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  compiler: {
+    // `^data-test`にマッチする属性を削除
+    reactRemoveProperties: true
+  }
 }
 
 export default nextConfig

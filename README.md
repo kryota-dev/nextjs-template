@@ -1,6 +1,14 @@
-# Next.js Template Project
+# Next.js Static Export Boilerplate
 
-このプロジェクトは、Next.js App Routerを使用した最新のWeb開発のための包括的なテンプレートです。  
+![GitHub Release](https://img.shields.io/github/v/release/kryota-dev/nextjs-static-export-boilerplate)
+
+
+[![✨ Check Quality](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/check-quality.yml/badge.svg?branch=main)](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/check-quality.yml)
+[![🚀 Automated Release](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/automated-release.yml/badge.svg?branch=main)](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/automated-release.yml)
+[![🏷️ Add GitHub Labels](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/add-github-labels.yml/badge.svg?branch=develop)](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/add-github-labels.yml)
+[![🌈 Chromatic](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/chromatic.yml/badge.svg?branch=main)](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/chromatic.yml)
+
+このプロジェクトは、Next.js App Routerを使用した最新のWeb開発のための包括的なボイラープレートです。  
 TypeScript、Tailwind CSS、Storybook、および様々な品質保証ツールが組み込まれています。
 
 ## Tech Stack
@@ -15,6 +23,15 @@ TypeScript、Tailwind CSS、Storybook、および様々な品質保証ツール�
 - Storybook
 
 ## Getting Started
+
+### Environment Variables
+
+プロジェクトで使用する環境変数を設定してください：
+
+```bash
+# .envファイルを作成
+cp .env.example .env
+```
 
 ### Installation
 
@@ -36,7 +53,10 @@ pnpm dev:storybook
 pnpm dev
 ```
 
-[http://localhost:3000](http://localhost:3000) をブラウザで開いて結果を確認できます。
+| ポート | 説明                  |
+| ------ | --------------------- |
+| 3000   | Next.js開発サーバー   |
+| 6006   | Storybook開発サーバー |
 
 ### Build
 
@@ -46,7 +66,28 @@ pnpm build:next
 
 # Storybookのビルド
 pnpm build:storybook
+
+# または全て同時にビルド
+pnpm build
 ```
+
+### Preview
+
+```bash
+# Next.jsのビルドをプレビュー
+pnpm start:next
+
+# Storybookのビルドをプレビュー
+pnpm start:storybook
+
+# または全て同時にプレビュー
+pnpm start
+```
+
+| ポート | 説明                        |
+| ------ | --------------------------- |
+| 8000   | Next.jsのビルドプレビュー   |
+| 6008   | Storybookのビルドプレビュー |
 
 ## Code Quality
 
@@ -55,9 +96,18 @@ pnpm build:storybook
 ```bash
 # リントチェック
 pnpm lint:check
+# リントチェック（自動修正）
+pnpm lint:fix
+
+# マークアップチェック
+pnpm markuplint:check
+# マークアップチェック（自動修正）
+pnpm markuplint:fix
 
 # フォーマットチェック
 pnpm format:check
+# フォーマットチェック（自動修正）
+pnpm format:fix
 
 # 型チェック
 pnpm typecheck
@@ -67,12 +117,26 @@ pnpm spellcheck
 
 # 全てのチェックを実行
 pnpm quality:check
-
 # 自動修正を適用
 pnpm quality:fix
 ```
 
 Git commit時にはlefthookによる自動チェックが行われます。
+
+## Test
+
+このプロジェクトでは、以下のテストが実行できます：
+
+```bash
+# ユニットテスト
+pnpm test:unit
+
+# ユニットテストのカバレッジ
+pnpm test:unit-coverage
+
+# ユニットテストのブラウザUI
+pnpm test:unit-ui
+```
 
 ## Project Structure
 
@@ -85,12 +149,25 @@ Git commit時にはlefthookによる自動チェックが行われます。
 - [技術スタック](docs/coding-guidlines/technology-stack.md) - 使用している技術とバージョン情報
 - [ディレクトリ構造](docs/coding-guidlines/directory-structure.md) - プロジェクトのファイル構成
 - [コーディング規約](docs/coding-guidlines/coding-rule.md) - 開発時の規約とガイドライン
+- [リリースプロセス](docs/coding-guidlines/release-process.md) - 自動リリースとバージョニングの仕組み
+
+## DeepWiki
+
+このプロジェクトのより詳細な情報、FAQ、ベストプラクティスについては、DeepWiki をご覧ください。
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/kryota-dev/nextjs-static-export-template)
+
+## Release Process
+
+このプロジェクトでは、カレンダーバージョニング（YYYY.MM.DD形式）を使用した自動リリースシステムを採用しています。
+
+詳細なリリースプロセスについては[リリースプロセス](docs/coding-guidlines/release-process.md)を参照してください。
 
 ## Deployment
 
-このプロジェクトはCloudflare Pagesを使用してデプロイできます。また、GitHub Actionsを使用した自動化されたCI/CDパイプラインが含まれています。
+このプロジェクトはStatic Exportを使用してデプロイできます。
 
-デプロイの詳細については、[Next.jsのデプロイドキュメント](https://nextjs.org/docs/app/building-your-application/deploying)を参照してください。
+Static Exportの詳細については、[Next.jsのドキュメント](https://nextjs.org/docs/app/guides/static-exports)を参照してください。
 
 ## License
 

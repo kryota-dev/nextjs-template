@@ -1,0 +1,258 @@
+name: 🚀 Automated Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    name: 🚀 Create Release
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: 🔨 Setup pnpm
+        uses: ./.github/actions/pnpm-setup
+
+      - name: 📅 Generate calendar version tag
+        id: calendar-version
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const logger = {
+              info: (msg) => console.log(`[INFO] 🔵 ${msg}`),
+              warn: (msg) => console.warn(`[WARN] 🟡 ${msg}`),
+              error: (msg) => console.error(`[ERROR] 🔴 ${msg}`),
+              success: (msg) => console.log(`[SUCCESS] 🟢 ${msg}`)
+            };
+
+            // 今日の日付をYYYY.MM.DD形式で取得（日本時間）
+            const today = new Date().toLocaleDateString('ja-JP', {
+              timeZone: 'Asia/Tokyo',
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit'
+            }).replace(/\//g, '.');
+            logger.info(`今日の日付: ${today}`);
+
+            // 既存のタグ一覧を取得
+            const existingTags = await github.paginate(github.rest.repos.listTags, {
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            }).catch(error => {
+              logger.error(`タグ一覧の取得に失敗しました: ${error.message || error}`);
+              throw error;
+            });
+
+            // 今日の日付で始まるタグを検索
+            const todayTags = existingTags.filter(tag => tag.name.startsWith(today));
+            logger.info(`今日のタグ数: ${todayTags.length}`);
+
+            // 新しいタグ名を決定
+            let newTag = today;
+            if (todayTags.length > 0) {
+              // 同日に複数のリリースがある場合、カウントを追加
+              const maxCount = Math.max(...todayTags.map(tag => {
+                const parts = tag.name.split('-');
+                return parts.length > 1 ? parseInt(parts[1]) || 0 : 0;
+              }));
+              newTag = `${today}-${maxCount + 1}`;
+            }
+
+            logger.success(`新しいカレンダーバージョンタグ: ${newTag}`);
+            core.setOutput('tag', newTag);
+            return newTag;
+
+      - name: 🔍 Check Next.js version change
+        id: nextjs-version
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const logger = {
+              info: (msg) => console.log(`[INFO] 🔵 ${msg}`),
+              warn: (msg) => console.warn(`[WARN] 🟡 ${msg}`),
+              error: (msg) => console.error(`[ERROR] 🔴 ${msg}`),
+              success: (msg) => console.log(`[SUCCESS] 🟢 ${msg}`)
+            };
+
+            const fs = require('fs');
+
+            try {
+              // 現在のpackage.jsonからNext.jsバージョンを取得
+              const currentPackageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+              const currentNextjsVersion = currentPackageJson.dependencies.next;
+              const currentMajor = parseInt(currentNextjsVersion.split('.')[0]);
+              
+              logger.info(`現在のNext.jsバージョン: ${currentNextjsVersion} (メジャー: ${currentMajor})`);
+
+              // 既存のnextjs-{version}タグを取得
+              const existingTags = await github.paginate(github.rest.repos.listTags, {
+                owner: context.repo.owner,
+                repo: context.repo.repo
+              }).catch(error => {
+                logger.error(`タグ一覧の取得に失敗しました: ${error.message || error}`);
+                throw error;
+              });
+
+              // nextjs-{version}パターンのタグを抽出し、バージョン番号でソート
+              const nextjsTags = existingTags
+                .filter(tag => tag.name.startsWith('nextjs-'))
+                .map(tag => {
+                  const version = parseInt(tag.name.replace('nextjs-', ''));
+                  return { name: tag.name, version: version };
+                })
+                .filter(tag => !isNaN(tag.version))
+                .sort((a, b) => b.version - a.version); // 降順ソート（最新が先頭）
+
+              let previousMajor = null;
+              let shouldCreateNextjsTag = false;
+
+              if (nextjsTags.length > 0) {
+                previousMajor = nextjsTags[0].version;
+                logger.info(`最新のNext.jsタグ: ${nextjsTags[0].name} (メジャー: ${previousMajor})`);
+                shouldCreateNextjsTag = currentMajor !== previousMajor;
+              } else {
+                logger.info('既存のNext.jsバージョンタグが見つかりません');
+                shouldCreateNextjsTag = true; // 初回作成
+              }
+
+              const nextjsTag = `nextjs-${currentMajor}`;
+
+              if (shouldCreateNextjsTag) {
+                if (previousMajor !== null) {
+                  logger.success(`Next.jsメジャーバージョンが変更されました: ${previousMajor} → ${currentMajor}`);
+                } else {
+                  logger.success(`初回Next.jsバージョンタグを作成します: ${currentMajor}`);
+                }
+                logger.success(`Next.jsバージョンタグを作成します: ${nextjsTag}`);
+              } else {
+                logger.info('Next.jsメジャーバージョンに変更はありません');
+              }
+
+              core.setOutput('should_create_tag', shouldCreateNextjsTag);
+              core.setOutput('tag', nextjsTag);
+              core.setOutput('current_version', currentNextjsVersion);
+              core.setOutput('previous_version', previousMajor ? `nextjs-${previousMajor}` : 'なし');
+
+              return {
+                shouldCreateTag: shouldCreateNextjsTag,
+                tag: nextjsTag,
+                currentVersion: currentNextjsVersion,
+                previousVersion: previousMajor ? `nextjs-${previousMajor}` : 'なし'
+              };
+            } catch (error) {
+              logger.error(`Next.jsバージョンチェック中にエラーが発生しました: ${error.message}`);
+              throw error;
+            }
+
+      - name: 🏷️ Create calendar version tag
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const logger = {
+              info: (msg) => console.log(`[INFO] 🔵 ${msg}`),
+              success: (msg) => console.log(`[SUCCESS] 🟢 ${msg}`)
+            };
+
+            const tagName = '${{ steps.calendar-version.outputs.tag }}';
+            
+            await github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/${tagName}`,
+              sha: context.sha
+            });
+
+            logger.success(`カレンダーバージョンタグを作成しました: ${tagName}`);
+
+      - name: 🏷️ Create Next.js version tag
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const logger = {
+              info: (msg) => console.log(`[INFO] 🔵 ${msg}`),
+              success: (msg) => console.log(`[SUCCESS] 🟢 ${msg}`)
+            };
+
+            const nextjsVersionInfo = JSON.parse('${{ steps.nextjs-version.outputs.result }}');
+            const tagName = nextjsVersionInfo.tag;
+            
+            logger.info(`Next.jsバージョンタグの処理: ${tagName}`);
+            
+            try {
+              await github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `refs/tags/${tagName}`,
+                sha: context.sha
+              });
+              logger.success(`Next.jsバージョンタグを作成しました: ${tagName}`);
+            } catch (error) {
+              if (error.status === 422) {
+                logger.info(`タグ ${tagName} は既に存在します。コミットを更新します。`);
+                await github.rest.git.updateRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: `tags/${tagName}`,
+                  sha: context.sha
+                });
+                logger.success(`Next.jsバージョンタグを更新しました: ${tagName}`);
+              } else {
+                throw error;
+              }
+            }
+
+      - name: 📝 Create release note and publish
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const logger = {
+              info: (msg) => console.log(`[INFO] 🔵 ${msg}`),
+              success: (msg) => console.log(`[SUCCESS] 🟢 ${msg}`)
+            };
+
+            const calendarTag = '${{ steps.calendar-version.outputs.tag }}';
+            const nextjsVersionInfo = JSON.parse('${{ steps.nextjs-version.outputs.result }}');
+            
+            // リリースノートの本文を作成
+            let releaseBody = '';
+
+            if (nextjsVersionInfo.shouldCreateTag) {
+              releaseBody += `## 🎉 Next.jsメジャーバージョンアップデート\n\n`;
+              releaseBody += `Next.jsのメジャーバージョンが更新されました:\n`;
+              releaseBody += `- **前回**: \`${nextjsVersionInfo.previousVersion}\`\n`;
+              releaseBody += `- **今回**: \`${nextjsVersionInfo.currentVersion}\`\n`;
+              releaseBody += `- **バージョンタグ**: \`${nextjsVersionInfo.tag}\`\n\n`;
+            }
+
+            // GitHubの自動生成リリースノートを使用してリリースを作成
+            const release = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: calendarTag,
+              name: `Release ${calendarTag}`,
+              body: releaseBody,
+              generate_release_notes: true,
+              draft: false,
+              prerelease: false
+            });
+
+            logger.success(`リリースを作成しました: ${release.data.html_url}`);
+            
+            return {
+              releaseUrl: release.data.html_url,
+              releaseId: release.data.id
+            };

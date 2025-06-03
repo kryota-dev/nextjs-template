@@ -1,12 +1,16 @@
 $schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json
-version: '0.2'
+version: "0.2"
 language: en
 allowCompoundWords: true
 useGitignore: true
 words:
   - embla
+  - Kaneko
+  - kryota
   - noarchive
   - noto
+  - Ryota
+  - vitest
 ignorePaths:
   - package.json
   - pnpm-lock.yaml

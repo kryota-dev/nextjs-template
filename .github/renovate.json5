@@ -7,7 +7,8 @@
     "mergeConfidence:all-badges",
     ":disableRateLimiting",
     ":prConcurrentLimit10",
-    "group:definitelyTyped"
+    "group:definitelyTyped",
+    "helpers:pinGitHubActionDigests"
   ],
   "labels": [":robot: Renovate"],
   // TODO: assigneesを設定する
