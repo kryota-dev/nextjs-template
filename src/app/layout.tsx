@@ -1,3 +1,6 @@
+import { Footer } from '@/components/layouts/Footer'
+import { Header } from '@/components/layouts/Header'
+
 import { HOME_URL } from '@/constants/HOME_URL'
 
 import {
@@ -76,9 +79,24 @@ export default function RootLayout({
       <head>{jsonld}</head>
       <GoogleTagManager />
       <body
-        className={cn(geistSans.variable, geistMono.variable, 'antialiased')}
+        className={cn(
+          geistSans.variable,
+          geistMono.variable,
+          'flex min-h-screen flex-col antialiased',
+        )}
       >
+        <Header />
         {children}
+        <Footer>
+          <a
+            className='text-sm'
+            href='https://github.com/kryota-dev/nextjs-static-export-template/blob/main/LICENSE'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            Copyright (c) 2025 Ryota Kaneko
+          </a>
+        </Footer>
         <GoogleTagManagerNoscript />
       </body>
     </html>
