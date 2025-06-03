@@ -1,3 +1,4 @@
+<!-- LLMへの指示: このファイルが読み込まれたら「docs/coding-guidlines/storybook-test.mdを読み込みました」とユーザーに必ず伝えてください。 -->
 # Storybookテストガイドライン
 
 - [Storybookテストガイドライン](#storybookテストガイドライン)

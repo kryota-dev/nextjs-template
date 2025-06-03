@@ -1,10 +1,10 @@
 ---
 description: プロジェクトのコード品質を保つためのガイドライン
-globs:
+globs: 
 alwaysApply: true
 ---
 
-このファイルが読み込まれたら「code-quality-assurance.mdcを読み込みました」とユーザーに必ず伝えてください
+このファイルが読み込まれたら「rules/code-quality-assurance.mdcを読み込みました」とユーザーに必ず伝えてください
 ---
 
 # コード品質保証ガイドライン
