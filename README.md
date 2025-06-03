@@ -21,6 +21,7 @@ TypeScript、Tailwind CSS、Storybook、および様々な品質保証ツール�
 - TypeScript
 - Tailwind CSS
 - Storybook
+- microCMS
 
 ## Getting Started
 
@@ -159,7 +160,10 @@ pnpm test:unit-ui
 - [技術スタック](docs/coding-guidlines/technology-stack.md) - 使用している技術とバージョン情報
 - [ディレクトリ構造](docs/coding-guidlines/directory-structure.md) - プロジェクトのファイル構成
 - [コーディング規約](docs/coding-guidlines/coding-rule.md) - 開発時の規約とガイドライン
+- [microCMSガイドライン](docs/coding-guidlines/microcms.md) - microCMS統合とコンテンツ管理の使用方法
 - [Plopコードジェネレーター](docs/coding-guidlines/plop.md) - コンポーネント・ページ生成ツールの使用方法
+- [ユニットテストガイドライン](docs/coding-guidlines/unit-test.md) - ユニットテストの実行方法とガイドライン
+- [Storybookテストガイドライン](docs/coding-guidlines/storybook-test.md) - Storybookテストの実行方法とガイドライン
 - [リリースプロセス](docs/coding-guidlines/release-process.md) - 自動リリースとバージョニングの仕組み
 
 ## DeepWiki
