@@ -13,6 +13,8 @@
     "start": "pnpm run '/^start:.*$/'",
     "start:next": "serve out -p 8000",
     "start:storybook": "serve storybook-static -p 6008",
+    "test": "vitest",
+    "test-coverage": "vitest run --coverage",
     "test:unit": "vitest --project=unit",
     "test:unit-coverage": "vitest run --project=unit --coverage",
     "test:unit-ui": "vitest --project=unit --reporter='html' --outputFile='.vitest/ui/index.html' --ui",
