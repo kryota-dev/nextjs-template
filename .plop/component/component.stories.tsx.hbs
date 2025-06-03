@@ -1,0 +1,13 @@
+import { {{componentName}} } from './{{componentName}}'
+
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+
+export default {
+  title: '{{{storyTitle}}}',
+  component: {{componentName}},
+  tags: ['autodocs'],
+} satisfies Meta<typeof {{componentName}}>
+
+type Story = StoryObj<typeof {{componentName}}>
+
+export const Default: Story = {}

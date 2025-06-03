@@ -34,7 +34,11 @@
     "prepare": "lefthook install",
     "imageIndex": "pnpm ts-node scripts/genImageIndex.ts",
     "watch:imageIndex": "chokidar 'src/images/**/*.{png,jpg,jpeg,gif,svg,webp}' -c 'pnpm imageIndex'",
-    "ts-node": "node --experimental-strip-types --experimental-transform-types --experimental-detect-module --no-warnings=ExperimentalWarning"
+    "ts-node": "node --experimental-strip-types --experimental-transform-types --experimental-detect-module --no-warnings=ExperimentalWarning",
+    "generate": "plop",
+    "generate:component": "plop component",
+    "generate:page": "plop page",
+    "generate:layout": "plop layout"
   },
   "dependencies": {
     "@next/third-parties": "15.3.3",
@@ -87,6 +91,7 @@
     "lefthook": "1.11.13",
     "markuplint": "4.12.0",
     "playwright": "1.52.0",
+    "plop": "4.0.1",
     "prettier": "3.5.3",
     "prettier-plugin-tailwindcss": "0.6.12",
     "serve": "14.2.4",

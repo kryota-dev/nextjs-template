@@ -15,6 +15,7 @@
 │       ├── check-quality.yml           # コード品質チェック
 │       └── chromatic.yml               # ビジュアルテスト
 ├── .next/                              # Next.jsのキャッシュ
+├── .plop/                              # Plopテンプレートファイル
 ├── .storybook/                         # Storybookの設定
 ├── .vscode/                            # VSCodeの設定
 ├── docs/                               # ドキュメント
@@ -45,6 +46,7 @@
 ├── next-env.d.ts                       # Next.jsの型定義
 ├── next.config.ts                      # Next.jsの設定
 ├── package.json                        # プロジェクト設定
+├── plopfile.mjs                        # Plopの設定
 ├── pnpm-lock.yaml                      # 依存関係ロックファイル
 ├── postcss.config.mjs                  # PostCSSの設定
 ├── prettier.config.mjs                 # Prettierの設定

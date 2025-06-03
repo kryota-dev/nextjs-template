@@ -88,6 +88,16 @@ pnpm start
 | 8000   | Next.jsのビルドプレビュー   |
 | 6008   | Storybookのビルドプレビュー |
 
+### Code Generation
+
+このプロジェクトでは、Plopを使用してコンポーネントやページの自動生成ができます：
+
+```bash
+pnpm generate
+```
+
+詳細な使用方法については[Plopコードジェネレーター](docs/coding-guidlines/plop.md)を参照してください。
+
 ## Code Quality
 
 このプロジェクトには多数のコード品質ツールが組み込まれています：
@@ -148,6 +158,7 @@ pnpm test:unit-ui
 - [技術スタック](docs/coding-guidlines/technology-stack.md) - 使用している技術とバージョン情報
 - [ディレクトリ構造](docs/coding-guidlines/directory-structure.md) - プロジェクトのファイル構成
 - [コーディング規約](docs/coding-guidlines/coding-rule.md) - 開発時の規約とガイドライン
+- [Plopコードジェネレーター](docs/coding-guidlines/plop.md) - コンポーネント・ページ生成ツールの使用方法
 - [リリースプロセス](docs/coding-guidlines/release-process.md) - 自動リリースとバージョニングの仕組み
 
 ## DeepWiki
