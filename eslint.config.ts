@@ -1,6 +1,7 @@
-import { dirname } from 'path'
+import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 
+import { includeIgnoreFile } from '@eslint/compat'
 import { FlatCompat } from '@eslint/eslintrc'
 import vitestPlugin from '@vitest/eslint-plugin'
 import eslintConfigPrettier from 'eslint-config-prettier/flat'
@@ -14,12 +15,19 @@ import type { Linter } from 'eslint'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
+const gitignorePath = resolve(__dirname, '.gitignore')
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
 })
 
 const eslintConfig = [
+  includeIgnoreFile(gitignorePath),
+  {
+    ignores: [
+      'plop-file.mjs',
+    ],
+  },
   ...(compat.extends(
     'next/core-web-vitals',
     'next/typescript',
