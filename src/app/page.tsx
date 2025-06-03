@@ -1,3 +1,5 @@
+import { LinkButton } from '@/components/common/LinkButton'
+
 export default function Home() {
   return (
     <div className='grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20'>
@@ -8,22 +10,18 @@ export default function Home() {
         </p>
 
         <div className='flex flex-col items-center gap-4 sm:flex-row'>
-          <a
-            className='bg-foreground text-background flex h-10 items-center justify-center gap-2 rounded-full border border-solid border-transparent px-4 text-sm font-medium transition-colors hover:bg-[#383838] sm:h-12 sm:w-auto sm:px-5 sm:text-base dark:hover:bg-[#ccc]'
+          <LinkButton
+            variant='primary'
             href='https://github.com/kryota-dev/nextjs-static-export-template'
-            target='_blank'
-            rel='noopener noreferrer'
           >
             GitHub
-          </a>
-          <a
-            className='flex h-10 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-4 text-sm font-medium transition-colors hover:border-transparent hover:bg-[#f2f2f2] sm:h-12 sm:w-auto sm:px-5 sm:text-base dark:border-white/[.145] dark:hover:bg-[#1a1a1a]'
+          </LinkButton>
+          <LinkButton
+            variant='secondary'
             href='https://deepwiki.com/kryota-dev/nextjs-static-export-template'
-            target='_blank'
-            rel='noopener noreferrer'
           >
             Ask DeepWiki
-          </a>
+          </LinkButton>
         </div>
       </main>
       <footer className='row-start-3 flex flex-wrap items-center justify-center gap-[24px]'>
