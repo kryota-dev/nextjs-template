@@ -1,11 +1,9 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import react from '@vitejs/plugin-react'
-
-import { defineConfig } from 'vitest/config'
-
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin'
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vitest/config'
 
 const dirname =
   typeof __dirname !== 'undefined'
@@ -102,8 +100,6 @@ export default defineConfig({
         'src/**/?(_)constants/**/*.ts',
         'src/**/?(_)types/**/*.ts',
         'src/**/?(_)data/**/*.ts',
-        'src/mocks/browser.ts',
-        'src/mocks/node.ts',
       ],
     },
     projects: [unitConfig, storybookConfig],
