@@ -1,7 +1,6 @@
 # Next.js Static Export Boilerplate
 
-![GitHub Release](https://img.shields.io/github/v/release/kryota-dev/nextjs-static-export-boilerplate)
-
+[![GitHub Release](https://img.shields.io/github/v/release/kryota-dev/nextjs-static-export-boilerplate)](https://github.com/kryota-dev/nextjs-static-export-boilerplate/releases)
 
 [![✨ Check Quality](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/check-quality.yml/badge.svg?branch=main)](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/check-quality.yml)
 [![🚀 Automated Release](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/automated-release.yml/badge.svg?branch=main)](https://github.com/kryota-dev/nextjs-static-export-boilerplate/actions/workflows/automated-release.yml)
