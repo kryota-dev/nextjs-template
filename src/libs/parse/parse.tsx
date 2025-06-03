@@ -190,9 +190,10 @@ const options: HTMLReactParserOptions = {
         (node) => {
           const element = node as Element
           return (
-            // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               {...element.attribs}
+              alt={element.attribs.alt ?? ''}
               className='h-auto w-full'
               src={`${element.attribs.src}?fm=webp&w=1200`}
             />
