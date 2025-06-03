@@ -9,7 +9,7 @@
 Reactコンポーネント一式（コンポーネント本体、テストファイル、Storybookファイル、インデックスファイル）を生成します。
 
 ```bash
-pnpm plop component
+pnpm generate:component
 ```
 
 **生成されるファイル:**
@@ -46,7 +46,7 @@ pnpm plop component
 Next.js App Routerのページコンポーネント（とオプションでレイアウト）を生成します。
 
 ```bash
-pnpm plop page
+pnpm generate:page
 ```
 
 **生成されるファイル:**
@@ -66,7 +66,7 @@ pnpm plop page
 Next.js App Routerのレイアウトコンポーネントのみを生成します。
 
 ```bash
-pnpm plop layout
+pnpm generate:layout
 ```
 
 **生成されるファイル:**
@@ -116,13 +116,16 @@ pnpm plop layout
 
 ```bash
 # ジェネレーター選択画面を表示
-pnpm plop
+pnpm generate
 
 # 直接コンポーネント生成を実行
-pnpm plop component
+pnpm generate:component
 
 # 直接ページ生成を実行
-pnpm plop page
+pnpm generate:page
+
+# 直接レイアウト生成を実行
+pnpm generate:layout
 ```
 
 ### 入力例
@@ -130,7 +133,7 @@ pnpm plop page
 #### 共通Buttonコンポーネントの生成
 
 ```bash
-pnpm plop component
+pnpm generate:component
 # コンポーネント名: Button
 # 配置場所: src/components/ - 汎用コンポーネント
 # コンポーネントの種類: 共通コンポーネント (common)
@@ -143,7 +146,7 @@ pnpm plop component
 #### ニュースルート固有のNewsCardコンポーネントの生成
 
 ```bash
-pnpm plop component
+pnpm generate:component
 # コンポーネント名: NewsCard
 # 配置場所: app/ - ページ固有コンポーネント
 # コンポーネントの種類: 特定ルート用 ([route]/_components)
@@ -157,7 +160,7 @@ pnpm plop component
 #### app直下のページ用MainCarouselコンポーネントの生成
 
 ```bash
-pnpm plop component
+pnpm generate:component
 # コンポーネント名: MainCarousel
 # 配置場所: app/ - ページ固有コンポーネント
 # コンポーネントの種類: app直下のページ用 (_components)
@@ -170,7 +173,7 @@ pnpm plop component
 #### Aboutページの生成
 
 ```bash
-pnpm plop page
+pnpm generate:page
 # ページのパス: about
 # ページコンポーネント名: About (デフォルト)
 # レイアウトファイル生成: false
@@ -180,10 +183,19 @@ pnpm plop page
 #### 動的ルートのブログページ生成
 
 ```bash
-pnpm plop page
+pnpm generate:page
 # ページのパス: blog/[slug]
 # ページコンポーネント名: Slug (デフォルト)
 # レイアウトファイル生成: true
+# 生成確認: はい
+```
+
+#### レイアウトファイルの生成
+
+```bash
+pnpm generate:layout
+# レイアウトのパス: blog
+# レイアウトコンポーネント名: BlogLayout (デフォルト)
 # 生成確認: はい
 ```
 
