@@ -24,7 +24,7 @@ type Props = LinkButtonVariants &
 
 /**
  * LinkButton Component
- * @description リンクボタンコンポーネント
+ * @description Example Component
  */
 export const LinkButton = ({ variant = 'primary', children, href }: Props) => {
   return (
