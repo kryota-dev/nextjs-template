@@ -1,4 +1,5 @@
 import { LinkButton } from '@/components/common/LinkButton'
+import { Footer } from '@/components/layouts/Footer'
 
 export default function Home() {
   return (
@@ -24,7 +25,7 @@ export default function Home() {
           </LinkButton>
         </div>
       </main>
-      <footer className='row-start-3 flex flex-wrap items-center justify-center gap-[24px]'>
+      <Footer>
         <a
           className='text-sm'
           href='https://github.com/kryota-dev/nextjs-static-export-template/blob/main/LICENSE'
@@ -33,7 +34,7 @@ export default function Home() {
         >
           Copyright (c) 2025 Ryota Kaneko
         </a>
-      </footer>
+      </Footer>
     </div>
   )
 }
