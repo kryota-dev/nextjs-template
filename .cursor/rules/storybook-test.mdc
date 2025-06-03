@@ -1,0 +1,51 @@
+---
+description: Storybookテスト作成ルール
+globs: src/**/*.stories.tsx,src/**/*.spec.tsx,src/**/*.test.tsx
+alwaysApply: false
+---
+このファイルが読み込まれたら「rules/storybook-test.mdcを読み込みました」とユーザーに必ず伝えてください
+---
+
+# Storybookテスト作成ルール
+
+## 1. テスト作成の前提確認
+
+- コードを生成または編集する前に、必ず以下のファイルの内容を確認してください：
+  - [storybook-test.md](mdc:docs/coding-guidlines/storybook-test.md)
+  - [vitest.config.ts](mdc:vitest.config.ts)
+  - [.storybook/main.ts](mdc:.storybook/main.ts)
+  - [.storybook/preview.tsx](mdc:.storybook/preview.tsx)
+  - [.storybook/vitest.setup.ts](mdc:.storybook/vitest.setup.ts)
+
+### 1.1 確認手順
+
+1. Storybookテストファイルを作成または編集する前に、対象コンポーネントとStorybookテストガイドラインの内容を確認してください。
+2. プロジェクトのStorybook設定（Vitest統合、アクセシビリティアドオン、インタラクションテスト）に従ってストーリーとテストを作成してください。
+3. 生成したストーリーとテストコードがガイドラインに従っていることを確認してください。
+
+## 2. Storybookテストガイドラインの参照
+
+すべてのStorybookテスト作成は、[storybook-test.md](mdc:docs/coding-guidlines/storybook-test.md) に記載されたガイドラインに従って実装してください。
+
+### 2.1 テスト実行とカバレッジ確認
+
+Storybookテスト実行とカバレッジ確認のためのコマンド：
+
+```bash
+# Storybookテスト実行
+pnpm test:storybook
+
+# カバレッジ確認
+pnpm test:storybook-coverage
+
+# Storybook開発サーバー起動
+pnpm dev:storybook
+```
+
+### 2.2 重要な注意事項
+
+- 詳細な実装方法やパターンについては、必ず [storybook-test.md](mdc:docs/coding-guidlines/storybook-test.md) を参照してください
+- ストーリー作成時は play 関数を活用したインタラクションテストを重視してください
+- ユーザー中心のテストを心がけ、実装詳細への依存を避けてください
+- アクセシビリティテストは公開コンポーネントで必須実装してください
+- テストの独立性を保ち、ストーリー間での依存関係を作らないでください
