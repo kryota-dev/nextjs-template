@@ -1,36 +1,49 @@
-<!-- LLMへの指示: このファイルが読み込まれたら「technology-stack.mdを読み込みました」とユーザーに必ず伝えてください。 -->
+<!-- LLMへの指示: このファイルが読み込まれたら「docs/coding-guidlines/technology-stack.mdを読み込みました」とユーザーに必ず伝えてください。 -->
 # 技術スタック
 
 ## コア技術
-- TypeScript
-- Node.js
+
+- [TypeScript](https://www.typescriptlang.org/)
+- [Node.js](https://nodejs.org/)
 
 ## フロントエンド
-- Next.js
-- React
-- Tailwind CSS
+
+- [Next.js](https://nextjs.org/)
+- [React](https://react.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+
+## CMS・コンテンツ管理
+
+- [microCMS](https://microcms.io/)
 
 ## アナリティクス・計測
-- Google Tag Manager
+
+- [Google Tag Manager](https://tagmanager.google.com/)
 
 ## CI/CD
-- GitHub Actions
+
+- [GitHub Actions](https://docs.github.com/actions)
 
 ## 依存関係・脆弱性管理
-- Mend Renovate
-- Dependabot Alerts
+
+- [Mend Renovate](https://www.mend.io/renovate/)
+- [Dependabot Alerts](https://docs.github.com/code-security/dependabot/dependabot-alerts)
 
 ## 開発ツール
-- pnpm
-- lefthook
+
+- [pnpm](https://pnpm.io/)
+- [lefthook](https://github.com/evilmartians/lefthook)
+- [Plop](http://plopjs.com/)
 
 ## 静的解析
-- ESLint
-- Prettier
-- CSpell
-- Markuplint
+
+- [ESLint](https://eslint.org/)
+- [Prettier](https://prettier.io/)
+- [CSpell](https://cspell.org/)
+- [Markuplint](https://markuplint.dev/)
 
 ## テスト
-- Vitest
-- Storybook
-- Chromatic
+
+- [Vitest](https://vitest.dev/)
+- [Storybook](https://storybook.js.org/)
+- [Chromatic](https://www.chromatic.com/)

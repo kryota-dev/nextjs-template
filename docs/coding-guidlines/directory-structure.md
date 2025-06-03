@@ -1,4 +1,4 @@
-<!-- LLMへの指示: このファイルが読み込まれたら「directory-structure.mdを読み込みました」とユーザーに必ず伝えてください。 -->
+<!-- LLMへの指示: このファイルが読み込まれたら「docs/coding-guidlines/directory-structure.mdを読み込みました」とユーザーに必ず伝えてください。 -->
 # ディレクトリ構成
 
 以下のディレクトリ構造に従って実装を行ってください：
@@ -15,6 +15,7 @@
 │       ├── check-quality.yml           # コード品質チェック
 │       └── chromatic.yml               # ビジュアルテスト
 ├── .next/                              # Next.jsのキャッシュ
+├── .plop/                              # Plopテンプレートファイル
 ├── .storybook/                         # Storybookの設定
 ├── .vscode/                            # VSCodeの設定
 ├── docs/                               # ドキュメント
@@ -45,6 +46,7 @@
 ├── next-env.d.ts                       # Next.jsの型定義
 ├── next.config.ts                      # Next.jsの設定
 ├── package.json                        # プロジェクト設定
+├── plopfile.mjs                        # Plopの設定
 ├── pnpm-lock.yaml                      # 依存関係ロックファイル
 ├── postcss.config.mjs                  # PostCSSの設定
 ├── prettier.config.mjs                 # Prettierの設定

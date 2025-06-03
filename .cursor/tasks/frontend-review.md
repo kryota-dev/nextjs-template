@@ -1,15 +1,13 @@
-## このファイルが読み込まれたら「frontend-review.mdを読み込みました」とユーザーに必ず伝えてください
-
+<!-- LLMへの指示: このファイルが読み込まれたら「tasks/frontend-review.mdを読み込みました」とユーザーに必ず伝えてください。 -->
 # フロントエンドコードレビュータスク
 
 ## 概要
 
-このタスクは、Pull Requestに対して、フロントエンド開発の観点からコードレビューを行います。gh CLIを使用してPRの情報取得と結果の反映を行います。
+このタスクは、Pull Requestに対して、フロントエンド開発の観点からコードレビューを行います。GitHub MCP Serverを使用してPRの情報取得と結果の反映を行います。
 
 ## 前提条件
 
-- gh CLI (GitHub CLI) がインストールされていること
-- `gh auth login` でGitHubにログイン済みであること
+- GitHub MCP Serverが有効化されていること
 - GitHubリポジトリへのアクセス権限があること
 - 現在のブランチがPull Requestと紐づいていること
 
@@ -99,22 +97,25 @@
 
 ## 実行手順
 
-### 1. 現在のブランチとPR番号の特定
+### 1. リポジトリ情報の取得と PR番号の特定
 
 以下の手順で現在のブランチに紐づくPR番号を特定してください：
 
 1. **現在のブランチ名を取得**: `git branch --show-current` で現在のブランチ名を取得
-2. **PRの検索**: `gh pr list --head <branch_name> --state open --json number,title,headRefName` で現在のブランチに対応するPRを検索
-   - 開いているPRのみを対象とする
-   - JSON形式で情報を取得して解析
+2. **リポジトリ情報の取得**: `git remote get-url origin` からowner/repoを抽出
+3. **PRの検索**: `mcp_github_list_pull_requests` を使用してPR一覧を取得し、現在のブランチ（head）に対応するPRを検索
+   - `state: "open"` で開いているPRのみを対象とする
+   - `head` パラメータで現在のブランチを指定して絞り込み
 
 ### 2. PR詳細情報の取得
 
-特定したPR番号を使用して以下の情報を gh CLI から取得してください：
+特定したPR番号を使用して以下の情報をGitHub MCP Serverから取得してください：
 
-- `gh pr view <PR_NUMBER> --json title,body,baseRefName,headRefName,number,state,author` でPR詳細情報
-- `gh pr diff <PR_NUMBER> --name-only` で変更ファイル一覧  
-- `gh pr diff <PR_NUMBER>` で差分データ
+- `mcp_github_get_pull_request` でPR詳細情報（タイトル、本文、ベースブランチ、状態、作成者など）
+- `mcp_github_get_pull_request_files` で変更ファイル一覧
+- `mcp_github_get_pull_request_diff` で差分データ
+- `mcp_github_get_pull_request_comments` でPRコメント一覧（既存のレビューコメントやディスカッション内容）
+- `mcp_github_get_pull_request_reviews` でPRレビュー一覧（承認/変更要求状況、レビューアー情報）
 
 ### 3. レビュー対象ファイルの特定
 
@@ -144,9 +145,14 @@
 
 ### 6. GitHub への投稿
 
-ユーザーの確認後、以下の順序で投稿：
+ユーザーの確認後、以下の方法で投稿：
 
-`gh pr comment <PR_NUMBER> --body-file .cursor/reviews/review-${PR_NUMBER}-${TIMESTAMP}.md` でPRにコメントを投稿
+`mcp_github_create_and_submit_pull_request_review` を使用してPRにレビューコメントを投稿
+
+- `body`: レビュー結果ファイルの内容
+- `event`: "COMMENT" （一般的なレビューコメントの場合）
+- `pullNumber`: 対象のPR番号
+- `owner`, `repo`: リポジトリ情報
 
 ## 行レベル指摘の記録項目
 
@@ -167,9 +173,8 @@
 - プロジェクトの設定ファイル（ESLint, Prettier, TypeScript等）の内容を考慮してレビューを行ってください
 - Next.jsのベストプラクティスに基づいた提案を行ってください  
 - パフォーマンスとアクセシビリティを重視したレビューを心がけてください
-- gh CLIのレート制限に注意してください
+- GitHub APIのレート制限に注意してください
 - レビュー結果の投稿前には必ずユーザーの確認を取ってください
 - 行レベルコメントには適切なprefixを必ず付与してください
-- レビューの最後に行レベルコメントをsubmitしてください
 - **レビューを実行するAIは、自身の正確なモデル名を記載してください**
-- **gh CLI がインストールされ、認証が完了していることを事前に確認してください**
+- **GitHub MCP Serverが有効化されていることを事前に確認してください**

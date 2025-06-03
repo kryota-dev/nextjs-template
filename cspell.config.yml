@@ -5,6 +5,7 @@ allowCompoundWords: true
 useGitignore: true
 words:
   - embla
+  - guidlines
   - Kaneko
   - kryota
   - noarchive

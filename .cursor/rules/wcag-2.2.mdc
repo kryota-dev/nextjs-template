@@ -1,10 +1,10 @@
 ---
-description: Web Content Accessibility Guidelines (WCAG) 2.2に基づくコーディングガイドライン。このルールは、アクセシビリティの4つの基本原則（知覚可能、操作可能、理解可能、堅牢）に従い、Next.jsとTypeScriptを使用したWebアプリケーション開発におけるベストプラクティスを提供します。各セクションには具体的なコード例と推奨プラクティスが含まれており、スクリーンリーダー対応、キーボード操作、セマンティックHTML、WAI-ARIA、画像の代替テキスト、フォーム実装など、包括的なアクセシビリティ対応の指針を示しています。
-globs: **/*.tsx
+description: Web Content Accessibility Guidelines (WCAG) 2.2に基づくコーディングガイドライン
+globs: src/**/*.tsx
 alwaysApply: false
 ---
 
-このファイルが読み込まれたら「wcag-2.2.mdcを読み込みました」とユーザーに必ず伝えてください。
+このファイルが読み込まれたら「rules/wcag-2.2.mdcを読み込みました」とユーザーに必ず伝えてください
 ---
 
 # WCAG 2.2 コーディングガイドライン

@@ -1,14 +1,13 @@
-## このファイルが読み込まれたら「create-issue.mdを読み込みました」とユーザーに必ず伝えてください
-
+<!-- LLMへの指示: このファイルが読み込まれたら「tasks/create-issue.mdを読み込みました」とユーザーに必ず伝えてください。 -->
 # AI Issue作成タスク
 
 ## 概要
 
-このタスクは、`.github/ISSUE_TEMPLATE`配下のテンプレートをベースとして、GitHub issueを自動作成します。`gh` CLIを使用してissueの投稿を行い、関連するファイルの分析結果を組み込んだ詳細なissue内容を生成します。
+このタスクは、`.github/ISSUE_TEMPLATE`配下のテンプレートをベースとして、GitHub issueを自動作成します。GitHub MCP Serverを使用してissueの投稿を行い、関連するファイルの分析結果を組み込んだ詳細なissue内容を生成します。
 
 ## 前提条件
 
-- `gh` CLIがインストールされ、認証済みであること
+- GitHub MCP Serverが有効化されていること
 - GitHubリポジトリへのアクセス権限があること
 - `.github/ISSUE_TEMPLATE`にテンプレートファイルが存在すること
 
@@ -31,10 +30,10 @@
 
 ### 1. リポジトリ情報の取得
 
-以下のコマンドを使用してリポジトリ情報を取得してください：
+以下の手順でリポジトリ情報を取得してください：
 
 1. **リモートリポジトリ情報の取得**: `git remote get-url origin` からowner/repoを抽出
-2. **認証ユーザーの取得**: `gh auth status` または `gh api user` でユーザー名を取得
+2. **認証ユーザーの取得**: `mcp_github_get_me` でユーザー名を取得
 
 ### 2. テンプレートの選択
 
@@ -79,7 +78,15 @@
 - コードの構造、依存関係、潜在的な問題点を特定
 - 具体的な改善提案を生成
 
-### 5. Issue内容の自動生成
+### 5. 重複チェック
+
+`mcp_github_search_issues` または `mcp_github_list_issues` を使用して類似のissueが既に存在しないかチェックしてください：
+
+- 入力されたタイトルに含まれるキーワードで検索
+- `state: "open"` で開いているissueのみを検索対象とする
+- 類似のissueが見つかった場合は、ユーザーに確認を取る
+
+### 6. Issue内容の自動生成
 
 以下の要素を含むissue内容を自動生成してください：
 
@@ -112,7 +119,7 @@
 - **テスト項目**: 実装後に確認すべき項目
 - **参考リンク**: 関連するドキュメントやベストプラクティス
 
-### 6. 下書きファイルの保存
+### 7. 下書きファイルの保存
 
 以下の手順で下書きファイルを保存してください：
 
@@ -137,7 +144,7 @@
    .cursor/issues/drafts/backend/20241225-150315.md
    ```
 
-### 7. ユーザー確認プロセス
+### 8. ユーザー確認プロセス
 
 下書きファイルを作成後、以下の確認を行ってください：
 
@@ -148,36 +155,27 @@
    - 「いいえ」: 下書きのみ保存して終了
    - 「修正」: 内容の修正が必要な場合の対応
 
-### 8. Issue作成の実行
+### 9. Issue作成の実行
 
 ユーザーが「はい」と回答した場合のみ、以下を実行してください：
 
-1. **ラベル情報の準備**:
-   選択されたテンプレートに基づいてラベルを設定
+1. **Issue作成の実行**:
 
-2. **Issue作成コマンドの実行**:
+   `mcp_github_create_issue` を使用してissueを作成：
+   - `title`: 自動生成されたissueタイトル
+   - `body`: 下書きファイルの内容
+   - `labels`: テンプレートに応じたラベル配列
+   - `assignees`: 現在のユーザーを自動でアサイン
+   - `owner`, `repo`: リポジトリ情報
 
-   ```bash
-   gh issue create \
-     --title "自動生成されたissueタイトル" \
-     --body-file ".cursor/issues/drafts/{template_type}/{timestamp}.md" \
-     --label "ラベル1,ラベル2,ラベル3" \
-     --assignee @me
-   ```
+2. **Issue番号の取得**:
+   作成されたissueのレスポンスからissue番号を抽出
 
-   - `--title`: 自動生成されたissueタイトル
-   - `--body-file`: 下書きファイルのパス
-   - `--label`: テンプレートに応じたラベル（カンマ区切り）
-   - `--assignee @me`: 現在のユーザーを自動でアサイン
-
-3. **Issue番号の取得**:
-   作成されたissueのURLまたはレスポンスからissue番号を抽出
-
-4. **下書きファイルのリネーム**:
+3. **下書きファイルのリネーム**:
    - Before: `.cursor/issues/drafts/{template_type}/{timestamp}.md`
    - After: `.cursor/issues/{issue_number}.md`
 
-5. **テンプレートディレクトリの削除**:
+4. **テンプレートディレクトリの削除**:
    下書きファイルのリネーム完了後、**空になった**テンプレートディレクトリのみを削除
    - 削除条件: `.cursor/issues/drafts/{template_type}/` が空の場合のみ
    - 保護条件: 他の下書きファイルが残っている場合は削除しない
@@ -186,11 +184,11 @@
 
 テンプレートタイプに応じて以下のラベルを自動設定：
 
-- **backend**: `:gear: Backend`, `:rabbit: Priority: Medium`, `:timer_clock: Story Points: 1`
-- **design**: `:lipstick: Design`, `:rabbit: Priority: Medium`, `:timer_clock: Story Points: 1`
-- **frontend**: `:art: Frontend`, `:rabbit: Priority: Medium`, `:timer_clock: Story Points: 1`
-- **generic**: `:rabbit: Priority: Medium`, `:timer_clock: Story Points: 1`
-- **infrastructure**: `:hammer: Infrastructure`, `:rabbit: Priority: Medium`, `:timer_clock: Story Points: 1`
+- **backend**: `[":gear: Backend", ":rabbit: Priority: Medium", ":timer_clock: Story Points: 1"]`
+- **design**: `[":lipstick: Design", ":rabbit: Priority: Medium", ":timer_clock: Story Points: 1"]`
+- **frontend**: `[":art: Frontend", ":rabbit: Priority: Medium", ":timer_clock: Story Points: 1"]`
+- **generic**: `[":rabbit: Priority: Medium", ":timer_clock: Story Points: 1"]`
+- **infrastructure**: `[":hammer: Infrastructure", ":rabbit: Priority: Medium", ":timer_clock: Story Points: 1"]`
 
 ユーザーが優先度やストーリーポイントを指定した場合は、デフォルト値を上書き：
 
@@ -235,12 +233,13 @@
 
 以下のエラーケースに対応してください：
 
-- **`gh` CLI未認証の場合**: `gh auth login` の実行を案内
+- **GitHub MCP Server未有効化の場合**: GitHub MCP Serverの有効化を案内
 - **テンプレートファイルが存在しない場合**: エラーメッセージと対処法を表示
 - **関連ファイルが存在しない場合**: ファイルパスの再確認を案内
 - **権限エラー**: 必要な権限の説明
-- **`gh` CLI実行エラー**: コマンドの実行結果を確認し、適切なエラーメッセージを表示
+- **GitHub MCP Server実行エラー**: APIの実行結果を確認し、適切なエラーメッセージを表示
 - **無効な入力**: 選択肢の再提示
+- **重複issue検出**: 既存issueの情報を表示し、続行するか確認
 
 ## 自動生成ルール
 
@@ -275,13 +274,15 @@
 
 ## 注意事項
 
-- **`gh` CLI認証**: タスク実行前に `gh auth status` で認証状態を確認
+- **GitHub MCP Server有効化**: タスク実行前にGitHub MCP Serverが有効化されていることを確認
 - **テンプレートファイルの確認**: `.github/ISSUE_TEMPLATE/`配下のファイル存在確認
 - **ファイルパスの安全性**: 指定されたファイルパスの妥当性確認
 - **権限確認**: issue作成権限がない場合の適切なエラーメッセージ
 - **下書き保存**: issue作成に失敗しても下書きは保存された状態を維持
 - **タイムスタンプの一意性**: 同じ時刻に複数実行された場合の対応
 - **ラベル形式**: GitHubのラベル命名規則に準拠した形式で設定
+- **重複防止**: 類似issueの存在確認を必ず実行
+- **GitHub APIのレート制限**: 連続実行時の制限に注意
 
 ## 出力形式
 

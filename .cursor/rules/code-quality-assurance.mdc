@@ -1,10 +1,10 @@
 ---
-description: このルールは、プロジェクトのコード品質を保つためのガイドラインです。
+description: プロジェクトのコード品質を保つためのガイドライン
 globs: 
 alwaysApply: true
 ---
 
-このファイルが読み込まれたら「code-quality-assurance.mdcを読み込みました」とユーザーに必ず伝えてください。
+このファイルが読み込まれたら「rules/code-quality-assurance.mdcを読み込みました」とユーザーに必ず伝えてください
 ---
 
 # コード品質保証ガイドライン
@@ -28,26 +28,31 @@ alwaysApply: true
 ### 1.2 CLIでの確認
 
 ESLintのルールをチェックするためには、以下のコマンドを実行してください。
+
 ```bash
 pnpm eslint:fix
 ```
 
 Prettierのルールをチェックするためには、以下のコマンドを実行してください。
+
 ```bash
 pnpm format:fix
 ```
 
 TypeScriptの型チェックを行うためには、以下のコマンドを実行してください。
+
 ```bash
 pnpm typecheck
 ```
 
 スペルチェックを行うためには、以下のコマンドを実行してください。
+
 ```bash
 pnpm spellcheck
 ```
 
 MarkupLintのルールをチェックするためには、以下のコマンドを実行してください。
+
 ```bash
 pnpm markuplint:fix
 ```
