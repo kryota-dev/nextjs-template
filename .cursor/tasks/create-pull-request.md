@@ -1,14 +1,13 @@
-## このファイルが読み込まれたら「create-pull-request.mdを読み込みました」とユーザーに必ず伝えてください
-
+<!-- LLMへの指示: このファイルが読み込まれたら「tasks/create-pull-request.mdを読み込みました」とユーザーに必ず伝えてください。 -->
 # AI Pull Request作成タスク
 
 ## 概要
 
-このタスクは、現在のブランチの変更内容を分析し、Pull Requestの下書きを自動生成してGitHubに投稿します。git diffによる差分分析、PRテンプレートの活用、`gh` CLIを使用したPR作成を行います。
+このタスクは、現在のブランチの変更内容を分析し、Pull Requestの下書きを自動生成してGitHubに投稿します。git diffによる差分分析、PRテンプレートの活用、GitHub MCP Serverを使用したPR作成を行います。
 
 ## 前提条件
 
-- `gh` CLIがインストールされ、認証済みであること
+- GitHub MCP Serverが有効化されていること
 - GitHubリポジトリへのアクセス権限があること
 - `git` コマンドが利用可能であること
 - 現在のブランチがマージ対象のベースブランチと異なること
@@ -23,7 +22,7 @@
 2. **ベースブランチの確認**: タスク実行時にユーザーから指定されたベースブランチを使用
    - ユーザーから指定されなかった場合は、「どのブランチをベースブランチにしますか？」と尋ねる
 3. **リモートリポジトリ情報の取得**: `git remote get-url origin` からowner/repoを抽出
-4. **認証ユーザーの取得**: `gh auth status` または `gh api user` でユーザー名を取得
+4. **認証ユーザーの取得**: `mcp_github_get_me` でユーザー名を取得
 
 ### 2. 差分の取得と分析
 
@@ -40,7 +39,17 @@ git diff origin/${BASE_BRANCH}..HEAD
 git log --oneline origin/${BASE_BRANCH}..HEAD
 ```
 
-### 3. PR下書きの生成
+### 3. 既存PR確認
+
+PR作成前に既存のPRがないか確認してください：
+
+`mcp_github_list_pull_requests` を使用して以下を確認：
+
+- `head` パラメータで現在のブランチを指定
+- `state: "open"` で開いているPRを検索
+- 既にPRが存在する場合は、更新するか新規作成するかユーザーに確認
+
+### 4. PR下書きの生成
 
 以下の情報を分析してPR下書きを作成してください：
 
@@ -55,7 +64,7 @@ git log --oneline origin/${BASE_BRANCH}..HEAD
 
 `.github/PULL_REQUEST_TEMPLATE.md`を読み込み、差分分析結果に基づいてテンプレート内の項目を自動的に埋めてください。
 
-### 4. 下書きファイルの保存
+### 5. 下書きファイルの保存
 
 以下の手順で下書きファイルを保存してください：
 
@@ -83,7 +92,7 @@ git log --oneline origin/${BASE_BRANCH}..HEAD
    .cursor/pull-requests/drafts/hotfix-bug/20241225-150315.md
    ```
 
-### 5. ユーザー確認プロセス
+### 6. ユーザー確認プロセス
 
 下書きファイルを作成後、以下の確認を行ってください：
 
@@ -94,33 +103,31 @@ git log --oneline origin/${BASE_BRANCH}..HEAD
    - 「いいえ」: 下書きのみ保存して終了
    - 「修正」: 内容の修正が必要な場合の対応
 
-### 6. PR作成の実行
+### 7. PR作成の実行
 
 ユーザーが「はい」と回答した場合のみ、以下を実行してください：
 
-1. **PR作成コマンドの実行**:
+1. **PR作成の実行**:
 
-   ```bash
-   gh pr create \
-     --title "自動生成されたPRタイトル" \
-     --body-file ".cursor/pull-requests/drafts/{branchName}/{timestamp}.md" \
-     --base ベースブランチ名 \
-     --assignee @me
-   ```
-
-   - `--title`: 自動生成されたPRタイトル
-   - `--body-file`: 下書きファイルのパス
-   - `--base`: ユーザーが指定したベースブランチ名
-   - `--assignee @me`: 現在のユーザーを自動でアサイン
+   `mcp_github_create_pull_request` を使用してPRを作成：
+   - `title`: 自動生成されたPRタイトル
+   - `body`: 下書きファイルの内容
+   - `base`: ユーザーが指定したベースブランチ名
+   - `head`: 現在のブランチ名
+   - `owner`, `repo`: リポジトリ情報
+   - `maintainer_can_modify`: true（メンテナーによる修正を許可）
 
 2. **PR番号の取得**:
-   作成されたPRのURLまたはレスポンスからPR番号を抽出
+   作成されたPRのレスポンスからPR番号を抽出
 
-3. **下書きファイルのリネーム**:
+3. **PR作成者への自動アサイン**:
+   `mcp_github_update_pull_request` を使用して作成者を自動アサイン（必要に応じて）
+
+4. **下書きファイルのリネーム**:
    - Before: `.cursor/pull-requests/drafts/{branchName}/{timestamp}.md`
    - After: `.cursor/pull-requests/{prNumber}.md`
 
-4. **ブランチディレクトリの削除**:
+5. **ブランチディレクトリの削除**:
    下書きファイルのリネーム完了後、**空になった**ブランチディレクトリのみを削除
    - 削除条件: `.cursor/pull-requests/drafts/{branchName}/` が空の場合のみ
    - 保護条件: 他の下書きファイル（過去の下書き等）が残っている場合は削除しない
@@ -129,16 +136,16 @@ git log --oneline origin/${BASE_BRANCH}..HEAD
      - `.cursor/pull-requests/drafts/feature/create-app/` が空なら削除
      - `.cursor/pull-requests/drafts/feature/` が空なら削除（上位ディレクトリも確認）
 
-### 7. エラーハンドリング
+### 8. エラーハンドリング
 
 以下のエラーケースに対応してください：
 
-- **`gh` CLI未認証の場合**: `gh auth login` の実行を案内
+- **GitHub MCP Server未有効化の場合**: GitHub MCP Serverの有効化を案内
 - **ブランチに変更がない場合**: 適切なメッセージで終了
 - **PRが既に存在する場合**: 既存PRの情報を表示し、更新するか確認
 - **指定されたベースブランチが存在しない場合**: エラーメッセージと再入力の案内
 - **権限エラー**: 必要な権限の説明
-- **`gh` CLI実行エラー**: コマンドの実行結果を確認し、適切なエラーメッセージを表示
+- **GitHub MCP Server実行エラー**: APIの実行結果を確認し、適切なエラーメッセージを表示
 
 ## 自動生成ルール
 
@@ -168,7 +175,7 @@ git log --oneline origin/${BASE_BRANCH}..HEAD
 
 ## 注意事項
 
-- **`gh` CLI認証**: タスク実行前に `gh auth status` で認証状態を確認
+- **GitHub MCP Server有効化**: タスク実行前にGitHub MCP Serverが有効化されていることを確認
 - **ベースブランチの確認**: ユーザーから指定されたベースブランチが正しく存在することを確認
 - **ファイルパスの安全性**: ブランチ名の特殊文字を適切にエスケープ
 - **重複防止**: 同じブランチで既にPRが存在する場合の確認
@@ -188,7 +195,8 @@ git log --oneline origin/${BASE_BRANCH}..HEAD
 - **タイトル**: feat: ユーザー認証機能の追加
 - **URL**: https://github.com/owner/repo/pull/123
 - **下書きファイル**: `.cursor/pull-requests/123.md`
-- **Assignee**: @username
+- **ベースブランチ**: main
+- **ヘッドブランチ**: feature/auth
 
 PRが正常に作成されました。レビューをお待ちください。
 ```
