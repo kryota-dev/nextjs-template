@@ -3,7 +3,7 @@ import { LinkButton } from '@/components/common/LinkButton'
 export default function Home() {
   return (
     <main className='flex flex-col items-start gap-[32px] p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20'>
-      <h1 className='text-4xl font-bold'>Hello World</h1>
+      <h2 className='text-4xl font-bold'>Hello World</h2>
       <p className='text-lg'>
         This is a boilerplate for Next.js static export.
       </p>

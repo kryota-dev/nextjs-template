@@ -30,6 +30,10 @@ const preview: Preview = {
 
     layout: 'fullscreen',
 
+    nextjs: {
+      appDirectory: true,
+    },
+
     chromatic: {
       modes: {
         iphone: {
