@@ -1,12 +1,12 @@
+type Props = Readonly<{
+  children: React.ReactNode
+}>
+
 /**
  * {{componentName}}LayoutPresentation
  * @description Shared Components or Client Components
  */
-export const {{componentName}}LayoutPresentation = ({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) => {
+export const {{componentName}}LayoutPresentation = ({ children }: Props) => {
   return (
     <main>
       <h2>{{componentName}}Layout</h2>

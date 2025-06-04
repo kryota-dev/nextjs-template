@@ -11,6 +11,12 @@ import { geistMono, geistSans } from '@/styles/fonts'
 
 import '@/styles/globals.css'
 
+type Props = Readonly<{
+  children: React.ReactNode
+  jsonld: React.ReactNode | null
+  storybook?: boolean
+}>
+
 /**
  * RootLayoutPresentation
  * @description Shared Components or Client Components
@@ -19,11 +25,7 @@ export const RootLayoutPresentation = ({
   children,
   jsonld,
   storybook = false,
-}: Readonly<{
-  children: React.ReactNode
-  jsonld: React.ReactNode | null
-  storybook?: boolean
-}>) => {
+}: Props) => {
   /** htmlタグ（storybookの場合はdiv） */
   const Html = storybook ? 'div' : 'html'
   /** bodyタグ（storybookの場合はdiv） */
