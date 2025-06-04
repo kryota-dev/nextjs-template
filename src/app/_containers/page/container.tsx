@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { getPosts, getPostComments } from '@/libs/jsonplaceholder'
 
 import { HomePagePresentation } from './presentation'

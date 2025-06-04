@@ -8,7 +8,7 @@ export function Navigation() {
           <div className='flex'>
             <div className='flex flex-shrink-0 items-center'>
               <Link
-                href='/top'
+                href='/'
                 className='text-xl font-bold text-gray-900 transition-colors hover:text-blue-600'
               >
                 Blog App
@@ -16,7 +16,7 @@ export function Navigation() {
             </div>
             <div className='hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8'>
               <Link
-                href='/top'
+                href='/'
                 className='rounded-md px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:text-blue-600'
               >
                 トップ

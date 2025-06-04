@@ -1,9 +1,10 @@
 import 'server-only'
 
-import { Navigation } from '@/components/layouts/Navigation'
+import { RootLayoutContainer } from './_containers/layout'
 import '@/styles/globals.css'
 
 import type { Metadata } from 'next'
+import type { ComponentProps } from 'react'
 
 export const metadata: Metadata = {
   title: {
@@ -13,19 +14,8 @@ export const metadata: Metadata = {
   description: 'JSONPlaceholderを使用したブログアプリケーション',
 }
 
-interface RootLayoutProps {
-  children: React.ReactNode
-}
+type Props = ComponentProps<typeof RootLayoutContainer>
 
-export default function RootLayout({ children }: RootLayoutProps) {
-  return (
-    <html lang='ja'>
-      <body className='min-h-screen bg-gray-50'>
-        <Navigation />
-        <main className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
-          {children}
-        </main>
-      </body>
-    </html>
-  )
+export default function RootLayout(props: Props) {
+  return <RootLayoutContainer {...props} />
 }

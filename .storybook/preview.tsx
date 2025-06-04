@@ -1,11 +1,10 @@
 // MSWの初期化（msw-storybook-addonが自動的に処理）
 import { initialize, mswLoader } from 'msw-storybook-addon'
 
+import { handlers } from '@/libs/msw/handlers'
 import { cn } from '@/libs/stylings'
 
 import { geistMono, geistSans } from '@/styles/fonts'
-
-import { handlers } from '@/libs/msw/handlers'
 
 import type { Preview } from '@storybook/nextjs-vite'
 

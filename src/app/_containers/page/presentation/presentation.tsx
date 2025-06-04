@@ -2,15 +2,12 @@ import { PostCard } from '@/components/common/PostCard'
 
 import type { Post } from '@/libs/jsonplaceholder'
 
-interface HomePagePresentationProps {
+type Props = {
   posts: (Post & { commentCount: number })[]
   error?: string
 }
 
-export function HomePagePresentation({
-  posts,
-  error,
-}: HomePagePresentationProps) {
+export function HomePagePresentation({ posts, error }: Props) {
   if (error) {
     return (
       <div className='py-12 text-center'>

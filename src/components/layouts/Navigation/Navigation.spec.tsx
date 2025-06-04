@@ -27,14 +27,14 @@ describe('Navigation', () => {
       render(<Navigation />)
 
       const blogAppLink = screen.getByRole('link', { name: 'Blog App' })
-      expect(blogAppLink).toHaveAttribute('href', '/top')
+      expect(blogAppLink).toHaveAttribute('href', '/')
     })
 
     it('トップページリンクが正しいhrefを持つ', () => {
       render(<Navigation />)
 
       const topLink = screen.getByRole('link', { name: 'トップ' })
-      expect(topLink).toHaveAttribute('href', '/top')
+      expect(topLink).toHaveAttribute('href', '/')
     })
 
     it('記事一覧リンクが正しいhrefを持つ', () => {
