@@ -1,15 +1,15 @@
 import { getPosts, getPostComments } from '@/libs/jsonplaceholder'
 
-import { HomePagePresentation } from './presentation'
+import { PostsPagePresentation } from './presentation'
 
-export async function HomePageContainer() {
+export async function PostsPageContainer() {
   try {
     const posts = await getPosts()
-    const topPosts = posts.slice(0, 5)
 
-    // 各投稿のコメント数を取得
+    // 各投稿のコメント数を取得（最初の10件のみ）
+    const displayPosts = posts.slice(0, 10)
     const postsWithCommentCount = await Promise.all(
-      topPosts.map(async (post) => {
+      displayPosts.map(async (post) => {
         try {
           const comments = await getPostComments(post.id)
           return { ...post, commentCount: comments.length }
@@ -20,9 +20,9 @@ export async function HomePageContainer() {
       }),
     )
 
-    return <HomePagePresentation posts={postsWithCommentCount} />
+    return <PostsPagePresentation posts={postsWithCommentCount} />
   } catch {
     // エラーが発生した場合は空の配列とエラーメッセージを渡す
-    return <HomePagePresentation posts={[]} error='記事の取得に失敗しました' />
+    return <PostsPagePresentation posts={[]} error='記事の取得に失敗しました' />
   }
 }

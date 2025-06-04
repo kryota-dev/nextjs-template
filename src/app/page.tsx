@@ -1,7 +1,5 @@
-import 'server-only'
-
 import { HomePageContainer } from './_containers/page'
 
-export default function Home() {
+export default function HomePage() {
   return <HomePageContainer />
 }

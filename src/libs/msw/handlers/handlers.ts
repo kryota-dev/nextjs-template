@@ -1,5 +1,7 @@
 import { http, HttpResponse, graphql } from 'msw'
 
+import { jsonplaceholderHandlers } from './jsonplaceholder'
+
 /**
  * MSW リクエストハンドラー
  * テストやStorybook環境でAPIリクエストをモックするためのハンドラー定義
@@ -100,4 +102,8 @@ export const graphqlHandlers = [
 ]
 
 // すべてのハンドラーをエクスポート
-export const handlers = [...restHandlers, ...graphqlHandlers]
+export const handlers = [
+  ...restHandlers,
+  ...graphqlHandlers,
+  ...jsonplaceholderHandlers,
+]

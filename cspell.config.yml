@@ -1,5 +1,5 @@
 $schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json
-version: "0.2"
+version: '0.2'
 language: en
 allowCompoundWords: true
 useGitignore: true
@@ -12,6 +12,118 @@ words:
   - noto
   - Ryota
   - vitest
+  - accusantium
+  - adipisci
+  - adipiscing
+  - aliquid
+  - amet
+  - animi
+  - aperiam
+  - architecto
+  - aspernatur
+  - atque
+  - aute
+  - autem
+  - beatae
+  - blanditiis
+  - cillum
+  - consequat
+  - consequatur
+  - consequuntur
+  - cupiditate
+  - debitis
+  - delectus
+  - deleniti
+  - deserunt
+  - doloribus
+  - ducimus
+  - Duis
+  - eaque
+  - earum
+  - eiusmod
+  - eligendi
+  - elit
+  - enim
+  - eius
+  - eveniet
+  - excepturi
+  - exercitationem
+  - expedita
+  - explicabo
+  - fugiat
+  - harum
+  - illo
+  - incididunt
+  - ipsa
+  - ipsam
+  - irure
+  - iste
+  - itaque
+  - iure
+  - iusto
+  - labore
+  - laboris
+  - laborum
+  - laudantium
+  - magni
+  - molestiae
+  - natus
+  - necessitatibus
+  - neque
+  - nesciunt
+  - nfugiat
+  - nharum
+  - nobis
+  - nomnis
+  - noccaecati
+  - nostrud
+  - nquis
+  - nreiciendis
+  - nsequi
+  - nsuscipit
+  - nreprehenderit
+  - nulla
+  - numquam
+  - nvoluptatem
+  - occaecat
+  - occaecati
+  - odio
+  - odit
+  - officia
+  - omnis
+  - optio
+  - pariatur
+  - perspiciatis
+  - porro
+  - proident
+  - quas
+  - quis
+  - ratione
+  - recusandae
+  - reiciendis
+  - reprehenderit
+  - repudiandae
+  - rerum
+  - saepe
+  - sapiente
+  - similique
+  - sunt
+  - suscipit
+  - tempor
+  - tenetur
+  - totam
+  - ullam
+  - ullamco
+  - unde
+  - velit
+  - veniam
+  - veritatis
+  - vero
+  - voluptas
+  - voluptate
+  - voluptatem
+  - voluptates
+  - voluptatibus
 ignorePaths:
   - package.json
   - pnpm-lock.yaml
