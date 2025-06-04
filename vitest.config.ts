@@ -121,7 +121,7 @@ export default defineConfig({
         'src/app/robots.ts',
         'src/app/sitemap.ts',
         'src/app/**/{page,layout,default}.tsx',
-        'src/libs/msw/{browser,node}.ts',
+        'src/libs/msw/{browser,node,nextjs}.ts',
       ],
     },
     projects: [unitConfig, storybookConfig],
