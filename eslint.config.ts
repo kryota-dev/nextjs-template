@@ -149,10 +149,7 @@ const eslintConfig = [
   },
   {
     files: ['src/app/**/*.tsx'],
-    ignores: [
-      'src/app/**/_components/**/*.tsx',
-      'src/app/**/_containers/**/*.tsx',
-    ],
+    ignores: ['src/app/**/{_components,_containers}/**/*.tsx'],
     rules: {
       // Next.jsのページコンポーネントでは、default exportを強制
       'import/prefer-default-export': 'error',
