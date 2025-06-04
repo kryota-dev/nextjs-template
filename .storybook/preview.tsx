@@ -5,7 +5,7 @@ import { cn } from '@/libs/stylings'
 
 import { geistMono, geistSans } from '@/styles/fonts'
 
-import { handlers } from '@/mocks/handlers'
+import { handlers } from '@/libs/msw/handlers'
 
 import type { Preview } from '@storybook/nextjs-vite'
 
