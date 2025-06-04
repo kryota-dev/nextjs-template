@@ -4,7 +4,7 @@
  * Plop設定ファイル
  * @param {import('plop').NodePlopAPI} plop
  */
-export default function (plop) {
+function setupPlop(plop) {
   // ヘルパー関数の設定
   plop.setHelper('pascalCase', (text) => {
     return text
@@ -68,11 +68,6 @@ export default function (plop) {
     return ''
   }
 
-  // App Routerページ用のstoryTitle生成関数
-  const generatePageStoryTitle = (pagePath) => {
-    return `app/${pagePath}/page`
-  }
-
   // コンポーネント名生成
   const generateComponentNameFromPath = (path) => {
     const segments = path.split('/').filter(Boolean)
@@ -115,6 +110,45 @@ export default function (plop) {
       templateFile: '.plop/component/index.ts.hbs',
     },
   ]
+
+  // Container/Presentational pattern用のファイル生成アクション
+  const createContainerPresentationalActions = (basePath, componentType) => {
+    const actions = []
+
+    // Container files
+    actions.push({
+      type: 'add',
+      path: `${basePath}/_containers/${componentType}/container.tsx`,
+      templateFile: `.plop/app_component/_containers/${componentType}/container.tsx.hbs`,
+    })
+
+    actions.push({
+      type: 'add',
+      path: `${basePath}/_containers/${componentType}/index.ts`,
+      templateFile: `.plop/app_component/_containers/${componentType}/index.ts.hbs`,
+    })
+
+    // Presentation files
+    actions.push({
+      type: 'add',
+      path: `${basePath}/_containers/${componentType}/presentation/presentation.tsx`,
+      templateFile: `.plop/app_component/_containers/${componentType}/presentation/presentation.tsx.hbs`,
+    })
+
+    actions.push({
+      type: 'add',
+      path: `${basePath}/_containers/${componentType}/presentation/presentation.stories.tsx`,
+      templateFile: `.plop/app_component/_containers/${componentType}/presentation/presentation.stories.tsx.hbs`,
+    })
+
+    actions.push({
+      type: 'add',
+      path: `${basePath}/_containers/${componentType}/presentation/index.ts`,
+      templateFile: `.plop/app_component/_containers/${componentType}/presentation/index.ts.hbs`,
+    })
+
+    return actions
+  }
 
   // Reactコンポーネント生成
   plop.setGenerator('component', {
@@ -251,20 +285,26 @@ export default function (plop) {
       },
       {
         type: 'confirm',
-        name: 'includeStory',
-        message: 'Storybookファイルも生成しますか？',
-        default: true,
-      },
-      {
-        type: 'confirm',
         name: 'confirmGeneration',
         message: (answers) => {
-          const files = [`src/app/${answers.pagePath}/page.tsx`]
+          const files = [
+            `src/app/${answers.pagePath}/page.tsx`,
+            `src/app/${answers.pagePath}/_containers/page/container.tsx`,
+            `src/app/${answers.pagePath}/_containers/page/index.ts`,
+            `src/app/${answers.pagePath}/_containers/page/presentation/presentation.tsx`,
+            `src/app/${answers.pagePath}/_containers/page/presentation/presentation.stories.tsx`,
+            `src/app/${answers.pagePath}/_containers/page/presentation/index.ts`,
+          ]
+
           if (answers.includeLayout) {
-            files.push(`src/app/${answers.pagePath}/layout.tsx`)
-          }
-          if (answers.includeStory) {
-            files.push(`src/app/${answers.pagePath}/page.stories.tsx`)
+            files.push(
+              `src/app/${answers.pagePath}/layout.tsx`,
+              `src/app/${answers.pagePath}/_containers/layout/container.tsx`,
+              `src/app/${answers.pagePath}/_containers/layout/index.ts`,
+              `src/app/${answers.pagePath}/_containers/layout/presentation/presentation.tsx`,
+              `src/app/${answers.pagePath}/_containers/layout/presentation/presentation.stories.tsx`,
+              `src/app/${answers.pagePath}/_containers/layout/presentation/index.ts`,
+            )
           }
 
           const details = [
@@ -281,19 +321,7 @@ export default function (plop) {
             ])
           }
 
-          details.push([
-            '📚',
-            'Storybook生成',
-            answers.includeStory ? 'あり' : 'なし',
-          ])
-
-          if (answers.includeStory) {
-            details.push([
-              '📚',
-              'Storybookタイトル',
-              generatePageStoryTitle(answers.pagePath),
-            ])
-          }
+          details.push(['📚', 'Storybook', 'presentation.stories.tsx を生成'])
 
           return generateConfirmMessage(
             '以下の内容でページを生成します',
@@ -313,25 +341,23 @@ export default function (plop) {
           path: 'src/app/{{pagePath}}/page.tsx',
           templateFile: '.plop/app_component/page.tsx.hbs',
         },
+        // Container/Presentational pattern files for page
+        ...createContainerPresentationalActions('src/app/{{pagePath}}', 'page'),
       ]
 
       if (data.includeLayout) {
-        actions.push({
-          type: 'add',
-          path: 'src/app/{{pagePath}}/layout.tsx',
-          templateFile: '.plop/app_component/layout.tsx.hbs',
-        })
-      }
-
-      if (data.includeStory) {
-        actions.push({
-          type: 'add',
-          path: 'src/app/{{pagePath}}/page.stories.tsx',
-          templateFile: '.plop/app_component/page.stories.tsx.hbs',
-          data: {
-            storyTitle: generatePageStoryTitle(data.pagePath),
+        actions.push(
+          {
+            type: 'add',
+            path: 'src/app/{{pagePath}}/layout.tsx',
+            templateFile: '.plop/app_component/layout.tsx.hbs',
           },
-        })
+          // Container/Presentational pattern files for layout
+          ...createContainerPresentationalActions(
+            'src/app/{{pagePath}}',
+            'layout',
+          ),
+        )
       }
 
       return actions
@@ -344,7 +370,7 @@ export default function (plop) {
     prompts: [
       {
         type: 'input',
-        name: 'layoutPath',
+        name: 'pagePath',
         message: 'レイアウトのパスを入力してください (例: dashboard, blog):',
         validate: (input) => validatePath(input, 'レイアウトパス'),
       },
@@ -352,17 +378,26 @@ export default function (plop) {
         type: 'input',
         name: 'componentName',
         message: 'レイアウトコンポーネント名を入力してください (PascalCase):',
-        default: (answers) => generateComponentNameFromPath(answers.layoutPath),
+        default: (answers) => generateComponentNameFromPath(answers.pagePath),
         validate: (input) => validatePascalCase(input),
       },
       {
         type: 'confirm',
         name: 'confirmGeneration',
         message: (answers) => {
-          const files = [`src/app/${answers.layoutPath}/layout.tsx`]
+          const files = [
+            `src/app/${answers.pagePath}/layout.tsx`,
+            `src/app/${answers.pagePath}/_containers/layout/container.tsx`,
+            `src/app/${answers.pagePath}/_containers/layout/index.ts`,
+            `src/app/${answers.pagePath}/_containers/layout/presentation/presentation.tsx`,
+            `src/app/${answers.pagePath}/_containers/layout/presentation/presentation.stories.tsx`,
+            `src/app/${answers.pagePath}/_containers/layout/presentation/index.ts`,
+          ]
+
           const details = [
-            ['📁', 'レイアウトパス', `/${answers.layoutPath}`],
+            ['📁', 'レイアウトパス', `/${answers.pagePath}`],
             ['📦', 'コンポーネント名', `${answers.componentName}Layout`],
+            ['📚', 'Storybook', 'presentation.stories.tsx を生成'],
           ]
 
           return generateConfirmMessage(
@@ -380,13 +415,17 @@ export default function (plop) {
       return [
         {
           type: 'add',
-          path: 'src/app/{{layoutPath}}/layout.tsx',
+          path: 'src/app/{{pagePath}}/layout.tsx',
           templateFile: '.plop/app_component/layout.tsx.hbs',
-          data: {
-            pagePath: '{{layoutPath}}',
-          },
         },
+        // Container/Presentational pattern files for layout
+        ...createContainerPresentationalActions(
+          'src/app/{{pagePath}}',
+          'layout',
+        ),
       ]
     },
   })
 }
+
+export default setupPlop

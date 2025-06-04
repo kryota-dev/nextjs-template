@@ -1,0 +1,18 @@
+import 'server-only'
+
+import { {{componentName}}LayoutPresentation } from './presentation'
+
+import type { ComponentProps } from 'react'
+
+type Props = Pick<
+  ComponentProps<typeof {{componentName}}LayoutPresentation>,
+  'children'
+>
+
+/**
+ * {{componentName}}LayoutContainer
+ * @description Server Components上でのデータフェッチなどのサーバーサイド処理を行うコンテナコンポーネント
+ */
+export const {{componentName}}LayoutContainer = (props: Props) => {
+  return <{{componentName}}LayoutPresentation {...props} />
+}

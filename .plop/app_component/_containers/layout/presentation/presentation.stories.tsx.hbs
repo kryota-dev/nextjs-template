@@ -1,0 +1,15 @@
+import { {{componentName}}LayoutPresentation } from './presentation'
+
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+
+export default {
+  title: 'app/{{pagePath}}/_containers/layout/presentation',
+  component: {{componentName}}LayoutPresentation,
+  args: {
+    children: <div>Hello World</div>,
+  },
+} satisfies Meta<typeof {{componentName}}LayoutPresentation>
+
+type Story = StoryObj<typeof {{componentName}}LayoutPresentation>
+
+export const Default: Story = {}

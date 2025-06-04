@@ -140,6 +140,7 @@ const eslintConfig = [
       'src/**/*.stories.{ts,tsx}',
       '.storybook/**/*.{ts,tsx}',
       '**/*.config.{js,ts}',
+      'plopfile.mjs',
     ],
     rules: {
       // default exportを許可する

@@ -1,12 +1,11 @@
-export default function {{componentName}}Layout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
-  return (
-    <main>
-      <h2>{{componentName}}Layout</h2>
-      {children}
-    </main>
-  )
+import 'server-only'
+
+import { {{componentName}}LayoutContainer } from './_containers/layout'
+
+import type { ComponentProps } from 'react'
+
+type Props = ComponentProps<typeof {{componentName}}LayoutContainer>
+
+export default function {{componentName}}Layout(props: Props) {
+  return <{{componentName}}LayoutContainer {...props} />
 }
