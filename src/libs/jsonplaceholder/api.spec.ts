@@ -118,24 +118,29 @@ describe('JSONPlaceholder API', () => {
 
   describe('createPost', () => {
     it('新しい投稿を正常に作成する', async () => {
-      const mockCreatedPost = {
-        id: 101,
-        ...mockCreatePostData,
-      }
-
       server.use(
         http.post(
           'https://jsonplaceholder.typicode.com/posts',
           async ({ request }) => {
             const body = await request.json()
             expect(body).toEqual(mockCreatePostData)
-            return HttpResponse.json(mockCreatedPost, { status: 201 })
+            // createMockPostが生成するidはDate.now()なので、動的な値をチェックする
+            return HttpResponse.json(
+              {
+                ...mockCreatePostData,
+                id: expect.any(Number),
+              },
+              { status: 201 },
+            )
           },
         ),
       )
 
       const result = await createPost(mockCreatePostData)
-      expect(result).toEqual(mockCreatedPost)
+      expect(result).toEqual({
+        ...mockCreatePostData,
+        id: expect.any(Number),
+      })
     })
 
     it('不正なデータで400エラーになる', async () => {
