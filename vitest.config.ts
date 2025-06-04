@@ -120,7 +120,7 @@ export default defineConfig({
         'src/**/?(_)data/**/*.ts',
         'src/app/robots.ts',
         'src/app/sitemap.ts',
-        'src/app/**/layout.tsx',
+        'src/app/**/{page,layout,default}.tsx',
         'src/libs/msw/browser.ts',
         'src/libs/msw/node.ts',
       ],
