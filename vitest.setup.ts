@@ -1,6 +1,8 @@
-import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, vi } from 'vitest'
+
+import { server } from '@/libs/msw/node'
+import '@testing-library/jest-dom/vitest'
 
 // 環境変数をモック
 vi.mock('@/config', () => ({
@@ -8,8 +10,7 @@ vi.mock('@/config', () => ({
 }))
 
 beforeAll(() => {
-  // TODO: MSW追加後にコメントアウトを外す
-  // server.listen()
+  server.listen()
 
   // JSDOMではHTMLCanvasElement.prototype.getContextが定義されていないため、モックを定義
   if (typeof global.HTMLCanvasElement !== 'undefined') {
@@ -23,11 +24,9 @@ beforeAll(() => {
 
 afterEach(() => {
   cleanup()
-  // TODO: MSW追加後にコメントアウトを外す
-  // server.resetHandlers()
+  server.resetHandlers()
 })
 
 afterAll(() => {
-  // TODO: MSW追加後にコメントアウトを外す
-  // server.close()
+  server.close()
 })

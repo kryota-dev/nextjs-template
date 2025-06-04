@@ -31,16 +31,15 @@ pnpm generate:component
     - `common` - 共通コンポーネント
     - `layouts` - レイアウトコンポーネント
   - **app/の場合**:
-    - `_components` - app直下のページ用
-    - `route_components` - 特定ルート用（ルート名の入力が必要）
-- **ルート名** (route_componentsの場合のみ): 例: `news`, `blog`
+    - `page_presentation_components` - ページPresentation内用（ルート名の入力が必要）
+    - `layout_presentation_components` - レイアウトPresentation内用（ルート名の入力が必要）
+- **ルート名** (page_presentation_components、layout_presentation_componentsの場合): 例: `news`, `blog`
 - **生成確認**: 生成内容の最終確認
 
 **Storybookタイトルの自動生成:**
 
 - `src/components/common/Button` → `components/common/Button`
-- `src/app/_components/MainCarousel` → `app/_components/MainCarousel`
-- `src/app/news/_components/NewsCard` → `app/news/_components/NewsCard`
+- `src/app/news/_containers/page/presentation/_components/NewsCard` → `app/news/_containers/page/presentation/_components/NewsCard`
 
 ### 2. page - App Routerページ生成
 
@@ -170,32 +169,33 @@ pnpm generate:component
 **生成先**: `src/components/common/Button/`
 **Storybookタイトル**: `components/common/Button`
 
-#### ニュースルート固有のNewsCardコンポーネントの生成
+#### ニュースルート固有のNewsCardコンポーネントの生成（ページPresentation内）
 
 ```bash
 pnpm generate:component
 # コンポーネント名: NewsCard
 # 配置場所: app/ - ページ固有コンポーネント
-# コンポーネントの種類: 特定ルート用 ([route]/_components)
+# コンポーネントの種類: ページPresentation内用 ([route]/_containers/page/presentation/_components)
 # ルート名: news
 # 生成確認: はい
 ```
 
-**生成先**: `src/app/news/_components/NewsCard/`
-**Storybookタイトル**: `app/news/_components/NewsCard`
+**生成先**: `src/app/news/_containers/page/presentation/_components/NewsCard/`
+**Storybookタイトル**: `app/news/_containers/page/presentation/_components/NewsCard`
 
-#### app直下のページ用MainCarouselコンポーネントの生成
+#### ブログルート固有のSidebarコンポーネントの生成（レイアウトPresentation内）
 
 ```bash
 pnpm generate:component
-# コンポーネント名: MainCarousel
+# コンポーネント名: Sidebar
 # 配置場所: app/ - ページ固有コンポーネント
-# コンポーネントの種類: app直下のページ用 (_components)
+# コンポーネントの種類: レイアウトPresentation内用 ([route]/_containers/layout/presentation/_components)
+# ルート名: blog
 # 生成確認: はい
 ```
 
-**生成先**: `src/app/_components/MainCarousel/`
-**Storybookタイトル**: `app/_components/MainCarousel`
+**生成先**: `src/app/blog/_containers/layout/presentation/_components/Sidebar/`
+**Storybookタイトル**: `app/blog/_containers/layout/presentation/_components/Sidebar`
 
 #### Aboutページの生成（Storybookあり）
 
@@ -245,10 +245,12 @@ pnpm generate:layout
 
 ### app/ - ページ固有コンポーネント
 
-- **app/\_components**: app直下のページ（主にトップページ）に紐づくコンポーネント
-  - 例: `MainCarousel`, `HeroSection`
-- **app/[route]/\_components**: 特定のルート内でのみ使用するコンポーネント
-  - 例: `app/news/_components/NewsCard`, `app/blog/_components/BlogPost`
+- **app/[route]/\_containers/page/presentation/\_components**: 特定ルートのページPresentation内で使用するコンポーネント
+  - 例: `app/news/_containers/page/presentation/_components/NewsCard`, `app/blog/_containers/page/presentation/_components/ArticleCard`
+- **app/[route]/\_containers/layout/presentation/\_components**: 特定ルートのレイアウトPresentation内で使用するコンポーネント
+  - 例: `app/blog/_containers/layout/presentation/_components/Sidebar`, `app/dashboard/_containers/layout/presentation/_components/Navigation`
+- **app/[route]/\_containers**: Container/Presentationalパターンのファイル群
+  - ページ・レイアウトのロジックとUI分離
 
 ## テンプレートファイル
 
