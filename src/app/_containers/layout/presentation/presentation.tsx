@@ -24,11 +24,13 @@ export const RootLayoutPresentation = ({
   jsonld: React.ReactNode | null
   storybook?: boolean
 }>) => {
-  const Parent = storybook ? 'div' : 'html'
+  /** htmlタグ（storybookの場合はdiv） */
+  const Html = storybook ? 'div' : 'html'
+  /** bodyタグ（storybookの場合はdiv） */
   const Body = storybook ? 'div' : 'body'
 
   return (
-    <Parent {...(storybook ? {} : { lang: 'ja' })}>
+    <Html {...(storybook ? {} : { lang: 'ja' })}>
       {!storybook && (
         <>
           <head>{jsonld}</head>
@@ -56,6 +58,6 @@ export const RootLayoutPresentation = ({
         </Footer>
         <GoogleTagManagerNoscript />
       </Body>
-    </Parent>
+    </Html>
   )
 }

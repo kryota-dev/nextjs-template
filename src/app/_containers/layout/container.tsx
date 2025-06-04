@@ -4,7 +4,10 @@ import { RootLayoutPresentation } from './presentation'
 
 import type { ComponentProps } from 'react'
 
-type Props = ComponentProps<typeof RootLayoutPresentation>
+type Props = Pick<
+  ComponentProps<typeof RootLayoutPresentation>,
+  'children' | 'jsonld'
+>
 
 /**
  * RootLayoutContainer

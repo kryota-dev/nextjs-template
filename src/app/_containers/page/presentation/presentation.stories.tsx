@@ -8,6 +8,22 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 export default {
   title: 'app/_containers/page/presentation',
   component: HomePagePresentation,
+  args: {
+    title: 'Hello World',
+    description: 'This is a boilerplate for Next.js static export.',
+    links: [
+      {
+        label: 'GitHub',
+        href: 'https://github.com/kryota-dev/nextjs-static-export-template',
+        variant: 'primary',
+      },
+      {
+        label: 'Ask DeepWiki',
+        href: 'https://deepwiki.com/kryota-dev/nextjs-static-export-template',
+        variant: 'secondary',
+      },
+    ],
+  },
 } satisfies Meta<typeof HomePagePresentation>
 
 type Story = StoryObj<typeof HomePagePresentation>
