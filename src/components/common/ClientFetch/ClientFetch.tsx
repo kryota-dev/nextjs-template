@@ -26,7 +26,9 @@ export const ClientFetch = () => {
         setLoading(true)
         setError(null)
 
-        const response = await fetch('https://api.example.com/user')
+        const response = await fetch('https://api.example.com/user', {
+          signal: controller.signal,
+        })
 
         if (!response.ok) {
           throw new Error('Failed to fetch user')
@@ -35,7 +37,11 @@ export const ClientFetch = () => {
         const userData = await response.json()
         setUser(userData)
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error')
+        if (err instanceof Error && err.name === 'AbortError') {
+          setError('Request aborted')
+        } else {
+          setError(err instanceof Error ? err.message : 'Unknown error')
+        }
       } finally {
         setLoading(false)
       }
