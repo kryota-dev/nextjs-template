@@ -36,13 +36,11 @@ ComponentName/
 
 ### コンポーネントの分類
 
-- **`app/**/_components/**`: 特定のページやルートに紐づくコンポーネント
-
-  - 例: `app/_components/MainCarousel/` - トップページ（app/page.tsx）に紐づくカルーセル
-  - 例: `app/news/_components/NewsCard/` - news ルート内でのみ使用するカード
+- **`app/[route]/_containers/{page,layout}/presentation/_components/**`: 特定のページやレイアウトのPresentation内に紐づくコンポーネント
+  - 例: `app/news/_containers/page/presentation/_components/NewsCard/` - newsルートのページPresentation内でのみ使用するカード
+  - 例: `app/blog/_containers/layout/presentation/_components/Sidebar/` - blogルートのレイアウトPresentation内でのみ使用するサイドバー
 
 - **`components/common`**: 汎用的なUIコンポーネント
-
   - 例: `Button`, `Icon` - アプリケーション全体で再利用可能なUI要素
 
 - **`components/layouts`**: レイアウト関連コンポーネント
@@ -50,24 +48,40 @@ ComponentName/
 
 ### `_components`ディレクトリの配置
 
-`_components`ディレクトリは以下の場所に配置できます：
+Container/Presentationalパターンにおいて、`_components`ディレクトリは以下の場所に配置されます：
 
-1. **`app/_components/**`: app/直下のページ（主にトップページ）に紐づくコンポーネント
-2. **`app/[route]/_components/**`: 特定のルート内でのみ使用するコンポーネント
+1. **`app/[route]/_containers/page/presentation/_components/**`: 特定ルートのページPresentation内でのみ使用するコンポーネント
+2. **`app/[route]/_containers/layout/presentation/_components/**`: 特定ルートのレイアウトPresentation内でのみ使用するコンポーネント
 
-特定のルート内でのみ使用するコンポーネントは、そのルートディレクトリ配下の`_components`ディレクトリに配置します。これにより、コンポーネントの使用範囲が明確になり、コードの整理がしやすくなります。
+特定のルート内でのみ使用するコンポーネントは、該当するContainer/Presentationディレクトリ配下の`_components`ディレクトリに配置します。これにより、コンポーネントの使用範囲が明確になり、責任分離された構造でコードの整理がしやすくなります。
 
 例:
 
 ```
 app/
-├── _components/           # app/直下のページに紐づくコンポーネント
-│   └── MainCarousel/      # トップページのカルーセル
-├── news/               # /news ルート
-│   ├── _components/       # news ルート内でのみ使用するコンポーネント
-│   │   └── NewsCard/     # ニュース情報カード
-│   └── page.tsx           # /news ページのコンポーネント
-└── page.tsx               # / (ルート) ページのコンポーネント
+├── news/                               # /news ルート
+│   ├── _containers/
+│   │   ├── page/
+│   │   │   ├── container.tsx           # ページのロジック層
+│   │   │   ├── index.ts
+│   │   │   └── presentation/
+│   │   │       ├── _components/        # ページPresentation内でのみ使用するコンポーネント
+│   │   │       │   └── NewsCard/       # ニュース情報カード
+│   │   │       ├── presentation.tsx    # ページのUI層
+│   │   │       ├── presentation.stories.tsx
+│   │   │       └── index.ts
+│   │   └── layout/
+│   │       ├── container.tsx           # レイアウトのロジック層
+│   │       ├── index.ts
+│   │       └── presentation/
+│   │           ├── _components/        # レイアウトPresentation内でのみ使用するコンポーネント
+│   │           │   └── NewsSidebar/    # ニュース専用サイドバー
+│   │           ├── presentation.tsx    # レイアウトのUI層
+│   │           ├── presentation.stories.tsx
+│   │           └── index.ts
+│   ├── page.tsx                        # /news ページのエントリーポイント
+│   └── layout.tsx                      # /news レイアウトのエントリーポイント
+└── page.tsx                            # / (ルート) ページのコンポーネント
 ```
 
 ### コンポーネントの作成
@@ -76,8 +90,8 @@ app/
 
 1. 適切なディレクトリを選択
 
-   - app/直下のページに紐づくコンポーネント: `app/_components`
-   - 特定のルート内でのみ使用するコンポーネント: `app/[route]/_components`
+   - 特定ルートのページPresentation内でのみ使用するコンポーネント: `app/[route]/_containers/page/presentation/_components`
+   - 特定ルートのレイアウトPresentation内でのみ使用するコンポーネント: `app/[route]/_containers/layout/presentation/_components`
    - 汎用的なUIコンポーネント: `components/common`
    - レイアウト関連コンポーネント: `components/layouts`
 

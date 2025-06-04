@@ -44,10 +44,10 @@ function setupPlop(plop) {
   const generateComponentPath = (location, type, routeName = '') => {
     if (location === 'src') {
       return `src/components/${type}`
-    } else if (type === '_components') {
-      return 'src/app/_components'
-    } else if (type === 'route_components') {
-      return `src/app/${routeName}/_components`
+    } else if (type === 'page_presentation_components') {
+      return `src/app/${routeName}/_containers/page/presentation/_components`
+    } else if (type === 'layout_presentation_components') {
+      return `src/app/${routeName}/_containers/layout/presentation/_components`
     }
     return ''
   }
@@ -60,10 +60,10 @@ function setupPlop(plop) {
   ) => {
     if (location === 'src') {
       return `components/${type}/${componentName}`
-    } else if (type === '_components') {
-      return `app/_components/${componentName}`
-    } else if (type === 'route_components') {
-      return `app/${routeName}/_components/${componentName}`
+    } else if (type === 'page_presentation_components') {
+      return `app/${routeName}/_containers/page/presentation/_components/${componentName}`
+    } else if (type === 'layout_presentation_components') {
+      return `app/${routeName}/_containers/layout/presentation/_components/${componentName}`
     }
     return ''
   }
@@ -182,22 +182,27 @@ function setupPlop(plop) {
             ]
           } else {
             return [
-              { name: 'app直下のページ用 (_components)', value: '_components' },
               {
-                name: '特定ルート用 ([route]/_components)',
-                value: 'route_components',
+                name: 'ページPresentation内用 ([route]/_containers/page/presentation/_components)',
+                value: 'page_presentation_components',
+              },
+              {
+                name: 'レイアウトPresentation内用 ([route]/_containers/layout/presentation/_components)',
+                value: 'layout_presentation_components',
               },
             ]
           }
         },
         default: (answers) =>
-          answers.componentLocation === 'src' ? 'common' : '_components',
+          answers.componentLocation === 'src'
+            ? 'common'
+            : 'page_presentation_components',
       },
       {
         type: 'input',
         name: 'routeName',
         message: 'ルート名を入力してください (例: news, blog):',
-        when: (answers) => answers.componentType === 'route_components',
+        when: (answers) => answers.componentLocation === 'app',
         validate: (input) => validatePath(input, 'ルート名'),
       },
       {
