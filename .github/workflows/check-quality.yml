@@ -51,13 +51,18 @@ jobs:
       - name: 🔨 Setup pnpm
         uses: ./.github/actions/pnpm-setup
 
+      - name: 🎱 Store Playwright's version
+        id: playwright-version
+        run: |
+          PLAYWRIGHT_VERSION=$(pnpm -s dlx playwright --version | sed 's/Version //')
+          echo "Playwright's Version: $PLAYWRIGHT_VERSION"
+          echo "version=$PLAYWRIGHT_VERSION" >> $GITHUB_OUTPUT
+
       - name: 📦 Cache Playwright
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
+          key: playwright-browsers-${{ steps.playwright-version.outputs.version }}
 
       - name: 🌐 Install Playwright
         run: pnpm exec playwright install --with-deps
