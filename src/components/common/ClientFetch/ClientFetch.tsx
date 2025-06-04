@@ -19,6 +19,8 @@ export const ClientFetch = () => {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    const controller = new AbortController()
+
     const fetchUser = async () => {
       try {
         setLoading(true)
@@ -40,6 +42,8 @@ export const ClientFetch = () => {
     }
 
     fetchUser()
+
+    return () => controller.abort()
   }, [])
 
   if (loading) {
