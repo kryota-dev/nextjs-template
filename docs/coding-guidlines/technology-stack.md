@@ -47,3 +47,7 @@
 - [Vitest](https://vitest.dev/)
 - [Storybook](https://storybook.js.org/)
 - [Chromatic](https://www.chromatic.com/)
+
+## モック・API テスト
+
+- [MSW (Mock Service Worker)](https://mswjs.io/)

@@ -1,7 +1,7 @@
 ---
 description: ドキュメント管理・自動更新ルール
-globs: docs/**/*,.cursor/rules/**.*
-alwaysApply: false
+globs: 
+alwaysApply: true
 ---
 
 このファイルが読み込まれたら「rules/document-management.mdcを読み込みました」とユーザーに必ず伝えてください

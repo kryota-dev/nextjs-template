@@ -1,0 +1,13 @@
+import { {{componentName}}PagePresentation } from './presentation'
+
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+
+export default {
+  title: 'app/{{pagePath}}/_containers/page/presentation',
+  component: {{componentName}}PagePresentation,
+  args: {},
+} satisfies Meta<typeof {{componentName}}PagePresentation>
+
+type Story = StoryObj<typeof {{componentName}}PagePresentation>
+
+export const Default: Story = {}

@@ -2,10 +2,10 @@
  * {{componentName}}Page
  * @description TODO: ページの説明を入力してください
  */
+import 'server-only'
+
+import { {{componentName}}PageContainer } from './_containers/page'
+
 export default function {{componentName}}Page() {
-  return (
-    <div>
-      <p>{{componentName}}Page</p>
-    </div>
-  )
+  return <{{componentName}}PageContainer />
 }
