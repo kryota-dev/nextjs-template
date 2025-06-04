@@ -10,6 +10,9 @@ const dirname =
     ? __dirname
     : path.dirname(fileURLToPath(import.meta.url))
 
+/**
+ * Next.jsの画像インポートをスタブ化するプラグイン
+ */
 const stubNextAssetImport = () => ({
   name: 'stub-next-asset-import',
   transform(_code: string, id: string) {
@@ -23,11 +26,18 @@ const stubNextAssetImport = () => ({
   },
 })
 
+/**
+ * Storybookのテスト設定
+ * @see More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
+ */
 const storybookConfig = defineConfig({
   plugins: [
     // The plugin will run tests for the stories defined in your Storybook config
     // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-    storybookTest({ configDir: path.join(dirname, '.storybook') }),
+    storybookTest({
+      configDir: path.join(dirname, '.storybook'),
+      tags: { exclude: ['skip'] },
+    }),
   ],
   test: {
     name: 'storybook',
@@ -37,6 +47,7 @@ const storybookConfig = defineConfig({
       provider: 'playwright',
       instances: [{ browser: 'chromium' }],
     },
+    include: ['src/**/*.mdx', 'src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
     setupFiles: ['.storybook/vitest.setup.ts'],
   },
   resolve: {
@@ -53,6 +64,9 @@ const storybookConfig = defineConfig({
   },
 })
 
+/**
+ * ユニットテスト設定
+ */
 const unitConfig = defineConfig({
   plugins: [react(), stubNextAssetImport()],
   test: {
@@ -79,7 +93,9 @@ const unitConfig = defineConfig({
   },
 })
 
-// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
+/**
+ * テスト設定
+ */
 export default defineConfig({
   test: {
     coverage: {
@@ -105,6 +121,8 @@ export default defineConfig({
         'src/app/robots.ts',
         'src/app/sitemap.ts',
         'src/app/**/layout.tsx',
+        'src/libs/msw/browser.ts',
+        'src/libs/msw/node.ts',
       ],
     },
     projects: [unitConfig, storybookConfig],

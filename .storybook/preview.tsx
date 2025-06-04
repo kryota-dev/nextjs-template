@@ -1,10 +1,18 @@
+// MSWの初期化（msw-storybook-addonが自動的に処理）
+import { initialize, mswLoader } from 'msw-storybook-addon'
+
 import { cn } from '@/libs/stylings'
 
 import { geistMono, geistSans } from '@/styles/fonts'
 
+import { handlers } from '@/mocks/handlers'
+
 import type { Preview } from '@storybook/nextjs-vite'
 
 import '@/styles/globals.css'
+
+// MSWを初期化
+initialize({})
 
 const preview: Preview = {
   parameters: {
@@ -51,6 +59,11 @@ const preview: Preview = {
       // 'off' - skip a11y checks entirely
       test: 'todo',
     },
+
+    // グローバルMSWハンドラーを設定
+    msw: {
+      handlers,
+    },
   },
   decorators: [
     (Story) => (
@@ -61,6 +74,7 @@ const preview: Preview = {
       </div>
     ),
   ],
+  loaders: [mswLoader],
 }
 
 export default preview
