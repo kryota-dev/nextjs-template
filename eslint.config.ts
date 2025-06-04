@@ -24,9 +24,7 @@ const compat = new FlatCompat({
 const eslintConfig = [
   includeIgnoreFile(gitignorePath),
   {
-    ignores: [
-      'plop-file.mjs',
-    ],
+    ignores: ['plop-file.mjs'],
   },
   ...(compat.extends(
     'next/core-web-vitals',
@@ -150,7 +148,10 @@ const eslintConfig = [
   },
   {
     files: ['src/app/**/*.tsx'],
-    ignores: ['src/app/**/_components/**/*.tsx'],
+    ignores: [
+      'src/app/**/_components/**/*.tsx',
+      'src/app/**/_containers/**/*.tsx',
+    ],
     rules: {
       // Next.jsのページコンポーネントでは、default exportを強制
       'import/prefer-default-export': 'error',

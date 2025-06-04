@@ -1,21 +1,13 @@
-import { Footer } from '@/components/layouts/Footer'
-import { Header } from '@/components/layouts/Header'
+import 'server-only'
 
 import { HOME_URL } from '@/constants/HOME_URL'
 
-import {
-  GoogleTagManager,
-  GoogleTagManagerNoscript,
-} from '@/libs/GoogleTagManager'
-import { cn } from '@/libs/stylings'
-
-import { geistMono, geistSans } from '@/styles/fonts'
-
 import { SITE_DESCRIPTION, SITE_NAME } from '@/constants'
 
-import type { Metadata } from 'next'
+import { RootLayoutContainer } from './_containers/layout'
 
-import '@/styles/globals.css'
+import type { Metadata } from 'next'
+import type { ComponentProps } from 'react'
 
 export const metadata: Metadata = {
   title: {
@@ -67,38 +59,8 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
-  children,
-  jsonld,
-}: Readonly<{
-  children: React.ReactNode
-  jsonld: React.ReactNode | null
-}>) {
-  return (
-    <html lang='ja'>
-      <head>{jsonld}</head>
-      <GoogleTagManager />
-      <body
-        className={cn(
-          geistSans.variable,
-          geistMono.variable,
-          'flex min-h-screen flex-col antialiased',
-        )}
-      >
-        <Header />
-        {children}
-        <Footer>
-          <a
-            className='text-sm'
-            href='https://github.com/kryota-dev/nextjs-static-export-template/blob/main/LICENSE'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            Copyright (c) 2025 Ryota Kaneko
-          </a>
-        </Footer>
-        <GoogleTagManagerNoscript />
-      </body>
-    </html>
-  )
+type Props = ComponentProps<typeof RootLayoutContainer>
+
+export default function RootLayout(props: Props) {
+  return <RootLayoutContainer {...props} />
 }
