@@ -9,6 +9,10 @@ export interface User {
   email: string
 }
 
+/**
+ * クライアントサイドでフェッチするコンポーネント
+ * @description Example Component
+ */
 export const ClientFetch = () => {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
