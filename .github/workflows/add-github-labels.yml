@@ -2,8 +2,6 @@ name: 🏷️ Add GitHub Labels
 
 on:
   push:
-    branches:
-      - develop
     paths:
       - '.github/labels.yml'
       - '.github/workflows/add-github-labels.yml'
@@ -19,31 +17,40 @@ jobs:
 
     steps:
       - name: 🔍 Check branch
+        id: check-branch
+        env:
+          ADD_LABELS_BRANCH: ${{ vars.ADD_LABELS_BRANCH || 'develop' }}  # ラベル追加対象のブランチ名（デフォルトは develop）
         run: |
-          if [ "${{ github.ref_name }}" != "develop" ]; then
-            echo "❌ このワークフローは develop ブランチでのみ実行可能です"
-            echo "現在のブランチ: ${{ github.ref_name }}"
-            exit 1
+          if [ "${{ github.ref_name }}" != "${ADD_LABELS_BRANCH}" ]; then
+            echo "::notice:: このワークフローは ${ADD_LABELS_BRANCH} ブランチでのみ実行可能です"
+            echo "::notice:: 現在のブランチ: ${{ github.ref_name }}"
+            # GITHUB_OUTPUTにチェック結果（スキップフラグ）を設定
+            echo "skip=true" >> $GITHUB_OUTPUT
           fi
 
       - name: 📥 Checkout repository
+        if: ${{ steps.check-branch.outputs.skip != 'true' }}
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: 📦 Setup Node.js
+        if: ${{ steps.check-branch.outputs.skip != 'true' }}
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .node-version
 
       # 既存のpackage.jsonとpnpm-lock.yamlと.npmrcを削除し、package.jsonを作成
       - name: 🗑️ Remove unnecessary files
+        if: ${{ steps.check-branch.outputs.skip != 'true' }}
         run: |
           rm -f package.json pnpm-lock.yaml .npmrc
           echo "{}" > package.json
 
       - name: 🔧 Install yaml module
+        if: ${{ steps.check-branch.outputs.skip != 'true' }}
         run: npm install yaml
 
       - name: 🏷️ Add GitHub Labels
+        if: ${{ steps.check-branch.outputs.skip != 'true' }}
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: | #```typescript
@@ -174,6 +181,7 @@ jobs:
           #```
 
       - name: 💾 Commit changes
+        if: ${{ steps.check-branch.outputs.skip != 'true' }}
         run: |
           # Note: the following account information will not work on GHES
           git config user.name "github-actions[bot]"
