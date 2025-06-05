@@ -122,6 +122,7 @@ export default defineConfig({
         'src/app/sitemap.ts',
         'src/app/**/{page,layout,default}.tsx',
         'src/libs/msw/{browser,node,nextjs}.ts',
+        'src/instrumentation.ts',
       ],
     },
     projects: [unitConfig, storybookConfig],
