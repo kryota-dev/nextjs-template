@@ -1,9 +1,7 @@
-import { jsonplaceholderHandlers } from './jsonplaceholder'
+import { microCMSHandlers } from './microcms'
 
 /**
- * MSW リクエストハンドラー
- * テストやStorybook環境でAPIリクエストをモックするためのハンドラー定義
+ * MSWハンドラー
+ * アプリケーションで使用するAPIエンドポイントのモック定義
  */
-
-// すべてのハンドラーをエクスポート
-export const handlers = [...jsonplaceholderHandlers]
+export const handlers = [...microCMSHandlers]

@@ -1,30 +1,41 @@
 import 'server-only'
 
-import { getPosts, getPostComments } from '@/libs/jsonplaceholder'
+import { loggerError } from '@/libs/logger'
+import { getList } from '@/libs/microcms'
 
 import { HomePagePresentation } from './presentation'
 
 export async function HomePageContainer() {
-  try {
-    const posts = await getPosts()
-    const topPosts = posts.slice(0, 5)
+  // 最新ニュースを取得（3件）
+  const newsResponse = await getList('news', {
+    limit: 3,
+    orders: '-publishedAt',
+  }).catch((e) => {
+    loggerError({
+      e,
+      __filename,
+      fnName: 'HomePageContainer',
+    })
+    throw new Error('ニュースの取得に失敗しました')
+  })
 
-    // 各投稿のコメント数を取得
-    const postsWithCommentCount = await Promise.all(
-      topPosts.map(async (post) => {
-        try {
-          const comments = await getPostComments(post.id)
-          return { ...post, commentCount: comments.length }
-        } catch {
-          // エラーが発生した場合はコメント数を0とする
-          return { ...post, commentCount: 0 }
-        }
-      }),
-    )
+  // プロフィールを取得（4件）
+  const profilesResponse = await getList('profiles', {
+    limit: 4,
+    orders: '-publishedAt',
+  }).catch((e) => {
+    loggerError({
+      e,
+      __filename,
+      fnName: 'HomePageContainer',
+    })
+    throw new Error('プロフィールの取得に失敗しました')
+  })
 
-    return <HomePagePresentation posts={postsWithCommentCount} />
-  } catch {
-    // エラーが発生した場合は空の配列とエラーメッセージを渡す
-    return <HomePagePresentation posts={[]} error='記事の取得に失敗しました' />
-  }
+  return (
+    <HomePagePresentation
+      latestNews={newsResponse.contents}
+      featuredProfiles={profilesResponse.contents}
+    />
+  )
 }

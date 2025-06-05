@@ -63,6 +63,8 @@ const eslintConfig = [
             'Switch文を使用しないでください。代わりにts-patternを使用してください。',
         },
       ],
+      // リテラルをthrowするのを禁止する
+      'no-throw-literal': 'error',
       // importの後に改行を強制する
       'import/newline-after-import': 'error',
       // importはファイルの先頭に配置する

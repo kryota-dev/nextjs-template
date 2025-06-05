@@ -19,19 +19,19 @@ export function Navigation() {
                 href='/'
                 className='rounded-md px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:text-blue-600'
               >
-                トップ
+                ホーム
               </Link>
               <Link
-                href='/posts'
+                href='/news'
                 className='rounded-md px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:text-blue-600'
               >
-                記事一覧
+                ニュース
               </Link>
               <Link
-                href='/posts/new'
-                className='rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700'
+                href='/profiles'
+                className='rounded-md px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:text-blue-600'
               >
-                新規投稿
+                プロフィール
               </Link>
             </div>
           </div>

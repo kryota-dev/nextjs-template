@@ -1,61 +1,44 @@
-import { mockPosts } from '@/libs/msw/data'
+import { mockNews, mockProfiles } from '@/libs/msw/data'
 
 import { HomePagePresentation } from './presentation'
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 const meta: Meta<typeof HomePagePresentation> = {
-  title: 'app/page/presentation',
+  title: 'app/_containers/page/presentation',
   component: HomePagePresentation,
   parameters: {
     layout: 'fullscreen',
   },
-  tags: ['autodocs'],
-}
+} satisfies Meta<typeof HomePagePresentation>
 
 export default meta
 type Story = StoryObj<typeof HomePagePresentation>
 
-// 共通化したモックデータにコメント数を追加
-const mockPostsWithComments = mockPosts.map((post) => ({
-  ...post,
-  commentCount: Math.floor(Math.random() * 10) + 1, // 1-10のランダムなコメント数
-}))
-
 export const Default: Story = {
   args: {
-    posts: mockPostsWithComments,
+    latestNews: mockNews.slice(0, 3),
+    featuredProfiles: mockProfiles,
   },
 }
 
-export const Loading: Story = {
+export const EmptyContent: Story = {
   args: {
-    posts: [],
+    latestNews: [],
+    featuredProfiles: [],
   },
 }
 
-export const Error: Story = {
+export const OnlyNews: Story = {
   args: {
-    posts: [],
-    error: 'データの取得に失敗しました。時間をおいて再度お試しください。',
+    latestNews: mockNews.slice(0, 3),
+    featuredProfiles: [],
   },
 }
 
-export const SinglePost: Story = {
+export const OnlyProfiles: Story = {
   args: {
-    posts: [mockPostsWithComments[0]],
-  },
-}
-
-export const ManyPosts: Story = {
-  args: {
-    posts: [
-      ...mockPostsWithComments,
-      ...mockPostsWithComments.map((post, index) => ({
-        ...post,
-        id: post.id + 100,
-        title: `追加記事 ${index + 1}: ${post.title}`,
-      })),
-    ],
+    latestNews: [],
+    featuredProfiles: mockProfiles,
   },
 }

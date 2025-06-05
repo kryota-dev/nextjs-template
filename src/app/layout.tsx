@@ -8,10 +8,10 @@ import type { ComponentProps } from 'react'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Blog App',
-    template: '%s | Blog App',
+    default: 'Next.js Static Export Boilerplate',
+    template: '%s | Next.js Static Export Boilerplate',
   },
-  description: 'JSONPlaceholderを使用したブログアプリケーション',
+  description: 'microCMSとNext.jsで作成したWebサイト',
 }
 
 type Props = ComponentProps<typeof RootLayoutContainer>

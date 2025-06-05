@@ -3,4 +3,4 @@
  * Storybook、ユニットテスト、MSWハンドラーで共通利用
  */
 
-export * from './posts'
+export * from './microcms'
