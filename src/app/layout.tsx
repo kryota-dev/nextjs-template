@@ -1,8 +1,7 @@
 import 'server-only'
 
-import { logger } from '@/libs/logger'
+import { setupMswRsc } from '@/libs/msw/setupMswRsc'
 
-import { NEXT_RUNTIME, NEXT_PUBLIC_MSW_ENABLED } from '@/config'
 import { MSWProvider } from '@/providers'
 
 import { RootLayoutContainer } from './_containers/layout'
@@ -12,26 +11,7 @@ import type { ComponentProps } from 'react'
 
 import '@/styles/globals.css'
 
-if (NEXT_RUNTIME === 'nodejs' && NEXT_PUBLIC_MSW_ENABLED === 'true') {
-  const { server } = await import('@/libs/msw/node')
-  server.listen({
-    onUnhandledRequest(request, print) {
-      if (request.url.includes('_next')) {
-        return
-      }
-      print.warning()
-    },
-  })
-  logger({
-    level: 'warn',
-    message: 'MSW server listening',
-    __filename: 'layout',
-    fnName: 'server.listen',
-    // child: {
-    //   handlers: server.listHandlers(),
-    // },
-  })
-}
+await setupMswRsc()
 
 export const metadata: Metadata = {
   title: {
