@@ -7,9 +7,11 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   compiler: {
-    // `^data-test`にマッチする属性を削除
-    reactRemoveProperties: true
-  }
+    // NOTE: `^data-test`にマッチする属性を削除
+    reactRemoveProperties: true,
+  },
+  // NOTE: `pino`を使用するための設定
+  serverExternalPackages: ['pino'],
 }
 
 export default nextConfig
