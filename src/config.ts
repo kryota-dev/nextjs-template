@@ -8,3 +8,5 @@ export const NEXT_PUBLIC_MICROCMS_API_KEY =
 export const SERVER_ONLY_MICROCMS_API_KEY =
   process.env.SERVER_ONLY_MICROCMS_API_KEY
 export const NEXT_PUBLIC_HOME_URL = process.env.NEXT_PUBLIC_HOME_URL
+export const NEXT_RUNTIME = process.env.NEXT_RUNTIME
+export const NEXT_PUBLIC_MSW_ENABLED = process.env.NEXT_PUBLIC_MSW_ENABLED

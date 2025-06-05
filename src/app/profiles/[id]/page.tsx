@@ -9,16 +9,19 @@ type Params = { id: string }
  * 静的生成用のパラメータを生成
  */
 export async function generateStaticParams(): Promise<Params[]> {
-  const contentIds = await getAllContentIds('profiles').catch((e) => {
-    loggerError({
-      e,
-      __filename,
-      fnName: 'generateStaticParams',
+  const contentIds = await getAllContentIds('profiles')
+    .then((res) => {
+      if (res.length === 0) throw new Error()
+      return res
     })
-    throw new Error('プロフィールの取得に失敗しました')
-  })
-
-  if (contentIds.length === 0) return []
+    .catch((e) => {
+      loggerError({
+        e,
+        __filename,
+        fnName: 'generateStaticParams',
+      })
+      throw new Error('プロフィールの取得に失敗しました')
+    })
   return contentIds.map((id) => ({
     id,
   }))

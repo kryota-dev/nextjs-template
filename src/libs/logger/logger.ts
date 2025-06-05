@@ -13,7 +13,7 @@ const stream = pretty({
  * @description ログを出力する
  */
 export const logger = (args: Logger): void => {
-  const { level = 'info', message, __filename, fnName } = args
+  const { level = 'info', message, __filename, fnName, child = {} } = args
 
   const loggerOptions: LoggerOptions = {
     level,
@@ -23,6 +23,7 @@ export const logger = (args: Logger): void => {
   const internalLogger = pino(loggerOptions, stream).child({
     __filename,
     fnName,
+    ...child,
   })
 
   internalLogger[level](message)
