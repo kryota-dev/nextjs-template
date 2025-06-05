@@ -4,24 +4,26 @@ import { Suspense, use } from 'react'
 
 import { NEXT_PUBLIC_MSW_ENABLED } from '@/config'
 
-const mockingEnabledPromise =
-  typeof window !== 'undefined' && NEXT_PUBLIC_MSW_ENABLED === 'true'
-    ? import('@/libs/msw/browser').then(async ({ worker }) => {
-        await worker.start({
-          onUnhandledRequest(request, print) {
-            if (request.url.includes('_next')) {
-              return
-            }
-            print.warning()
-          },
-        })
-        const { handlers } = await import('@/libs/msw/handlers')
-        worker.use(...handlers)
+const mockingEnabledPromise = (async () => {
+  if (typeof window === 'undefined' || NEXT_PUBLIC_MSW_ENABLED !== 'true') {
+    return Promise.resolve()
+  }
 
-        // eslint-disable-next-line no-console
-        console.warn('MSW worker started')
-      })
-    : Promise.resolve()
+  const { worker } = await import('@/libs/msw/browser')
+  await worker.start({
+    onUnhandledRequest(request, print) {
+      if (request.url.includes('_next')) {
+        return
+      }
+      print.warning()
+    },
+  })
+  const { handlers } = await import('@/libs/msw/handlers')
+  worker.use(...handlers)
+
+  // eslint-disable-next-line no-console
+  console.warn('MSW worker started')
+})()
 
 export function MSWProvider({
   children,

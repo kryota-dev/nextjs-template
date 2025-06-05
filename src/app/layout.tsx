@@ -14,10 +14,17 @@ import '@/styles/globals.css'
 
 if (NEXT_RUNTIME === 'nodejs' && NEXT_PUBLIC_MSW_ENABLED === 'true') {
   const { server } = await import('@/libs/msw/node')
-  server.listen()
+  server.listen({
+    onUnhandledRequest(request, print) {
+      if (request.url.includes('_next')) {
+        return
+      }
+      print.warning()
+    },
+  })
   logger({
     level: 'warn',
-    message: 'MSW server started',
+    message: 'MSW server listening',
     __filename: 'layout',
     fnName: 'server.listen',
     // child: {
