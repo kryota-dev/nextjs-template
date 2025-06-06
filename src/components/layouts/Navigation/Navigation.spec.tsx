@@ -9,9 +9,11 @@ describe('Navigation', () => {
       render(<Navigation />)
 
       expect(screen.getByRole('link', { name: 'Blog App' })).toBeInTheDocument()
-      expect(screen.getByRole('link', { name: 'トップ' })).toBeInTheDocument()
-      expect(screen.getByRole('link', { name: '記事一覧' })).toBeInTheDocument()
-      expect(screen.getByRole('link', { name: '新規投稿' })).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: 'ホーム' })).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: 'ニュース' })).toBeInTheDocument()
+      expect(
+        screen.getByRole('link', { name: 'プロフィール' }),
+      ).toBeInTheDocument()
     })
 
     it('ナビゲーションが適切なセマンティクスを持つ', () => {
@@ -30,25 +32,25 @@ describe('Navigation', () => {
       expect(blogAppLink).toHaveAttribute('href', '/')
     })
 
-    it('トップページリンクが正しいhrefを持つ', () => {
+    it('ホームページリンクが正しいhrefを持つ', () => {
       render(<Navigation />)
 
-      const topLink = screen.getByRole('link', { name: 'トップ' })
-      expect(topLink).toHaveAttribute('href', '/')
+      const homeLink = screen.getByRole('link', { name: 'ホーム' })
+      expect(homeLink).toHaveAttribute('href', '/')
     })
 
-    it('記事一覧リンクが正しいhrefを持つ', () => {
+    it('ニュースリンクが正しいhrefを持つ', () => {
       render(<Navigation />)
 
-      const postsLink = screen.getByRole('link', { name: '記事一覧' })
-      expect(postsLink).toHaveAttribute('href', '/posts')
+      const newsLink = screen.getByRole('link', { name: 'ニュース' })
+      expect(newsLink).toHaveAttribute('href', '/news')
     })
 
-    it('新規投稿リンクが正しいhrefを持つ', () => {
+    it('プロフィールリンクが正しいhrefを持つ', () => {
       render(<Navigation />)
 
-      const newPostLink = screen.getByRole('link', { name: '新規投稿' })
-      expect(newPostLink).toHaveAttribute('href', '/posts/new')
+      const profilesLink = screen.getByRole('link', { name: 'プロフィール' })
+      expect(profilesLink).toHaveAttribute('href', '/profiles')
     })
   })
 
@@ -59,18 +61,25 @@ describe('Navigation', () => {
       expect(nav).toHaveClass('border-b', 'bg-white', 'shadow-sm')
     })
 
-    it('新規投稿リンクが特別なスタイルを持つ', () => {
-      render(<Navigation />)
-
-      const newPostLink = screen.getByRole('link', { name: '新規投稿' })
-      expect(newPostLink).toHaveClass('bg-blue-600', 'text-white')
-    })
-
     it('通常のリンクが適切なスタイルを持つ', () => {
       render(<Navigation />)
 
-      const topLink = screen.getByRole('link', { name: 'トップ' })
-      expect(topLink).toHaveClass('text-gray-900', 'hover:text-blue-600')
+      const homeLink = screen.getByRole('link', { name: 'ホーム' })
+      expect(homeLink).toHaveClass('text-gray-900', 'hover:text-blue-600')
+    })
+
+    it('ニュースリンクが適切なスタイルを持つ', () => {
+      render(<Navigation />)
+
+      const newsLink = screen.getByRole('link', { name: 'ニュース' })
+      expect(newsLink).toHaveClass('text-gray-900', 'hover:text-blue-600')
+    })
+
+    it('プロフィールリンクが適切なスタイルを持つ', () => {
+      render(<Navigation />)
+
+      const profilesLink = screen.getByRole('link', { name: 'プロフィール' })
+      expect(profilesLink).toHaveClass('text-gray-900', 'hover:text-blue-600')
     })
   })
 
@@ -117,9 +126,9 @@ describe('Navigation', () => {
 
       const links = screen.getAllByRole('link')
       expect(links[0]).toHaveTextContent('Blog App')
-      expect(links[1]).toHaveTextContent('トップ')
-      expect(links[2]).toHaveTextContent('記事一覧')
-      expect(links[3]).toHaveTextContent('新規投稿')
+      expect(links[1]).toHaveTextContent('ホーム')
+      expect(links[2]).toHaveTextContent('ニュース')
+      expect(links[3]).toHaveTextContent('プロフィール')
     })
   })
 })
