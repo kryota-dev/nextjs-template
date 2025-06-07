@@ -24,10 +24,11 @@ export const setupMswRsc = async () => {
       message: 'MSW server listening',
       __filename: 'layout',
       fnName: 'server.listen',
-      // NOTE: 有効なハンドラーを表示する際に使用する
-      // child: {
-      //   handlers: server.listHandlers(),
-      // },
+      child: {
+        NEXT_PUBLIC_MSW_ENABLED,
+        // NOTE: 有効なハンドラーを表示する際に使用する
+        // handlers: server.listHandlers(),
+      },
     })
   }
 }
