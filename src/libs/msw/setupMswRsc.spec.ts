@@ -49,6 +49,9 @@ describe('setupMswRsc', () => {
         message: 'MSW server listening',
         __filename: 'layout',
         fnName: 'server.listen',
+        child: {
+          NEXT_PUBLIC_MSW_ENABLED: 'true',
+        },
       })
     })
 
@@ -78,6 +81,9 @@ describe('setupMswRsc', () => {
         message: 'MSW server listening',
         __filename: 'layout',
         fnName: 'server.listen',
+        child: {
+          NEXT_PUBLIC_MSW_ENABLED: 'true',
+        },
       })
     })
   })
