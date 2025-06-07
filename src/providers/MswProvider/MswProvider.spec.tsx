@@ -5,7 +5,7 @@ import { MswProvider } from './MswProvider'
 
 // MSWのモック設定（ホイスティング対応）
 vi.mock('@/config', () => ({
-  NEXT_PUBLIC_MSW_ENABLED: 'true',
+  NEXT_PUBLIC_FEATURE_FLAG: 'true',
   NEXT_PUBLIC_BASE_PATH: '',
 }))
 
@@ -111,7 +111,7 @@ describe('MswProvider', () => {
       const config = await import('@/config')
 
       // Act & Assert
-      expect(config.NEXT_PUBLIC_MSW_ENABLED).toBe('true')
+      expect(config.NEXT_PUBLIC_FEATURE_FLAG).toBe('true')
     })
 
     it('MSWモジュールが適切にモックされている', async () => {
@@ -200,18 +200,18 @@ describe('MswProvider', () => {
 
     it.each([
       [
-        'NEXT_PUBLIC_MSW_ENABLED=false, ブラウザ環境',
-        { NEXT_PUBLIC_MSW_ENABLED: 'false' },
+        'NEXT_PUBLIC_FEATURE_FLAG=false, ブラウザ環境',
+        { NEXT_PUBLIC_FEATURE_FLAG: 'false' },
         true,
       ],
       [
-        'NEXT_PUBLIC_MSW_ENABLED=true, SSR環境',
-        { NEXT_PUBLIC_MSW_ENABLED: 'true' },
+        'NEXT_PUBLIC_FEATURE_FLAG=true, SSR環境',
+        { NEXT_PUBLIC_FEATURE_FLAG: 'true' },
         false,
       ],
       [
-        'NEXT_PUBLIC_MSW_ENABLED=false, SSR環境',
-        { NEXT_PUBLIC_MSW_ENABLED: 'false' },
+        'NEXT_PUBLIC_FEATURE_FLAG=false, SSR環境',
+        { NEXT_PUBLIC_FEATURE_FLAG: 'false' },
         false,
       ],
     ])(

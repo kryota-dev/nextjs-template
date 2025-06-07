@@ -8,7 +8,7 @@ import { setupMswRsc } from './setupMswRsc'
 // モックの設定（ホイスティング対応）
 vi.mock('@/config', () => ({
   NEXT_RUNTIME: 'nodejs',
-  NEXT_PUBLIC_MSW_ENABLED: 'true',
+  NEXT_PUBLIC_FEATURE_FLAG: 'true',
 }))
 
 vi.mock('../logger', () => ({
@@ -50,7 +50,7 @@ describe('setupMswRsc', () => {
         __filename: 'layout',
         fnName: 'server.listen',
         child: {
-          NEXT_PUBLIC_MSW_ENABLED: 'true',
+          NEXT_PUBLIC_FEATURE_FLAG: 'true',
         },
       })
     })
@@ -82,7 +82,7 @@ describe('setupMswRsc', () => {
         __filename: 'layout',
         fnName: 'server.listen',
         child: {
-          NEXT_PUBLIC_MSW_ENABLED: 'true',
+          NEXT_PUBLIC_FEATURE_FLAG: 'true',
         },
       })
     })
@@ -94,7 +94,7 @@ describe('setupMswRsc', () => {
       const config = await import('@/config')
 
       // Act & Assert
-      expect(config.NEXT_PUBLIC_MSW_ENABLED).toBe('true')
+      expect(config.NEXT_PUBLIC_FEATURE_FLAG).toBe('true')
       expect(config.NEXT_RUNTIME).toBe('nodejs')
     })
 
@@ -125,16 +125,16 @@ describe('setupMswRsc', () => {
 
     it.each([
       [
-        'NEXT_PUBLIC_MSW_ENABLEDがfalse',
-        { NEXT_RUNTIME: 'nodejs', NEXT_PUBLIC_MSW_ENABLED: 'false' },
+        'NEXT_PUBLIC_FEATURE_FLAGがfalse',
+        { NEXT_RUNTIME: 'nodejs', NEXT_PUBLIC_FEATURE_FLAG: 'false' },
       ],
       [
         'NEXT_RUNTIMEがnodejs以外',
-        { NEXT_RUNTIME: 'edge', NEXT_PUBLIC_MSW_ENABLED: 'true' },
+        { NEXT_RUNTIME: 'edge', NEXT_PUBLIC_FEATURE_FLAG: 'true' },
       ],
       [
         '両方の条件が無効',
-        { NEXT_RUNTIME: 'edge', NEXT_PUBLIC_MSW_ENABLED: 'false' },
+        { NEXT_RUNTIME: 'edge', NEXT_PUBLIC_FEATURE_FLAG: 'false' },
       ],
     ])('%sの場合はMSWサーバーが起動しない', async (_, config) => {
       // Arrange - configモジュールをモック

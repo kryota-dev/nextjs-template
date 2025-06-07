@@ -12,7 +12,7 @@ vi.mock('@/config', () => ({
   SERVER_ONLY_MICROCMS_API_KEY: 'api-key',
   NEXT_PUBLIC_BASE_PATH: '',
   NEXT_PUBLIC_HOME_URL: 'http://localhost:3000',
-  NEXT_PUBLIC_MSW_ENABLED: 'true',
+  NEXT_PUBLIC_FEATURE_FLAG: 'true',
 }))
 
 beforeAll(() => {

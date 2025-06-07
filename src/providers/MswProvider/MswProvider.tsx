@@ -2,10 +2,10 @@
 
 import { Suspense, use } from 'react'
 
-import { NEXT_PUBLIC_BASE_PATH, NEXT_PUBLIC_MSW_ENABLED } from '@/config'
+import { NEXT_PUBLIC_BASE_PATH, NEXT_PUBLIC_FEATURE_FLAG } from '@/config'
 
 const mockingEnabledPromise = (async () => {
-  if (typeof window === 'undefined' || NEXT_PUBLIC_MSW_ENABLED !== 'true') {
+  if (typeof window === 'undefined' || NEXT_PUBLIC_FEATURE_FLAG !== 'true') {
     return Promise.resolve()
   }
 
@@ -30,7 +30,7 @@ const mockingEnabledPromise = (async () => {
 
   // eslint-disable-next-line no-console
   console.log('%c[MSW] worker started', 'color: #FF4500; font-weight: bold;', {
-    NEXT_PUBLIC_MSW_ENABLED,
+    NEXT_PUBLIC_FEATURE_FLAG,
     // NOTE: 有効なハンドラーを表示する際に使用する
     // handlers: worker.listHandlers(),
   })

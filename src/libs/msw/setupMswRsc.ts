@@ -1,4 +1,4 @@
-import { NEXT_PUBLIC_MSW_ENABLED, NEXT_RUNTIME } from '@/config'
+import { NEXT_PUBLIC_FEATURE_FLAG, NEXT_RUNTIME } from '@/config'
 
 import { logger } from '../logger'
 
@@ -7,7 +7,7 @@ import { logger } from '../logger'
  * @description MSWProviderと併用することで、RSC環境でもMSWを使用できるようにする
  */
 export const setupMswRsc = async (__filename: string) => {
-  if (NEXT_RUNTIME === 'nodejs' && NEXT_PUBLIC_MSW_ENABLED === 'true') {
+  if (NEXT_RUNTIME === 'nodejs' && NEXT_PUBLIC_FEATURE_FLAG === 'true') {
     const { server } = await import('@/libs/msw/node')
     server.listen({
       // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
@@ -25,7 +25,7 @@ export const setupMswRsc = async (__filename: string) => {
       __filename,
       fnName: 'server.listen',
       child: {
-        NEXT_PUBLIC_MSW_ENABLED,
+        NEXT_PUBLIC_FEATURE_FLAG,
         // NOTE: 有効なハンドラーを表示する際に使用する
         // handlers: server.listHandlers(),
       },

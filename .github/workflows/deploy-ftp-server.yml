@@ -64,7 +64,7 @@ jobs:
           SERVER_ONLY_MICROCMS_API_KEY: ${{ secrets.SERVER_ONLY_MICROCMS_API_KEY }}
           NEXT_PUBLIC_HOME_URL: ${{ vars.NEXT_PUBLIC_HOME_URL }}
           NEXT_PUBLIC_BASE_PATH: ${{ steps.set-base-path.outputs.base_path }}
-          NEXT_PUBLIC_MSW_ENABLED: ${{ vars.NEXT_PUBLIC_MSW_ENABLED }}
+          NEXT_PUBLIC_FEATURE_FLAG: ${{ github.ref_name != 'main' && 'true' || 'false' }}
         run: pnpm build:next
 
       - name: ⬆️ Upload artifact
