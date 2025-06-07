@@ -36,7 +36,6 @@ export const metadata: Metadata = {
   publisher: 'kryota-dev',
   metadataBase: new URL(HOME_URL),
   description: SITE_DESCRIPTION,
-  // TODO: サイト公開時にrobotsをtrueにする
   robots: {
     index: !Boolean(NEXT_PUBLIC_FEATURE_FLAG),
     follow: !Boolean(NEXT_PUBLIC_FEATURE_FLAG),
