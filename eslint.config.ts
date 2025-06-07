@@ -158,7 +158,7 @@ const eslintConfig = [
     },
   },
   {
-    files: ['src/config.ts', 'src/instrumentation.ts'],
+    files: ['src/config.ts', 'src/instrumentation.ts', 'next.config.ts'],
     rules: {
       // process.envの参照を許可
       'no-process-env': 'off',

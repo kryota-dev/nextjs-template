@@ -1,0 +1,54 @@
+name: Deploy to FTP Server
+description: Common actions to deploy to an FTP server
+
+inputs:
+  artifact-name:
+    description: 'The name of the artifact to deploy'
+    required: true
+  base-path:
+    description: 'The base path of the artifact'
+    required: false
+  ftp-server:
+    description: 'The address of the FTP server'
+    required: true
+  ftp-username:
+    description: 'The username of the FTP server'
+    required: true
+  ftp-password:
+    description: 'The password of the FTP server'
+    required: true
+  ftp-path:
+    description: 'The path of the FTP server'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: ⬇️ Download Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ./out
+
+    - name: ⏬ Install lftp
+      shell: bash
+      run: |
+        which lftp || sudo apt update && sudo apt install -y lftp
+    - name: 🚀 Deploy
+      shell: bash
+      env:
+        FTP_SERVER: ${{ inputs.ftp-server }}
+        FTP_USERNAME: ${{ inputs.ftp-username }}
+        FTP_PASSWORD: ${{ inputs.ftp-password }}
+        FTP_PATH: ${{ inputs.ftp-path }}
+        BASE_PATH: ${{ inputs.base-path }}
+        DEBUG: ${{ runner.debug }}
+      run: |
+        lftp${{ env.DEBUG == '1' && ' -d' || '' }} -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER -e"\
+        set ftp:ssl-allow no; \
+        mirror \
+        --reverse \
+        --delete \
+        -x \".htaccess\" \
+        ./out${BASE_PATH} ${FTP_PATH} \
+        exit"

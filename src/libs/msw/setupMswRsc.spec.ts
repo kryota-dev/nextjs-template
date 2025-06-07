@@ -8,7 +8,7 @@ import { setupMswRsc } from './setupMswRsc'
 // モックの設定（ホイスティング対応）
 vi.mock('@/config', () => ({
   NEXT_RUNTIME: 'nodejs',
-  NEXT_PUBLIC_MSW_ENABLED: 'true',
+  NEXT_PUBLIC_FEATURE_FLAG: 'true',
 }))
 
 vi.mock('../logger', () => ({
@@ -37,7 +37,7 @@ describe('setupMswRsc', () => {
   describe('基本機能テスト', () => {
     it('Node.js環境でMSWが有効な場合にサーバーが起動する', async () => {
       // Arrange & Act
-      await setupMswRsc()
+      await setupMswRsc('layout')
 
       // Assert
       expect(mockServerListen).toHaveBeenCalledOnce()
@@ -46,23 +46,23 @@ describe('setupMswRsc', () => {
       })
       expect(mockLogger).toHaveBeenCalledWith({
         level: 'warn',
-        message: 'MSW server listening',
+        message: '[MSW] server listening',
         __filename: 'layout',
         fnName: 'server.listen',
         child: {
-          NEXT_PUBLIC_MSW_ENABLED: 'true',
+          NEXT_PUBLIC_FEATURE_FLAG: 'true',
         },
       })
     })
 
     it('setupMswRsc関数がエラーなく実行される', async () => {
       // Arrange & Act & Assert
-      await expect(setupMswRsc()).resolves.toBeUndefined()
+      await expect(setupMswRsc('layout')).resolves.toBeUndefined()
     })
 
     it('MSWサーバーのlistenメソッドが適切な設定で呼ばれる', async () => {
       // Arrange & Act
-      await setupMswRsc()
+      await setupMswRsc('layout')
 
       // Assert
       const callArgs = mockServerListen.mock.calls[0]?.[0]
@@ -73,16 +73,16 @@ describe('setupMswRsc', () => {
 
     it('ログが適切なフォーマットで出力される', async () => {
       // Arrange & Act
-      await setupMswRsc()
+      await setupMswRsc('layout')
 
       // Assert
       expect(mockLogger).toHaveBeenCalledWith({
         level: 'warn',
-        message: 'MSW server listening',
+        message: '[MSW] server listening',
         __filename: 'layout',
         fnName: 'server.listen',
         child: {
-          NEXT_PUBLIC_MSW_ENABLED: 'true',
+          NEXT_PUBLIC_FEATURE_FLAG: 'true',
         },
       })
     })
@@ -94,7 +94,7 @@ describe('setupMswRsc', () => {
       const config = await import('@/config')
 
       // Act & Assert
-      expect(config.NEXT_PUBLIC_MSW_ENABLED).toBe('true')
+      expect(config.NEXT_PUBLIC_FEATURE_FLAG).toBe('true')
       expect(config.NEXT_RUNTIME).toBe('nodejs')
     })
 
@@ -109,8 +109,8 @@ describe('setupMswRsc', () => {
   describe('関数呼び出し回数テスト', () => {
     it('setupMswRscを複数回呼び出した場合の動作', async () => {
       // Arrange & Act
-      await setupMswRsc()
-      await setupMswRsc()
+      await setupMswRsc('layout')
+      await setupMswRsc('layout')
 
       // Assert
       expect(mockServerListen).toHaveBeenCalledTimes(2)
@@ -125,16 +125,16 @@ describe('setupMswRsc', () => {
 
     it.each([
       [
-        'NEXT_PUBLIC_MSW_ENABLEDがfalse',
-        { NEXT_RUNTIME: 'nodejs', NEXT_PUBLIC_MSW_ENABLED: 'false' },
+        'NEXT_PUBLIC_FEATURE_FLAGがfalse',
+        { NEXT_RUNTIME: 'nodejs', NEXT_PUBLIC_FEATURE_FLAG: 'false' },
       ],
       [
         'NEXT_RUNTIMEがnodejs以外',
-        { NEXT_RUNTIME: 'edge', NEXT_PUBLIC_MSW_ENABLED: 'true' },
+        { NEXT_RUNTIME: 'edge', NEXT_PUBLIC_FEATURE_FLAG: 'true' },
       ],
       [
         '両方の条件が無効',
-        { NEXT_RUNTIME: 'edge', NEXT_PUBLIC_MSW_ENABLED: 'false' },
+        { NEXT_RUNTIME: 'edge', NEXT_PUBLIC_FEATURE_FLAG: 'false' },
       ],
     ])('%sの場合はMSWサーバーが起動しない', async (_, config) => {
       // Arrange - configモジュールをモック
@@ -145,7 +145,7 @@ describe('setupMswRsc', () => {
       const { setupMswRsc: setupMswRscTest } = await import('./setupMswRsc')
 
       // Act
-      await setupMswRscTest()
+      await setupMswRscTest('layout')
 
       // Assert
       expect(mockServerListen).not.toHaveBeenCalled()

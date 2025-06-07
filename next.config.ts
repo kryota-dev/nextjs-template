@@ -20,6 +20,12 @@ const nextConfig: NextConfig = {
     }
     return config
   },
+  ...(process.env.NODE_ENV !== 'development' &&
+    process.env.NEXT_PUBLIC_BASE_PATH && {
+      basePath: process.env.NEXT_PUBLIC_BASE_PATH,
+      assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH,
+      distDir: `out${process.env.NEXT_PUBLIC_BASE_PATH}`,
+    }),
 }
 
 export default nextConfig
