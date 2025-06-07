@@ -12,7 +12,7 @@ import { NewsListPagePresentation } from './presentation'
 export const NewsListPageContainer = async () => {
   const newsResponse = await getList('news', {
     limit: 10,
-    orders: '-publishedAt',
+    orders: '-updatedAt',
   }).catch((e) => {
     loggerError({
       e,

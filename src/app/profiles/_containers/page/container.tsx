@@ -12,7 +12,7 @@ import { ProfileListPagePresentation } from './presentation'
 export const ProfileListPageContainer = async () => {
   const profilesResponse = await getList('profiles', {
     limit: 10,
-    orders: '-publishedAt',
+    orders: '-updatedAt',
   }).catch((e) => {
     loggerError({
       e,

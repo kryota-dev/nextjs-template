@@ -9,7 +9,7 @@ export async function HomePageContainer() {
   // 最新ニュースを取得（3件）
   const newsResponse = await getList('news', {
     limit: 3,
-    orders: '-publishedAt',
+    orders: '-updatedAt',
   }).catch((e) => {
     loggerError({
       e,
@@ -22,7 +22,7 @@ export async function HomePageContainer() {
   // プロフィールを取得（4件）
   const profilesResponse = await getList('profiles', {
     limit: 4,
-    orders: '-publishedAt',
+    orders: '-updatedAt',
   }).catch((e) => {
     loggerError({
       e,
