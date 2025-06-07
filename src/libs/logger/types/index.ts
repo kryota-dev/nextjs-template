@@ -7,6 +7,8 @@ export type Logger = {
   __filename: string
   /** 関数名 */
   fnName?: string
+  /** ロガーの子要素 */
+  child?: object
 }
 
 export type LoggerError = Pick<Logger, '__filename' | 'fnName'> & {

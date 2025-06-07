@@ -8,7 +8,11 @@ import {
   diffInDays,
   diffInYears,
   formatDate,
+  getAdjustedDate,
   getCurrentDate,
+  getMiddleDate,
+  getNewerDate,
+  getOlderDate,
   getUtcEndOfYearInJst,
   getUtcJustBeforeEndOfYearInJst,
   getUtcJustBeforeStartOfYearInJst,
@@ -396,6 +400,182 @@ describe('dateUtils', () => {
     it('別の年でも正しく計算する', () => {
       const result = getUtcJustBeforeEndOfYearInJst(2025)
       expect(result).toBe('2025-12-31T14:59:59.998Z')
+    })
+  })
+
+  describe('getNewerDate', () => {
+    it('2つの日付を比較してより新しい日付を返す', () => {
+      const date1 = '2024-01-15'
+      const date2 = '2024-01-20'
+      const result = getNewerDate(date1, date2)
+      expect(result).toBe('2024.01.20')
+    })
+
+    it('date1の方が新しい場合はdate1を返す', () => {
+      const date1 = '2024-01-25'
+      const date2 = '2024-01-20'
+      const result = getNewerDate(date1, date2)
+      expect(result).toBe('2024.01.25')
+    })
+
+    it('同じ日付の場合は同じ日付を返す', () => {
+      const date1 = '2024-01-15'
+      const date2 = '2024-01-15'
+      const result = getNewerDate(date1, date2)
+      expect(result).toBe('2024.01.15')
+    })
+
+    it('Date オブジェクトでも正しく動作する', () => {
+      const date1 = new Date('2024-01-15T00:00:00Z')
+      const date2 = new Date('2024-01-20T00:00:00Z')
+      const result = getNewerDate(date1, date2)
+      expect(result).toBe('2024.01.20')
+    })
+
+    it('年をまたぐ場合でも正しく比較する', () => {
+      const date1 = '2023-12-31'
+      const date2 = '2024-01-01'
+      const result = getNewerDate(date1, date2)
+      expect(result).toBe('2024.01.01')
+    })
+  })
+
+  describe('getOlderDate', () => {
+    it('2つの日付を比較してより古い日付を返す', () => {
+      const date1 = '2024-01-15'
+      const date2 = '2024-01-20'
+      const result = getOlderDate(date1, date2)
+      expect(result).toBe('2024.01.15')
+    })
+
+    it('date2の方が古い場合はdate2を返す', () => {
+      const date1 = '2024-01-25'
+      const date2 = '2024-01-20'
+      const result = getOlderDate(date1, date2)
+      expect(result).toBe('2024.01.20')
+    })
+
+    it('同じ日付の場合は同じ日付を返す', () => {
+      const date1 = '2024-01-15'
+      const date2 = '2024-01-15'
+      const result = getOlderDate(date1, date2)
+      expect(result).toBe('2024.01.15')
+    })
+
+    it('Date オブジェクトでも正しく動作する', () => {
+      const date1 = new Date('2024-01-15T00:00:00Z')
+      const date2 = new Date('2024-01-20T00:00:00Z')
+      const result = getOlderDate(date1, date2)
+      expect(result).toBe('2024.01.15')
+    })
+
+    it('年をまたぐ場合でも正しく比較する', () => {
+      const date1 = '2023-12-31'
+      const date2 = '2024-01-01'
+      const result = getOlderDate(date1, date2)
+      expect(result).toBe('2023.12.31')
+    })
+  })
+
+  describe('getMiddleDate', () => {
+    it('2つの日付の中間点を正しく計算する', () => {
+      const date1 = '2024-01-10'
+      const date2 = '2024-01-20'
+      const result = getMiddleDate(date1, date2)
+      expect(result).toBe('2024.01.15')
+    })
+
+    it('date1とdate2が逆の順序でも正しく計算する', () => {
+      const date1 = '2024-01-20'
+      const date2 = '2024-01-10'
+      const result = getMiddleDate(date1, date2)
+      expect(result).toBe('2024.01.15')
+    })
+
+    it('1日差の場合の中間点を正しく計算する', () => {
+      const date1 = '2024-01-10'
+      const date2 = '2024-01-11'
+      const result = getMiddleDate(date1, date2)
+      expect(result).toBe('2024.01.10')
+    })
+
+    it('同じ日付の場合は同じ日付を返す', () => {
+      const date1 = '2024-01-15'
+      const date2 = '2024-01-15'
+      const result = getMiddleDate(date1, date2)
+      expect(result).toBe('2024.01.15')
+    })
+
+    it('Date オブジェクトでも正しく動作する', () => {
+      const date1 = new Date('2024-01-10T00:00:00Z')
+      const date2 = new Date('2024-01-20T00:00:00Z')
+      const result = getMiddleDate(date1, date2)
+      expect(result).toBe('2024.01.15')
+    })
+
+    it('月をまたぐ場合でも正しく計算する', () => {
+      const date1 = '2024-01-25'
+      const date2 = '2024-02-05'
+      const result = getMiddleDate(date1, date2)
+      expect(result).toBe('2024.01.30')
+    })
+  })
+
+  describe('getAdjustedDate', () => {
+    it('add指定で差分日数を追加する', () => {
+      const date1 = '2024-01-15'
+      const date2 = '2024-01-20' // 5日の差
+      const result = getAdjustedDate(date1, date2, 'add')
+      expect(result).toBe('2024.01.20') // 15 + 5 = 20
+    })
+
+    it('subtract指定で差分日数を減算する', () => {
+      const date1 = '2024-01-15'
+      const date2 = '2024-01-20' // 5日の差
+      const result = getAdjustedDate(date1, date2, 'subtract')
+      expect(result).toBe('2024.01.10') // 15 - 5 = 10
+    })
+
+    it('date1の方が後の日付でも絶対値で計算する', () => {
+      const date1 = '2024-01-20'
+      const date2 = '2024-01-15' // 5日の差（絶対値）
+      const result = getAdjustedDate(date1, date2, 'add')
+      expect(result).toBe('2024.01.25') // 20 + 5 = 25
+    })
+
+    it('同じ日付の場合は元の日付を返す（add）', () => {
+      const date1 = '2024-01-15'
+      const date2 = '2024-01-15'
+      const result = getAdjustedDate(date1, date2, 'add')
+      expect(result).toBe('2024.01.15')
+    })
+
+    it('同じ日付の場合は元の日付を返す（subtract）', () => {
+      const date1 = '2024-01-15'
+      const date2 = '2024-01-15'
+      const result = getAdjustedDate(date1, date2, 'subtract')
+      expect(result).toBe('2024.01.15')
+    })
+
+    it('Date オブジェクトでも正しく動作する', () => {
+      const date1 = new Date('2024-01-15T00:00:00Z')
+      const date2 = new Date('2024-01-20T00:00:00Z')
+      const result = getAdjustedDate(date1, date2, 'add')
+      expect(result).toBe('2024.01.20')
+    })
+
+    it('月をまたぐ調整を正しく処理する', () => {
+      const date1 = '2024-01-25'
+      const date2 = '2024-01-15' // 10日の差
+      const result = getAdjustedDate(date1, date2, 'add')
+      expect(result).toBe('2024.02.04') // 25 + 10 = 2/4
+    })
+
+    it('年をまたぐ調整を正しく処理する', () => {
+      const date1 = '2023-12-25'
+      const date2 = '2023-12-15' // 10日の差
+      const result = getAdjustedDate(date1, date2, 'add')
+      expect(result).toBe('2024.01.04') // 12/25 + 10 = 1/4
     })
   })
 })

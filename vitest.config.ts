@@ -2,6 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin'
+import { storybookNextJsPlugin } from '@storybook/nextjs-vite/vite-plugin'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
@@ -97,6 +98,7 @@ const unitConfig = defineConfig({
  * テスト設定
  */
 export default defineConfig({
+  plugins: [storybookNextJsPlugin()],
   test: {
     coverage: {
       enabled: true,
@@ -122,6 +124,7 @@ export default defineConfig({
         'src/app/sitemap.ts',
         'src/app/**/{page,layout,default}.tsx',
         'src/libs/msw/{browser,node}.ts',
+        'src/instrumentation.ts',
       ],
     },
     projects: [unitConfig, storybookConfig],

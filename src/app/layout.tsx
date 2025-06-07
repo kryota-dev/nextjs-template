@@ -2,12 +2,19 @@ import 'server-only'
 
 import { HOME_URL } from '@/constants/HOME_URL'
 
+import { setupMswRsc } from '@/libs/msw/setupMswRsc'
+
 import { SITE_DESCRIPTION, SITE_NAME } from '@/constants'
+import { MswProvider } from '@/providers'
 
 import { RootLayoutContainer } from './_containers/layout'
 
 import type { Metadata } from 'next'
 import type { ComponentProps } from 'react'
+
+import '@/styles/globals.css'
+
+await setupMswRsc()
 
 export const metadata: Metadata = {
   title: {
@@ -62,5 +69,9 @@ export const metadata: Metadata = {
 type Props = ComponentProps<typeof RootLayoutContainer>
 
 export default function RootLayout(props: Props) {
-  return <RootLayoutContainer {...props} />
+  return (
+    <MswProvider>
+      <RootLayoutContainer {...props} />
+    </MswProvider>
+  )
 }

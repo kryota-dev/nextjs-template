@@ -1,5 +1,6 @@
-import { Footer } from '@/components/layouts/Footer'
-import { Header } from '@/components/layouts/Header'
+import Link from 'next/link'
+
+import { Footer, Header } from '@/components/layouts'
 
 import {
   GoogleTagManager,
@@ -7,9 +8,7 @@ import {
 } from '@/libs/GoogleTagManager'
 import { cn } from '@/libs/stylings'
 
-import { geistMono, geistSans } from '@/styles/fonts'
-
-import '@/styles/globals.css'
+import { geistSans, geistMono } from '@/styles/fonts'
 
 type Props = Readonly<{
   children: React.ReactNode
@@ -19,7 +18,7 @@ type Props = Readonly<{
 
 /**
  * RootLayoutPresentation
- * @description Shared Components or Client Components
+ * @description RootLayoutのUI表示を担当するPresentationコンポーネント
  */
 export const RootLayoutPresentation = ({
   children,
@@ -44,19 +43,21 @@ export const RootLayoutPresentation = ({
           geistSans.variable,
           geistMono.variable,
           'flex min-h-screen flex-col antialiased',
+          'bg-gray-50 font-sans',
         )}
       >
         <Header />
-        {children}
+        <main className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
+          {children}
+        </main>
         <Footer>
-          <a
+          <Link
             className='text-sm'
             href='https://github.com/kryota-dev/nextjs-static-export-template/blob/main/LICENSE'
             target='_blank'
-            rel='noopener noreferrer'
           >
             Copyright (c) 2025 Ryota Kaneko
-          </a>
+          </Link>
         </Footer>
         <GoogleTagManagerNoscript />
       </Body>
