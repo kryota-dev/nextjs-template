@@ -6,6 +6,7 @@ import { MswProvider } from './MswProvider'
 // MSWのモック設定（ホイスティング対応）
 vi.mock('@/config', () => ({
   NEXT_PUBLIC_MSW_ENABLED: 'true',
+  NEXT_PUBLIC_BASE_PATH: '',
 }))
 
 vi.mock('@/libs/msw/browser', () => ({

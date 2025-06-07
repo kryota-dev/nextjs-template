@@ -6,8 +6,13 @@ import '@testing-library/jest-dom/vitest'
 
 // 環境変数をモック
 vi.mock('@/config', () => ({
-  NEXT_PUBLIC_GTM_ID: 'GTM-1234567890',
-  NEXT_PUBLIC_MICROCMS_SERVICE_DOMAIN: 'test',
+  NEXT_PUBLIC_GTM_ID: 'GTM-XXX',
+  NEXT_PUBLIC_MICROCMS_SERVICE_DOMAIN: 'service-domain',
+  NEXT_PUBLIC_MICROCMS_API_KEY: 'api-key',
+  SERVER_ONLY_MICROCMS_API_KEY: 'api-key',
+  NEXT_PUBLIC_BASE_PATH: '',
+  NEXT_PUBLIC_HOME_URL: 'http://localhost:3000',
+  NEXT_PUBLIC_MSW_ENABLED: 'true',
 }))
 
 beforeAll(() => {

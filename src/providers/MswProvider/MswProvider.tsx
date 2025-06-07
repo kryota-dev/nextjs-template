@@ -2,7 +2,7 @@
 
 import { Suspense, use } from 'react'
 
-import { NEXT_PUBLIC_MSW_ENABLED } from '@/config'
+import { NEXT_PUBLIC_BASE_PATH, NEXT_PUBLIC_MSW_ENABLED } from '@/config'
 
 const mockingEnabledPromise = (async () => {
   if (typeof window === 'undefined' || NEXT_PUBLIC_MSW_ENABLED !== 'true') {
@@ -18,6 +18,11 @@ const mockingEnabledPromise = (async () => {
       }
       // NOTE: 不足しているハンドラーを表示する際に使用する
       // print.warning()
+    },
+    serviceWorker: {
+      url: NEXT_PUBLIC_BASE_PATH
+        ? `${NEXT_PUBLIC_BASE_PATH}/mockServiceWorker.js`
+        : '/mockServiceWorker.js',
     },
   })
   const { handlers } = await import('@/libs/msw/handlers')

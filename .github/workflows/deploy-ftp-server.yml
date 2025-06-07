@@ -1,0 +1,174 @@
+name: 🚀 Deploy to FTP Server
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - develop
+  workflow_dispatch:
+  repository_dispatch:
+    types: [microcms] # Webhookが通知されたときに実行
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: 📦 Build
+    runs-on: ubuntu-24.04
+    outputs:
+      base_path: ${{ steps.set-base-path.outputs.base_path }}
+
+    steps:
+      - name: 👮‍♂️ Branch check
+        if: ${{ github.event_name == 'workflow_dispatch' && github.ref_name != 'main' && github.ref_name != 'develop' }}
+        run: |
+          echo "🚨 This workflow can only be run on main or develop branch"
+          exit 1
+
+      - name: ᛘ Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+          ref: ${{ github.event_name == 'repository_dispatch' && 'main' || github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
+
+      - name: 🔨 Setup pnpm
+        uses: ./.github/actions/pnpm-setup
+
+      - name: 🫙 Set up build cache
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-next-cache-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-next-cache-
+
+      # BASE_PATHをGITHUB_OUTPUTに設定
+      - name: 🍳 Set BASE_PATH
+        id: set-base-path
+        env:
+          NEXT_PUBLIC_BASE_PATH: ${{ vars.NEXT_PUBLIC_BASE_PATH || '' }}
+        run: |
+          echo "base_path=${NEXT_PUBLIC_BASE_PATH}${{ github.event_name == 'pull_request' && format('/pr-{0}', github.event.pull_request.number) || github.ref_name != 'main' && format('/{0}', github.ref_name) || '' }}" >> $GITHUB_OUTPUT
+
+      - name: 🍳 Build next
+        env:
+          NEXT_PUBLIC_GTM_ID: ${{ secrets.NEXT_PUBLIC_GTM_ID }}
+          NEXT_PUBLIC_MICROCMS_SERVICE_DOMAIN: ${{ secrets.NEXT_PUBLIC_MICROCMS_SERVICE_DOMAIN }}
+          NEXT_PUBLIC_MICROCMS_API_KEY: ${{ secrets.NEXT_PUBLIC_MICROCMS_API_KEY }}
+          SERVER_ONLY_MICROCMS_API_KEY: ${{ secrets.SERVER_ONLY_MICROCMS_API_KEY }}
+          NEXT_PUBLIC_HOME_URL: ${{ vars.NEXT_PUBLIC_HOME_URL }}
+          NEXT_PUBLIC_BASE_PATH: ${{ steps.set-base-path.outputs.base_path }}
+          NEXT_PUBLIC_MSW_ENABLED: ${{ vars.NEXT_PUBLIC_MSW_ENABLED }}
+        run: pnpm build:next
+
+      - name: ⬆️ Upload artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: build-assets-${{ github.workflow_sha }}
+          path: ./out
+          retention-days: 1
+
+  deploy:
+    name: 🚚 Deploy
+    if: ${{ github.event_name != 'pull_request' }}
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
+    environment:
+      name: ${{ github.event_name == 'repository_dispatch' && 'main' || github.ref_name }}-app
+      url: "${{ vars.NEXT_PUBLIC_HOME_URL }}${{ vars.NEXT_PUBLIC_BASE_PATH || '' }}/${{ github.event_name == 'repository_dispatch' && '' || github.ref_name != 'main' && github.ref_name || '' }}"
+
+    steps:
+      - name: ᛘ Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event_name == 'repository_dispatch' && 'main' || github.ref_name }}
+
+      - name: ⬇️ Download Artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: build-assets-${{ github.workflow_sha }}
+          path: ./out
+
+      - name: 🚀 Deploy to FTP Server
+        uses: ./.github/actions/deploy/ftp
+        with:
+          artifact-name: build-assets-${{ github.workflow_sha }}
+          base-path: ${{ needs.build.outputs.base_path }}
+          ftp-server: ${{ secrets.FTP_SERVER }}
+          ftp-username: ${{ secrets.FTP_USERNAME }}
+          ftp-password: ${{ secrets.FTP_PASSWORD }}
+          ftp-path: ${{ secrets.FTP_PATH }}${{ needs.build.outputs.base_path }}
+
+  deploy-pr-preview:
+    name: 🚚 Deploy - PR preview
+    if: ${{ github.event_name == 'pull_request' }}
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: ᛘ Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: ⬇️ Download Artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: build-assets-${{ github.workflow_sha }}
+          path: ./out
+
+      - name: 🚀 Deploy to FTP Server
+        uses: ./.github/actions/deploy/ftp
+        with:
+          artifact-name: build-assets-${{ github.workflow_sha }}
+          base-path: ${{ needs.build.outputs.base_path }}
+          ftp-server: ${{ secrets.FTP_SERVER }}
+          ftp-username: ${{ secrets.FTP_USERNAME }}
+          ftp-password: ${{ secrets.FTP_PASSWORD }}
+          ftp-path: ${{ secrets.FTP_PATH }}${{ needs.build.outputs.base_path }}
+
+      - name: 💬 Comment on PR
+        if: ${{ success() }}
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        env:
+          DEPLOY_URL: ${{ vars.NEXT_PUBLIC_HOME_URL }}${{ needs.build.outputs.base_path }}/
+        with:
+          header: deploy-pr-preview-success
+          message: |
+            ## 🚀 Deployed to FTP Server (Preview)
+
+            URL: ${{ env.DEPLOY_URL }}
+
+            > [!NOTE]
+            > Deployed content will be deleted after merging.
+
+      - name: 🫠 Comment on PR for failure
+        if: ${{ failure() }}
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        with:
+          header: deploy-pr-preview-failed
+          hide_and_recreate: true
+          message: |
+            ## 🚨 Deploy failed
+
+            > [!CAUTION]
+            > Please check the build logs for details.  
+            > URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: 🫣 Hide failed comment
+        if: ${{ success() }}
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        with:
+          header: deploy-pr-preview-failed
+          hide: true
+          hide_classify: 'RESOLVED'

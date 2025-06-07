@@ -6,7 +6,7 @@ import { logger } from '../logger'
  * React Server Components環境用のMSWサーバー設定
  * @description MSWProviderと併用することで、RSC環境でもMSWを使用できるようにする
  */
-export const setupMswRsc = async () => {
+export const setupMswRsc = async (__filename: string) => {
   if (NEXT_RUNTIME === 'nodejs' && NEXT_PUBLIC_MSW_ENABLED === 'true') {
     const { server } = await import('@/libs/msw/node')
     server.listen({
@@ -21,8 +21,8 @@ export const setupMswRsc = async () => {
     })
     logger({
       level: 'warn',
-      message: 'MSW server listening',
-      __filename: 'layout',
+      message: '[MSW] server listening',
+      __filename,
       fnName: 'server.listen',
       child: {
         NEXT_PUBLIC_MSW_ENABLED,

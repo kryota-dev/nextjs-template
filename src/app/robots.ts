@@ -1,6 +1,10 @@
 import { HOME_URL } from '@/constants/HOME_URL'
 
+import { setupMswRsc } from '@/libs/msw/setupMswRsc'
+
 import type { MetadataRoute } from 'next'
+
+await setupMswRsc(__filename)
 
 export const dynamic = 'force-static'
 

@@ -37,7 +37,7 @@ describe('setupMswRsc', () => {
   describe('基本機能テスト', () => {
     it('Node.js環境でMSWが有効な場合にサーバーが起動する', async () => {
       // Arrange & Act
-      await setupMswRsc()
+      await setupMswRsc('layout')
 
       // Assert
       expect(mockServerListen).toHaveBeenCalledOnce()
@@ -46,7 +46,7 @@ describe('setupMswRsc', () => {
       })
       expect(mockLogger).toHaveBeenCalledWith({
         level: 'warn',
-        message: 'MSW server listening',
+        message: '[MSW] server listening',
         __filename: 'layout',
         fnName: 'server.listen',
         child: {
@@ -57,12 +57,12 @@ describe('setupMswRsc', () => {
 
     it('setupMswRsc関数がエラーなく実行される', async () => {
       // Arrange & Act & Assert
-      await expect(setupMswRsc()).resolves.toBeUndefined()
+      await expect(setupMswRsc('layout')).resolves.toBeUndefined()
     })
 
     it('MSWサーバーのlistenメソッドが適切な設定で呼ばれる', async () => {
       // Arrange & Act
-      await setupMswRsc()
+      await setupMswRsc('layout')
 
       // Assert
       const callArgs = mockServerListen.mock.calls[0]?.[0]
@@ -73,12 +73,12 @@ describe('setupMswRsc', () => {
 
     it('ログが適切なフォーマットで出力される', async () => {
       // Arrange & Act
-      await setupMswRsc()
+      await setupMswRsc('layout')
 
       // Assert
       expect(mockLogger).toHaveBeenCalledWith({
         level: 'warn',
-        message: 'MSW server listening',
+        message: '[MSW] server listening',
         __filename: 'layout',
         fnName: 'server.listen',
         child: {
@@ -109,8 +109,8 @@ describe('setupMswRsc', () => {
   describe('関数呼び出し回数テスト', () => {
     it('setupMswRscを複数回呼び出した場合の動作', async () => {
       // Arrange & Act
-      await setupMswRsc()
-      await setupMswRsc()
+      await setupMswRsc('layout')
+      await setupMswRsc('layout')
 
       // Assert
       expect(mockServerListen).toHaveBeenCalledTimes(2)
@@ -145,7 +145,7 @@ describe('setupMswRsc', () => {
       const { setupMswRsc: setupMswRscTest } = await import('./setupMswRsc')
 
       // Act
-      await setupMswRscTest()
+      await setupMswRscTest('layout')
 
       // Assert
       expect(mockServerListen).not.toHaveBeenCalled()

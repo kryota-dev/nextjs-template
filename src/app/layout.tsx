@@ -14,7 +14,7 @@ import type { ComponentProps } from 'react'
 
 import '@/styles/globals.css'
 
-await setupMswRsc()
+await setupMswRsc(__filename)
 
 export const metadata: Metadata = {
   title: {
