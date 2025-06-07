@@ -11,18 +11,24 @@ const mockingEnabledPromise = (async () => {
 
   const { worker } = await import('@/libs/msw/browser')
   await worker.start({
+    // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
     onUnhandledRequest(request, print) {
       if (request.url.includes('_next')) {
         return
       }
-      print.warning()
+      // NOTE: 不足しているハンドラーを表示する際に使用する
+      // print.warning()
     },
   })
   const { handlers } = await import('@/libs/msw/handlers')
   worker.use(...handlers)
 
   // eslint-disable-next-line no-console
-  console.warn('MSW worker started')
+  console.log('%c[MSW] worker started', 'color: #FF4500; font-weight: bold;', {
+    NEXT_PUBLIC_MSW_ENABLED,
+    // NOTE: 有効なハンドラーを表示する際に使用する
+    // handlers: worker.listHandlers(),
+  })
 })()
 
 export function MSWProvider({
@@ -30,8 +36,8 @@ export function MSWProvider({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  // If MSW is enabled, we need to wait for the worker to start,
-  // so we wrap the children in a Suspense boundary until it's ready.
+  // MSW が有効な場合、ワーカーが開始するまで待つ必要があります。
+  // そのため、準備が整うまで子プロセスを Suspense boundary で囲みます。
   return (
     <Suspense fallback={null}>
       <MSWProviderWrapper>{children}</MSWProviderWrapper>

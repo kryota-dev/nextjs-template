@@ -10,11 +10,13 @@ export const setupMswRsc = async () => {
   if (NEXT_RUNTIME === 'nodejs' && NEXT_PUBLIC_MSW_ENABLED === 'true') {
     const { server } = await import('@/libs/msw/node')
     server.listen({
+      // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
       onUnhandledRequest(request, print) {
         if (request.url.includes('_next')) {
           return
         }
-        print.warning()
+        // NOTE: 不足しているハンドラーを表示する際に使用する
+        // print.warning()
       },
     })
     logger({
@@ -22,6 +24,7 @@ export const setupMswRsc = async () => {
       message: 'MSW server listening',
       __filename: 'layout',
       fnName: 'server.listen',
+      // NOTE: 有効なハンドラーを表示する際に使用する
       // child: {
       //   handlers: server.listHandlers(),
       // },
