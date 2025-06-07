@@ -1,0 +1,80 @@
+name: Delete FTP Server
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - develop
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'The number of the pull request (ex. 123)'
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  delete:
+    name: 🗑️ Delete
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: 🍳 Set BASE_PATH
+        id: set-base-path
+        env:
+          NEXT_PUBLIC_BASE_PATH: ${{ vars.NEXT_PUBLIC_BASE_PATH || '' }}
+          PR_NUMBER: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.pr_number || github.event.pull_request.number }}
+        run: |
+          echo "base_path=${NEXT_PUBLIC_BASE_PATH}/pr-${PR_NUMBER}" >> $GITHUB_OUTPUT
+
+      - name: 🗑️ Delete FTP Server
+        uses: SamKirkland/FTP-Deploy-Action@8e83cea8672e3fbcbb9fdafff34debf6ae4c5f65 # v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_PATH }}/${{ steps.set-base-path.outputs.base_path }}/
+          dangerous-clean-slate: true
+
+      - name: 💬 Comment on PR
+        if: ${{ success() && github.event_name == 'pull_request' }}
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        with:
+          header: delete-pr-preview-success
+          message: |
+            ## 🗑️ Deleted from FTP Server (Preview)
+            Preview removed from FTP server.
+
+      - name: 🫠 Comment on PR for failure
+        if: ${{ failure() && github.event_name == 'pull_request' }}
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        with:
+          header: delete-pr-preview-failed
+          hide_and_recreate: true
+          message: |
+            ## 🚨 Delete failed
+
+            > [!CAUTION]
+            > Please check the build logs for details.  
+            > URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: 🫣 Hide failed comment
+        if: ${{ success() && github.event_name == 'pull_request' }}
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        with:
+          header: delete-pr-preview-failed
+          hide: true
+          hide_classify: 'RESOLVED'
+
+      - name: 🫣 Hide deployed comment
+        if: ${{ success() && github.event_name == 'pull_request' }}
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        with:
+          header: deploy-pr-preview-success
+          hide: true
+          hide_classify: 'RESOLVED'
