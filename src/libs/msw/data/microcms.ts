@@ -14,7 +14,7 @@ export const mockNewsCategories: NewsCategoriesContent[] = [
     updatedAt: '2024-01-01T00:00:00.000Z',
     publishedAt: '2024-01-01T00:00:00.000Z',
     revisedAt: '2024-01-01T00:00:00.000Z',
-    name: 'テクノロジー',
+    name: 'カテゴリA',
   },
   {
     id: 'business',
@@ -22,7 +22,7 @@ export const mockNewsCategories: NewsCategoriesContent[] = [
     updatedAt: '2024-01-01T00:00:00.000Z',
     publishedAt: '2024-01-01T00:00:00.000Z',
     revisedAt: '2024-01-01T00:00:00.000Z',
-    name: 'ビジネス',
+    name: 'カテゴリB',
   },
   {
     id: 'design',
@@ -30,7 +30,7 @@ export const mockNewsCategories: NewsCategoriesContent[] = [
     updatedAt: '2024-01-01T00:00:00.000Z',
     publishedAt: '2024-01-01T00:00:00.000Z',
     revisedAt: '2024-01-01T00:00:00.000Z',
-    name: 'デザイン',
+    name: 'カテゴリC',
   },
 ]
 
@@ -42,7 +42,7 @@ export const mockNews: NewsContent[] = [
     updatedAt: '2024-01-15T09:00:00.000Z',
     publishedAt: '2024-01-15T09:00:00.000Z',
     revisedAt: '2024-01-15T09:00:00.000Z',
-    title: 'Next.js 15の新機能について',
+    title: 'テストニュース1のタイトル',
     thumbnail: {
       url: 'https://picsum.photos/800/600',
       width: 800,
@@ -50,7 +50,7 @@ export const mockNews: NewsContent[] = [
     },
     category: mockNewsCategories[0],
     content:
-      '<p>Next.js 15では多くの新機能が追加されました。特にApp Routerの改善により、より柔軟なルーティングが可能になっています。</p><p>詳細な内容については、公式ドキュメントをご確認ください。</p>',
+      '<p>これはテストデータのニュース記事です。実際の内容ではありません。</p><p>モックデータとして作成されたサンプルコンテンツになります。</p>',
   },
   {
     id: 'news2',
@@ -58,7 +58,7 @@ export const mockNews: NewsContent[] = [
     updatedAt: '2024-01-10T14:30:00.000Z',
     publishedAt: '2024-01-10T14:30:00.000Z',
     revisedAt: '2024-01-10T14:30:00.000Z',
-    title: 'リモートワークの効率化について',
+    title: 'サンプル記事2のテストタイトル',
     thumbnail: {
       url: 'https://picsum.photos/800/600',
       width: 800,
@@ -66,7 +66,7 @@ export const mockNews: NewsContent[] = [
     },
     category: mockNewsCategories[1],
     content:
-      '<p>リモートワークを効率化するためのツールや手法について解説します。</p><p>適切なコミュニケーションツールの選択や、タスク管理の重要性について説明しています。</p>',
+      '<p>サンプルニュース記事のコンテンツです。テスト用のダミーデータとなっています。</p><p>実際の記事内容ではなく、開発・テスト目的で作成されています。</p>',
   },
   {
     id: 'news3',
@@ -74,7 +74,7 @@ export const mockNews: NewsContent[] = [
     updatedAt: '2024-01-05T11:15:00.000Z',
     publishedAt: '2024-01-05T11:15:00.000Z',
     revisedAt: '2024-01-05T11:15:00.000Z',
-    title: 'UIデザインのトレンド2024',
+    title: 'ダミーデータ記事3',
     thumbnail: {
       url: 'https://picsum.photos/800/600',
       width: 800,
@@ -82,9 +82,9 @@ export const mockNews: NewsContent[] = [
     },
     category: mockNewsCategories[2],
     content:
-      '<p>2024年のUIデザインにおけるトレンドについて分析します。</p><p>ミニマリズムの進化や、アクセシビリティの重要性が高まっています。</p>',
+      '<p>これはモックデータのサンプル記事です。テスト用のコンテンツとなります。</p><p>開発環境での動作確認に使用されるダミーコンテンツです。</p>',
     pdf: {
-      url: 'https://www.kansaigaidai.ac.jp/asp/img/pdf/82/7a79c35f7ce0704dec63be82440c8182.pdf',
+      url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
       fileSize: 1024000,
     },
   },
@@ -94,7 +94,7 @@ export const mockNews: NewsContent[] = [
     updatedAt: '2024-01-01T10:00:00.000Z',
     publishedAt: '2024-01-01T10:00:00.000Z',
     revisedAt: '2024-01-01T10:00:00.000Z',
-    title: 'TypeScriptの最新アップデート',
+    title: 'テスト記事4 - サンプルタイトル',
     thumbnail: {
       url: 'https://picsum.photos/800/600',
       width: 800,
@@ -102,7 +102,7 @@ export const mockNews: NewsContent[] = [
     },
     category: mockNewsCategories[0],
     content:
-      '<p>TypeScriptの最新バージョンでは、型システムがさらに強化されています。</p><p>新しい機能により、より安全で効率的な開発が可能になります。</p>',
+      '<p>テスト用のニュース記事コンテンツです。実際の記事ではありません。</p><p>MSWによるモックAPI用のサンプルデータとして使用されます。</p>',
   },
   {
     id: 'news5',
@@ -110,7 +110,7 @@ export const mockNews: NewsContent[] = [
     updatedAt: '2023-12-28T16:45:00.000Z',
     publishedAt: '2023-12-28T16:45:00.000Z',
     revisedAt: '2023-12-28T16:45:00.000Z',
-    title: 'プロジェクト管理のベストプラクティス',
+    title: 'ダミー記事5のテストタイトル',
     thumbnail: {
       url: 'https://picsum.photos/800/600',
       width: 800,
@@ -118,7 +118,7 @@ export const mockNews: NewsContent[] = [
     },
     category: mockNewsCategories[1],
     content:
-      '<p>効果的なプロジェクト管理のための手法とツールについて解説します。</p><p>アジャイル開発やスクラムの活用方法についても触れています。</p>',
+      '<p>モックデータのサンプル記事です。テスト環境での動作確認用です。</p><p>実際のコンテンツではなく、開発用のダミーデータとなります。</p>',
   },
 ]
 
@@ -130,19 +130,19 @@ export const mockProfiles: ProfileContent[] = [
     updatedAt: '2024-01-01T00:00:00.000Z',
     publishedAt: '2024-01-01T00:00:00.000Z',
     revisedAt: '2024-01-01T00:00:00.000Z',
-    name: '田中太郎',
+    name: 'テスト太郎',
     photo: {
       url: 'https://picsum.photos/400/400',
       width: 400,
       height: 400,
     },
     introduce:
-      'フロントエンド開発を専門とするソフトウェアエンジニアです。React、Next.js、TypeScriptを中心とした開発を行っています。',
-    birth_date: '1990-05-15',
-    birth_place: '東京都',
+      'これはテスト用のプロフィールです。実在の人物ではありません。モックデータとして作成されたサンプル情報です。',
+    birth_date: '1990-01-01',
+    birth_place: 'テスト県',
     career:
-      '2015年よりWeb開発に従事。複数のスタートアップでフロントエンド開発をリードしてきました。',
-    hobby: 'プログラミング、読書、映画鑑賞',
+      'サンプルキャリア情報です。実際の経歴ではなく、テスト用のダミーデータとなります。',
+    hobby: 'テスト、サンプル作成、ダミーデータ生成',
   },
   {
     id: 'profile2',
@@ -150,19 +150,19 @@ export const mockProfiles: ProfileContent[] = [
     updatedAt: '2024-01-01T00:00:00.000Z',
     publishedAt: '2024-01-01T00:00:00.000Z',
     revisedAt: '2024-01-01T00:00:00.000Z',
-    name: '佐藤花子',
+    name: 'サンプル花子',
     photo: {
       url: 'https://picsum.photos/400/400',
       width: 400,
       height: 400,
     },
     introduce:
-      'UIデザイナーとして、ユーザーフレンドリーなインターフェースの設計を行っています。',
-    birth_date: '1992-08-22',
-    birth_place: '大阪府',
+      'モックデータ用のプロフィールです。テスト環境での動作確認に使用されるダミー情報となります。',
+    birth_date: '1995-12-31',
+    birth_place: 'ダミー市',
     career:
-      '2018年からUIデザイナーとして活動。様々な業界のWebサービスのデザインを手がけています。',
-    hobby: 'デザイン、カフェ巡り、写真撮影',
+      'テスト用のキャリア情報です。開発環境での確認用に作成されたサンプルデータです。',
+    hobby: 'モック作成、ダミーデータ管理、テスト実行',
   },
 ]
 
