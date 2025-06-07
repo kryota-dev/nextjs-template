@@ -7,6 +7,8 @@ import type {
   ProfileContent,
 } from '@/libs/microcms/types/contents'
 
+import { SITE_DESCRIPTION, SITE_NAME } from '@/constants'
+
 type Props = {
   latestNews: NewsContent[]
   featuredProfiles: ProfileContent[]
@@ -21,9 +23,9 @@ export function HomePagePresentation({ latestNews, featuredProfiles }: Props) {
     <div className='space-y-12'>
       {/* ヒーローセクション */}
       <div className='text-center'>
-        <h1 className='mb-4 text-4xl font-bold text-gray-900'>Blog App</h1>
+        <h1 className='mb-4 text-4xl font-bold text-gray-900'>{SITE_NAME}</h1>
         <p className='mx-auto max-w-2xl text-lg text-gray-600'>
-          最新のニュースやプロフィール情報をお届けします。気になる記事があれば詳細をご覧ください。
+          {SITE_DESCRIPTION}
         </p>
       </div>
 
