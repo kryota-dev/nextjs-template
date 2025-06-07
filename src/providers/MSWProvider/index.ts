@@ -1,1 +1,1 @@
-export * from './MSWProvider'
+export * from './MswProvider'

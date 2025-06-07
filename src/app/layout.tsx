@@ -5,7 +5,7 @@ import { HOME_URL } from '@/constants/HOME_URL'
 import { setupMswRsc } from '@/libs/msw/setupMswRsc'
 
 import { SITE_DESCRIPTION, SITE_NAME } from '@/constants'
-import { MSWProvider } from '@/providers'
+import { MswProvider } from '@/providers'
 
 import { RootLayoutContainer } from './_containers/layout'
 
@@ -70,8 +70,8 @@ type Props = ComponentProps<typeof RootLayoutContainer>
 
 export default function RootLayout(props: Props) {
   return (
-    <MSWProvider>
+    <MswProvider>
       <RootLayoutContainer {...props} />
-    </MSWProvider>
+    </MswProvider>
   )
 }

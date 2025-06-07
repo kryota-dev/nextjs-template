@@ -31,7 +31,7 @@ const mockingEnabledPromise = (async () => {
   })
 })()
 
-export function MSWProvider({
+export function MswProvider({
   children,
 }: Readonly<{
   children: React.ReactNode

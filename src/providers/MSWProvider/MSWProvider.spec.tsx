@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { MSWProvider } from './MSWProvider'
+import { MswProvider } from './MswProvider'
 
 // MSWのモック設定（ホイスティング対応）
 vi.mock('@/config', () => ({
@@ -26,7 +26,7 @@ global.console = {
   warn: mockConsoleWarn,
 }
 
-describe('MSWProvider', () => {
+describe('MswProvider', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     // ブラウザ環境をシミュレート
@@ -43,17 +43,17 @@ describe('MSWProvider', () => {
   })
 
   describe('基本レンダリングテスト', () => {
-    it('MSWProviderが単一の子要素を適切にレンダリングできる', () => {
+    it('MswProviderが単一の子要素を適切にレンダリングできる', () => {
       // Arrange
       const children = <div data-testid='test-content'>Test Content</div>
 
       // Act & Assert - レンダリングエラーが発生しない
       expect(() => {
-        render(<MSWProvider>{children}</MSWProvider>)
+        render(<MswProvider>{children}</MswProvider>)
       }).not.toThrow()
     })
 
-    it('MSWProviderが複数の子要素を適切にレンダリングできる', () => {
+    it('MswProviderが複数の子要素を適切にレンダリングできる', () => {
       // Arrange
       const children = [
         <div key='1' data-testid='child1'>
@@ -66,17 +66,17 @@ describe('MSWProvider', () => {
 
       // Act & Assert - レンダリングエラーが発生しない
       expect(() => {
-        render(<MSWProvider>{children}</MSWProvider>)
+        render(<MswProvider>{children}</MswProvider>)
       }).not.toThrow()
     })
 
     it.each([
       ['null要素', null],
       ['undefined要素', undefined],
-    ])('MSWProviderが%sを適切にレンダリングできる', (_, children) => {
+    ])('MswProviderが%sを適切にレンダリングできる', (_, children) => {
       // Act & Assert - レンダリングエラーが発生しない
       expect(() => {
-        render(<MSWProvider>{children}</MSWProvider>)
+        render(<MswProvider>{children}</MswProvider>)
       }).not.toThrow()
     })
 
@@ -87,9 +87,9 @@ describe('MSWProvider', () => {
       // Act - Suspenseでエラーが発生しない
       expect(() => {
         render(
-          <MSWProvider>
+          <MswProvider>
             <div>{testContent}</div>
-          </MSWProvider>,
+          </MswProvider>,
         )
       }).not.toThrow()
     })
@@ -136,9 +136,9 @@ describe('MSWProvider', () => {
       // Act & Assert
       expect(() => {
         render(
-          <MSWProvider>
+          <MswProvider>
             <ErrorComponent />
-          </MSWProvider>,
+          </MswProvider>,
         )
       }).toThrow('Child error')
     })
@@ -151,19 +151,19 @@ describe('MSWProvider', () => {
       // Act & Assert - コンポーネントがクラッシュしない
       expect(() => {
         render(
-          <MSWProvider>
+          <MswProvider>
             <div>Error handling test</div>
-          </MSWProvider>,
+          </MswProvider>,
         )
       }).not.toThrow()
     })
   })
 
   describe('統合テスト', () => {
-    it('MSWProviderがネストしたコンポーネント構造で動作する', () => {
+    it('MswProviderがネストしたコンポーネント構造で動作する', () => {
       // Arrange
       const TestApp = () => (
-        <MSWProvider>
+        <MswProvider>
           <div data-testid='app'>
             <h1>Test App</h1>
             <div data-testid='nested'>
@@ -172,7 +172,7 @@ describe('MSWProvider', () => {
               </div>
             </div>
           </div>
-        </MSWProvider>
+        </MswProvider>
       )
 
       // Act & Assert - レンダリングエラーが発生しない
@@ -232,16 +232,16 @@ describe('MSWProvider', () => {
 
         // モジュールを再インポート
         vi.resetModules()
-        const { MSWProvider: MSWProviderTest } = await import('./MSWProvider')
+        const { MswProvider: MswProviderTest } = await import('./MswProvider')
 
         const TestComponent = () => <div data-testid='test'>Test Content</div>
 
         // Act & Assert
         expect(() => {
           render(
-            <MSWProviderTest>
+            <MswProviderTest>
               <TestComponent />
-            </MSWProviderTest>,
+            </MswProviderTest>,
           )
         }).not.toThrow()
       },
