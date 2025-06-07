@@ -2,8 +2,6 @@ name: 🏷️ Add GitHub Labels
 
 on:
   push:
-    branches:
-      - develop
     paths:
       - '.github/labels.yml'
       - '.github/workflows/add-github-labels.yml'
@@ -16,34 +14,33 @@ jobs:
     permissions:
       contents: write
       issues: write
+    env:
+      ADD_LABELS_BRANCH: ${{ vars.ADD_LABELS_BRANCH || 'develop' }} # ラベル追加対象のブランチ名（デフォルトは develop）
 
     steps:
-      - name: 🔍 Check branch
-        run: |
-          if [ "${{ github.ref_name }}" != "develop" ]; then
-            echo "❌ このワークフローは develop ブランチでのみ実行可能です"
-            echo "現在のブランチ: ${{ github.ref_name }}"
-            exit 1
-          fi
-
       - name: 📥 Checkout repository
+        if: ${{ github.ref_name == env.ADD_LABELS_BRANCH }}
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: 📦 Setup Node.js
+        if: ${{ github.ref_name == env.ADD_LABELS_BRANCH }}
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .node-version
 
       # 既存のpackage.jsonとpnpm-lock.yamlと.npmrcを削除し、package.jsonを作成
       - name: 🗑️ Remove unnecessary files
+        if: ${{ github.ref_name == env.ADD_LABELS_BRANCH }}
         run: |
           rm -f package.json pnpm-lock.yaml .npmrc
           echo "{}" > package.json
 
       - name: 🔧 Install yaml module
+        if: ${{ github.ref_name == env.ADD_LABELS_BRANCH }}
         run: npm install yaml
 
       - name: 🏷️ Add GitHub Labels
+        if: ${{ github.ref_name == env.ADD_LABELS_BRANCH }}
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: | #```typescript
@@ -174,6 +171,7 @@ jobs:
           #```
 
       - name: 💾 Commit changes
+        if: ${{ github.ref_name == env.ADD_LABELS_BRANCH }}
         run: |
           # Note: the following account information will not work on GHES
           git config user.name "github-actions[bot]"

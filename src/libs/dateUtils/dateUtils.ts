@@ -181,3 +181,76 @@ export const getUtcJustBeforeEndOfYearInJst = (
   const yearNum = typeof year === 'string' ? Number(year) : year
   return `${yearNum}-12-31T14:59:59.998Z`
 }
+
+/**
+ * 2つの日付を比較してより新しい日付を返す関数
+ * @param date1 - 比較対象の日付1
+ * @param date2 - 比較対象の日付2
+ * @returns より新しい日付の文字列
+ */
+export const getNewerDate = (
+  date1: Date | string,
+  date2: Date | string,
+): string => {
+  const d1 = dayjs(date1)
+  const d2 = dayjs(date2)
+  return d1.isAfter(d2)
+    ? d1.tz().format(defaultFormat)
+    : d2.tz().format(defaultFormat)
+}
+
+/**
+ * 2つの日付を比較してより古い日付を返す関数
+ * @param date1 - 比較対象の日付1
+ * @param date2 - 比較対象の日付2
+ * @returns より古い日付の文字列
+ */
+export const getOlderDate = (
+  date1: Date | string,
+  date2: Date | string,
+): string => {
+  const d1 = dayjs(date1)
+  const d2 = dayjs(date2)
+  return d1.isBefore(d2)
+    ? d1.tz().format(defaultFormat)
+    : d2.tz().format(defaultFormat)
+}
+
+/**
+ * 2つの日付の中間点を返す関数
+ * @param date1 - 基準日付1
+ * @param date2 - 基準日付2
+ * @returns 2つの日付の中間点の日付文字列
+ */
+export const getMiddleDate = (
+  date1: Date | string,
+  date2: Date | string,
+): string => {
+  const d1 = dayjs(date1)
+  const d2 = dayjs(date2)
+  const diffInMs = d2.diff(d1) / 2
+  return d1.add(diffInMs, 'millisecond').tz().format(defaultFormat)
+}
+
+/**
+ * 2つの日付の差分を使って調整された日付を返す関数
+ * @param date1 - 基準日付
+ * @param date2 - 差分計算用の日付
+ * @param adjustment - 差分の適用方法（'add': 追加、'subtract': 減算）
+ * @returns 調整された日付の文字列
+ */
+export const getAdjustedDate = (
+  date1: Date | string,
+  date2: Date | string,
+  adjustment: 'add' | 'subtract',
+): string => {
+  const d1 = dayjs(date1)
+  const d2 = dayjs(date2)
+  const diffInDays = Math.abs(d1.diff(d2, 'day'))
+
+  if (adjustment === 'add') {
+    return d1.add(diffInDays, 'day').tz().format(defaultFormat)
+  } else {
+    return d1.subtract(diffInDays, 'day').tz().format(defaultFormat)
+  }
+}

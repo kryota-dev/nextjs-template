@@ -1,31 +1,41 @@
 import 'server-only'
 
+import { loggerError } from '@/libs/logger'
+import { getList } from '@/libs/microcms'
+
 import { HomePagePresentation } from './presentation'
 
-import type { ComponentProps } from 'react'
+export async function HomePageContainer() {
+  // 最新ニュースを取得（3件）
+  const newsResponse = await getList('news', {
+    limit: 3,
+    orders: '-updatedAt',
+  }).catch((e) => {
+    loggerError({
+      e,
+      __filename,
+      fnName: 'HomePageContainer',
+    })
+    throw new Error('ニュースの取得に失敗しました')
+  })
 
-// Example data
-const presentationProps = {
-  title: 'Hello World',
-  description: 'This is a boilerplate for Next.js static export.',
-  links: [
-    {
-      label: 'GitHub',
-      href: 'https://github.com/kryota-dev/nextjs-static-export-template',
-      variant: 'primary',
-    },
-    {
-      label: 'Ask DeepWiki',
-      href: 'https://deepwiki.com/kryota-dev/nextjs-static-export-template',
-      variant: 'secondary',
-    },
-  ],
-} as const satisfies ComponentProps<typeof HomePagePresentation>
+  // プロフィールを取得（4件）
+  const profilesResponse = await getList('profiles', {
+    limit: 4,
+    orders: '-updatedAt',
+  }).catch((e) => {
+    loggerError({
+      e,
+      __filename,
+      fnName: 'HomePageContainer',
+    })
+    throw new Error('プロフィールの取得に失敗しました')
+  })
 
-/**
- * HomePageContainer
- * @description Server Components上でのデータフェッチなどのサーバーサイド処理を行うコンテナコンポーネント
- */
-export const HomePageContainer = () => {
-  return <HomePagePresentation {...presentationProps} />
+  return (
+    <HomePagePresentation
+      latestNews={newsResponse.contents}
+      featuredProfiles={profilesResponse.contents}
+    />
+  )
 }
