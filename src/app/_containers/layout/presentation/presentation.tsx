@@ -1,9 +1,12 @@
-import { Navigation } from '@/components/layouts/Navigation'
+import Link from 'next/link'
+
+import { Footer, Header } from '@/components/layouts'
 
 import {
   GoogleTagManager,
   GoogleTagManagerNoscript,
 } from '@/libs/GoogleTagManager'
+import { cn } from '@/libs/stylings'
 
 import { geistSans, geistMono } from '@/styles/fonts'
 
@@ -36,12 +39,26 @@ export const RootLayoutPresentation = ({
         </>
       )}
       <Body
-        className={`min-h-screen bg-gray-50 ${geistSans.variable} ${geistMono.variable} font-sans`}
+        className={cn(
+          geistSans.variable,
+          geistMono.variable,
+          'flex min-h-screen flex-col antialiased',
+          'bg-gray-50 font-sans',
+        )}
       >
-        <Navigation />
+        <Header />
         <main className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
           {children}
         </main>
+        <Footer>
+          <Link
+            className='text-sm'
+            href='https://github.com/kryota-dev/nextjs-static-export-template/blob/main/LICENSE'
+            target='_blank'
+          >
+            Copyright (c) 2025 Ryota Kaneko
+          </Link>
+        </Footer>
         <GoogleTagManagerNoscript />
       </Body>
     </Html>

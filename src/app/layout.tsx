@@ -1,7 +1,10 @@
 import 'server-only'
 
+import { HOME_URL } from '@/constants/HOME_URL'
+
 import { setupMswRsc } from '@/libs/msw/setupMswRsc'
 
+import { SITE_DESCRIPTION, SITE_NAME } from '@/constants'
 import { MSWProvider } from '@/providers'
 
 import { RootLayoutContainer } from './_containers/layout'
@@ -15,10 +18,52 @@ await setupMswRsc()
 
 export const metadata: Metadata = {
   title: {
-    default: 'Next.js Static Export Boilerplate',
-    template: '%s | Next.js Static Export Boilerplate',
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
   },
-  description: 'microCMSとNext.jsで作成したWebサイト',
+  applicationName: SITE_NAME,
+  authors: [
+    // TODO: サイト公開時にauthorを変更する
+    {
+      name: 'kryota-dev',
+      url: 'https://github.com/kryota-dev/',
+    },
+  ],
+  // TODO: サイト公開時にkeywordsを変更する
+  keywords: ['Next.js', 'Static Export', 'Template'],
+  // TODO: サイト公開時にpublisherを変更する
+  publisher: 'kryota-dev',
+  metadataBase: new URL(HOME_URL),
+  description: SITE_DESCRIPTION,
+  // TODO: サイト公開時にrobotsをtrueにする
+  robots: {
+    index: false,
+    follow: false,
+  },
+  alternates: {
+    canonical: HOME_URL,
+  },
+  openGraph: {
+    type: 'website',
+    url: HOME_URL,
+    title: SITE_NAME,
+    siteName: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    locale: 'ja_JP',
+    images: [
+      {
+        url: `${HOME_URL}ogp.png`,
+        alt: SITE_NAME,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
+  formatDetection: {
+    // NOTE: iOS SafariでHydration Errorが発生するため、telephoneをfalseにする
+    telephone: false,
+  },
 }
 
 type Props = ComponentProps<typeof RootLayoutContainer>
