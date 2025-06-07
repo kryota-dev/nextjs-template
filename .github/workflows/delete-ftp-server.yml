@@ -1,4 +1,4 @@
-name: Delete FTP Server
+name: 🗑️ Delete FTP Server
 
 on:
   pull_request:
