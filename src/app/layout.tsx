@@ -38,8 +38,8 @@ export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
   // TODO: サイト公開時にrobotsをtrueにする
   robots: {
-    index: Boolean(NEXT_PUBLIC_FEATURE_FLAG),
-    follow: Boolean(NEXT_PUBLIC_FEATURE_FLAG),
+    index: !Boolean(NEXT_PUBLIC_FEATURE_FLAG),
+    follow: !Boolean(NEXT_PUBLIC_FEATURE_FLAG),
     noarchive: Boolean(NEXT_PUBLIC_FEATURE_FLAG),
   },
   alternates: {
