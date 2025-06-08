@@ -1,0 +1,116 @@
+name: 🗑️ Delete FTP Server
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - develop
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'The number of the pull request (ex. 123)'
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  delete:
+    name: 🗑️ Delete
+    if: ${{ vars.DEPLOY_TYPE == 'ftp' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: 🍳 Set BASE_PATH
+        id: set-base-path
+        env:
+          NEXT_PUBLIC_BASE_PATH: ${{ vars.NEXT_PUBLIC_BASE_PATH || '' }}
+          PR_NUMBER: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.pr_number || github.event.pull_request.number }}
+        run: |
+          echo "base_path=${NEXT_PUBLIC_BASE_PATH}/_feature/pr-${PR_NUMBER}" >> $GITHUB_OUTPUT
+
+      - name: ⏬ Install lftp
+        run: |
+          which lftp || sudo apt update && sudo apt install -y lftp
+
+      - name: 🗑️ Delete from FTP Server
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PATH: ${{ secrets.FTP_PATH }}
+          BASE_PATH: ${{ steps.set-base-path.outputs.base_path }}
+          DRY_RUN: ${{ vars.FTP_DRY_RUN || 'false' }}
+        run: |
+          TARGET_PATH="${FTP_PATH}${BASE_PATH}"
+
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "[INFO] 🔍 DRY RUN MODE: Checking deletion target: ${TARGET_PATH}"
+            if lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e"\
+            set ftp:ssl-allow no; \
+            set net:timeout 30; \
+            ls -la ${TARGET_PATH}; \
+            exit"; then
+              echo "[INFO] ✅ Target directory found and accessible"
+            else
+              echo "[WARNING] ⚠️ Target directory not found or inaccessible"
+            fi
+            echo "[INFO] 📋 Would delete: ${TARGET_PATH}"
+            echo "[INFO] 💡 To actually delete, set FTP_DELETE_DRY_RUN variable to 'false'"
+          else
+            echo "[INFO] 🗑️ Deleting: ${TARGET_PATH}"
+            # Note: SSL disabled due to server configuration compatibility
+            # Consider upgrading to FTPS if server supports it
+            if lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e"\
+            set ftp:ssl-allow no; \
+            set net:timeout 30; \
+            rm -rf ${TARGET_PATH}; \
+            exit"; then
+              echo "[SUCCESS] ✅ Deletion completed successfully"
+            else
+              echo "[ERROR] ❌ FTP deletion failed"
+              exit 1
+            fi
+          fi
+
+      - name: 💬 Comment on PR
+        if: ${{ success() && github.event_name == 'pull_request' }}
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        with:
+          header: delete-pr-preview-success
+          message: |
+            ## 🗑️ ${{ vars.FTP_DRY_RUN == 'true' && '[DRY_RUN] ' || '' }}Deleted from FTP Server (Preview)
+            Preview removed from FTP server.
+
+      - name: 🫠 Comment on PR for failure
+        if: ${{ failure() && github.event_name == 'pull_request' }}
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        with:
+          header: delete-pr-preview-failed
+          hide_and_recreate: true
+          message: |
+            ## 🚨 Delete failed
+
+            > [!CAUTION]
+            > Please check the build logs for details.  
+            > URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: 🫣 Hide failed comment
+        if: ${{ success() && github.event_name == 'pull_request' }}
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        with:
+          header: delete-pr-preview-failed
+          hide: true
+          hide_classify: 'RESOLVED'
+
+      - name: 🫣 Hide deployed comment
+        if: ${{ success() && github.event_name == 'pull_request' }}
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        with:
+          header: deploy-pr-preview-success
+          hide: true
+          hide_classify: 'RESOLVED'

@@ -4,6 +4,7 @@ import { HOME_URL } from '@/constants/HOME_URL'
 
 import { setupMswRsc } from '@/libs/msw/setupMswRsc'
 
+import { NEXT_PUBLIC_FEATURE_FLAG } from '@/config'
 import { SITE_DESCRIPTION, SITE_NAME } from '@/constants'
 import { MswProvider } from '@/providers'
 
@@ -14,7 +15,7 @@ import type { ComponentProps } from 'react'
 
 import '@/styles/globals.css'
 
-await setupMswRsc()
+await setupMswRsc(__filename)
 
 export const metadata: Metadata = {
   title: {
@@ -35,10 +36,10 @@ export const metadata: Metadata = {
   publisher: 'kryota-dev',
   metadataBase: new URL(HOME_URL),
   description: SITE_DESCRIPTION,
-  // TODO: サイト公開時にrobotsをtrueにする
   robots: {
-    index: false,
-    follow: false,
+    index: !Boolean(NEXT_PUBLIC_FEATURE_FLAG),
+    follow: !Boolean(NEXT_PUBLIC_FEATURE_FLAG),
+    noarchive: Boolean(NEXT_PUBLIC_FEATURE_FLAG),
   },
   alternates: {
     canonical: HOME_URL,

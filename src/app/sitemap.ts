@@ -3,8 +3,11 @@ import { HOME_URL } from '@/constants/HOME_URL'
 import { getNewerDate, toISOFormat } from '@/libs/dateUtils/dateUtils'
 import { loggerError } from '@/libs/logger'
 import { getList } from '@/libs/microcms'
+import { setupMswRsc } from '@/libs/msw/setupMswRsc'
 
 import type { MetadataRoute } from 'next'
+
+await setupMswRsc(__filename)
 
 export const dynamic = 'force-static'
 

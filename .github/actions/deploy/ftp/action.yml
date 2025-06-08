@@ -1,0 +1,115 @@
+name: Deploy to FTP Server
+description: Common actions to deploy to an FTP server
+
+inputs:
+  artifact-name:
+    description: 'The name of the artifact to deploy'
+    required: true
+  base-path:
+    description: 'The base path of the artifact'
+    required: false
+  ftp-server:
+    description: 'The address of the FTP server'
+    required: true
+  ftp-username:
+    description: 'The username of the FTP server'
+    required: true
+  ftp-password:
+    description: 'The password of the FTP server'
+    required: true
+  ftp-path:
+    description: 'The path of the FTP server'
+    required: true
+  dry-run:
+    description: 'Whether to run in dry-run mode (default: false)'
+    required: false
+    default: 'false'
+  is-production:
+    description: 'Whether this is a production deployment'
+    required: false
+    default: 'false'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: ⬇️ Download Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ./out
+
+    - name: ⏬ Install lftp
+      shell: bash
+      run: |
+        which lftp || sudo apt update && sudo apt install -y lftp
+    - name: 🚀 Deploy to FTP Server
+      shell: bash
+      env:
+        FTP_SERVER: ${{ inputs.ftp-server }}
+        FTP_USERNAME: ${{ inputs.ftp-username }}
+        FTP_PASSWORD: ${{ inputs.ftp-password }}
+        FTP_PATH: ${{ inputs.ftp-path }}
+        BASE_PATH: ${{ inputs.base-path }}
+        DRY_RUN: ${{ inputs.dry-run }}
+        DEBUG: ${{ runner.debug }}
+        IS_PRODUCTION: ${{ inputs.is-production }}
+      run: |
+        TARGET_PATH="${FTP_PATH}"
+        SOURCE_PATH="./out${BASE_PATH}"
+
+        if [ "$DRY_RUN" = "true" ]; then
+          echo "[INFO] 🔍 DRY RUN MODE: Checking deployment target"
+          echo "[INFO] 📁 Source: ${SOURCE_PATH}"
+          echo "[INFO] 📂 Target: ${TARGET_PATH}"
+          echo "[INFO] 🌐 Server: ${FTP_SERVER}"
+          
+          # Check source directory
+          if [ -d "$SOURCE_PATH" ]; then
+            echo "[INFO] ✅ Source directory found"
+            echo "[INFO] 📋 Files to deploy:"
+            find "$SOURCE_PATH" -type f | sed -n '1,10{s|^|  - |;p}'
+            [ $(find "$SOURCE_PATH" -type f | wc -l) -gt 10 ] && echo "  ... and more"
+          else
+            echo "[WARNING] ⚠️ Source directory not found: ${SOURCE_PATH}"
+          fi
+          
+          # Check FTP connection
+          echo "[INFO] 🔌 Testing FTP connection..."
+          if lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e"\
+          set ftp:ssl-allow no; \
+          set net:timeout 30; \
+          ls -la ${TARGET_PATH}; \
+          exit"; then
+            echo "[INFO] ✅ FTP connection successful"
+          else
+            echo "[WARNING] ⚠️ FTP connection failed or target directory inaccessible"
+          fi
+          
+          echo "[INFO] 💡 Would deploy from: ${SOURCE_PATH}"
+          echo "[INFO] 💡 Would deploy to: ${TARGET_PATH}"
+          echo "[INFO] 💡 To actually deploy, set dry-run to 'false'"
+        else
+          echo "[INFO] 🚀 Deploying to FTP Server"
+          echo "[INFO] 📁 Source: ${SOURCE_PATH}"
+          echo "[INFO] 📂 Target: ${TARGET_PATH}"
+          
+          # Note: SSL disabled due to server configuration compatibility
+          # Consider upgrading to FTPS if server supports it
+          MIRROR_OPTS="--reverse --delete"
+          if [ "$IS_PRODUCTION" == "true" ]; then
+            MIRROR_OPTS="${MIRROR_OPTS} -x \".htaccess\" \"_feature/\""
+          fi
+
+          if lftp${{ env.DEBUG == '1' && ' -d' || '' }} -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e"\
+          set ftp:ssl-allow no; \
+          set net:timeout 30; \
+          mirror \
+          ${MIRROR_OPTS} \
+          ${SOURCE_PATH} ${TARGET_PATH}; \
+          exit"; then
+            echo "[SUCCESS] ✅ Deployment completed successfully"
+          else
+            echo "[ERROR] ❌ FTP deployment failed"
+            exit 1
+          fi
+        fi
