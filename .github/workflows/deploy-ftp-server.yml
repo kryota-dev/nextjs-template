@@ -20,6 +20,7 @@ concurrency:
 jobs:
   build:
     name: 📦 Build
+    if: ${{ vars.DEPLOY_TYPE == 'ftp' }}
     runs-on: ubuntu-24.04
     outputs:
       base_path: ${{ steps.set-base-path.outputs.base_path }}
@@ -76,7 +77,7 @@ jobs:
 
   deploy:
     name: 🚚 Deploy
-    if: ${{ github.event_name != 'pull_request' }}
+    if: ${{ vars.DEPLOY_TYPE == 'ftp' && github.event_name != 'pull_request' }}
     needs: build
     runs-on: ubuntu-24.04
     permissions:
@@ -110,7 +111,7 @@ jobs:
 
   deploy-pr-preview:
     name: 🚚 Deploy - PR preview
-    if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ vars.DEPLOY_TYPE == 'ftp' && github.event_name == 'pull_request' }}
     needs: build
     runs-on: ubuntu-24.04
     permissions:

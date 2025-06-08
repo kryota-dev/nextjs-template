@@ -18,6 +18,7 @@ concurrency:
 jobs:
   delete:
     name: 🗑️ Delete
+    if: ${{ vars.DEPLOY_TYPE == 'ftp' }}
     runs-on: ubuntu-24.04
     permissions:
       contents: read
