@@ -20,6 +20,10 @@ inputs:
   ftp-path:
     description: 'The path of the FTP server'
     required: true
+  dry-run:
+    description: 'Whether to run in dry-run mode (default: false)'
+    required: false
+    default: 'false'
 
 runs:
   using: 'composite'
@@ -34,7 +38,7 @@ runs:
       shell: bash
       run: |
         which lftp || sudo apt update && sudo apt install -y lftp
-    - name: 🚀 Deploy
+    - name: 🚀 Deploy to FTP Server
       shell: bash
       env:
         FTP_SERVER: ${{ inputs.ftp-server }}
@@ -42,13 +46,62 @@ runs:
         FTP_PASSWORD: ${{ inputs.ftp-password }}
         FTP_PATH: ${{ inputs.ftp-path }}
         BASE_PATH: ${{ inputs.base-path }}
+        DRY_RUN: ${{ inputs.dry-run }}
         DEBUG: ${{ runner.debug }}
       run: |
-        lftp${{ env.DEBUG == '1' && ' -d' || '' }} -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER -e"\
-        set ftp:ssl-allow no; \
-        mirror \
-        --reverse \
-        --delete \
-        -x \".htaccess\" \
-        ./out${BASE_PATH} ${FTP_PATH} \
-        exit"
+        TARGET_PATH="${FTP_PATH}"
+        SOURCE_PATH="./out${BASE_PATH}"
+
+        if [ "$DRY_RUN" = "true" ]; then
+          echo "[INFO] 🔍 DRY RUN MODE: Checking deployment target"
+          echo "[INFO] 📁 Source: ${SOURCE_PATH}"
+          echo "[INFO] 📂 Target: ${TARGET_PATH}"
+          echo "[INFO] 🌐 Server: ${FTP_SERVER}"
+          
+          # Check source directory
+          if [ -d "$SOURCE_PATH" ]; then
+            echo "[INFO] ✅ Source directory found"
+            echo "[INFO] 📋 Files to deploy:"
+            find "$SOURCE_PATH" -type f | sed -n '1,10{s|^|  - |;p}'
+            [ $(find "$SOURCE_PATH" -type f | wc -l) -gt 10 ] && echo "  ... and more"
+          else
+            echo "[WARNING] ⚠️ Source directory not found: ${SOURCE_PATH}"
+          fi
+          
+          # Check FTP connection
+          echo "[INFO] 🔌 Testing FTP connection..."
+          if lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e"\
+          set ftp:ssl-allow no; \
+          set net:timeout 30; \
+          ls -la ${TARGET_PATH}; \
+          exit"; then
+            echo "[INFO] ✅ FTP connection successful"
+          else
+            echo "[WARNING] ⚠️ FTP connection failed or target directory inaccessible"
+          fi
+          
+          echo "[INFO] 💡 Would deploy from: ${SOURCE_PATH}"
+          echo "[INFO] 💡 Would deploy to: ${TARGET_PATH}"
+          echo "[INFO] 💡 To actually deploy, set dry-run to 'false'"
+        else
+          echo "[INFO] 🚀 Deploying to FTP Server"
+          echo "[INFO] 📁 Source: ${SOURCE_PATH}"
+          echo "[INFO] 📂 Target: ${TARGET_PATH}"
+          
+          # Note: SSL disabled due to server configuration compatibility
+          # Consider upgrading to FTPS if server supports it
+          if lftp${{ env.DEBUG == '1' && ' -d' || '' }} -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e"\
+          set ftp:ssl-allow no; \
+          set net:timeout 30; \
+          mirror \
+          --reverse \
+          --delete \
+          -x \".htaccess\" \
+          ${SOURCE_PATH} ${TARGET_PATH}; \
+          exit"; then
+            echo "[SUCCESS] ✅ Deployment completed successfully"
+          else
+            echo "[ERROR] ❌ FTP deployment failed"
+            exit 1
+          fi
+        fi

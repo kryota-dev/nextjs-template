@@ -33,27 +33,62 @@ jobs:
         run: |
           echo "base_path=${NEXT_PUBLIC_BASE_PATH}/pr-${PR_NUMBER}" >> $GITHUB_OUTPUT
 
-      - name: 🗑️ Delete FTP Server
-        uses: SamKirkland/FTP-Deploy-Action@8e83cea8672e3fbcbb9fdafff34debf6ae4c5f65 # v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_PATH }}/${{ steps.set-base-path.outputs.base_path }}/
-          dangerous-clean-slate: true
+      - name: ⏬ Install lftp
+        run: |
+          which lftp || sudo apt update && sudo apt install -y lftp
+
+      - name: 🗑️ Delete from FTP Server
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PATH: ${{ secrets.FTP_PATH }}
+          BASE_PATH: ${{ steps.set-base-path.outputs.base_path }}
+          DRY_RUN: ${{ vars.FTP_DRY_RUN || 'false' }}
+        run: |
+          TARGET_PATH="${FTP_PATH}${BASE_PATH}"
+
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "[INFO] 🔍 DRY RUN MODE: Checking deletion target: ${TARGET_PATH}"
+            if lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e"\
+            set ftp:ssl-allow no; \
+            set net:timeout 30; \
+            ls -la ${TARGET_PATH}; \
+            exit"; then
+              echo "[INFO] ✅ Target directory found and accessible"
+            else
+              echo "[WARNING] ⚠️ Target directory not found or inaccessible"
+            fi
+            echo "[INFO] 📋 Would delete: ${TARGET_PATH}"
+            echo "[INFO] 💡 To actually delete, set FTP_DELETE_DRY_RUN variable to 'false'"
+          else
+            echo "[INFO] 🗑️ Deleting: ${TARGET_PATH}"
+            # Note: SSL disabled due to server configuration compatibility
+            # Consider upgrading to FTPS if server supports it
+            if lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e"\
+            set ftp:ssl-allow no; \
+            set net:timeout 30; \
+            rm -rf ${TARGET_PATH}; \
+            exit"; then
+              echo "[SUCCESS] ✅ Deletion completed successfully"
+            else
+              echo "[ERROR] ❌ FTP deletion failed"
+              exit 1
+            fi
+          fi
 
       - name: 💬 Comment on PR
         if: ${{ success() && github.event_name == 'pull_request' }}
-        uses: marocchino/sticky-pull-request-comment@67d0dec7b07ed060a405f9b2a64b8ab319fdd7db # v2.9.2
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
         with:
           header: delete-pr-preview-success
           message: |
-            ## 🗑️ Deleted from FTP Server (Preview)
+            ## 🗑️ ${{ vars.FTP_DRY_RUN == 'true' && '[DRY_RUN] ' || '' }}Deleted from FTP Server (Preview)
             Preview removed from FTP server.
 
       - name: 🫠 Comment on PR for failure
         if: ${{ failure() && github.event_name == 'pull_request' }}
-        uses: marocchino/sticky-pull-request-comment@67d0dec7b07ed060a405f9b2a64b8ab319fdd7db # v2.9.2
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
         with:
           header: delete-pr-preview-failed
           hide_and_recreate: true
@@ -66,7 +101,7 @@ jobs:
 
       - name: 🫣 Hide failed comment
         if: ${{ success() && github.event_name == 'pull_request' }}
-        uses: marocchino/sticky-pull-request-comment@67d0dec7b07ed060a405f9b2a64b8ab319fdd7db # v2.9.2
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
         with:
           header: delete-pr-preview-failed
           hide: true
@@ -74,7 +109,7 @@ jobs:
 
       - name: 🫣 Hide deployed comment
         if: ${{ success() && github.event_name == 'pull_request' }}
-        uses: marocchino/sticky-pull-request-comment@67d0dec7b07ed060a405f9b2a64b8ab319fdd7db # v2.9.2
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
         with:
           header: deploy-pr-preview-success
           hide: true

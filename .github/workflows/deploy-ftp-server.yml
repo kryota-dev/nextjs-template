@@ -108,6 +108,7 @@ jobs:
           ftp-username: ${{ secrets.FTP_USERNAME }}
           ftp-password: ${{ secrets.FTP_PASSWORD }}
           ftp-path: ${{ secrets.FTP_PATH }}${{ needs.build.outputs.base_path }}
+          dry-run: ${{ vars.FTP_DRY_RUN || 'false' }}
 
   deploy-pr-preview:
     name: 🚚 Deploy - PR preview
@@ -137,25 +138,27 @@ jobs:
           ftp-username: ${{ secrets.FTP_USERNAME }}
           ftp-password: ${{ secrets.FTP_PASSWORD }}
           ftp-path: ${{ secrets.FTP_PATH }}${{ needs.build.outputs.base_path }}
+          dry-run: ${{ vars.FTP_DRY_RUN || 'false' }}
 
       - name: 💬 Comment on PR
         if: ${{ success() }}
-        uses: marocchino/sticky-pull-request-comment@67d0dec7b07ed060a405f9b2a64b8ab319fdd7db # v2.9.2
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
         env:
           DEPLOY_URL: ${{ vars.NEXT_PUBLIC_HOME_URL }}${{ needs.build.outputs.base_path }}/
+          RESULT_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         with:
           header: deploy-pr-preview-success
           message: |
-            ## 🚀 Deployed to FTP Server (Preview)
+            ## 🚀 ${{ vars.DRY_RUN == 'true' && '[DRY_RUN] ' || '' }}Deployed to FTP Server (Preview)
 
-            URL: ${{ env.DEPLOY_URL }}
+            URL: ${{ vars.DRY_RUN == 'true' && env.RESULT_URL || env.DEPLOY_URL }}
 
             > [!NOTE]
             > Deployed content will be deleted after merging.
 
       - name: 🫠 Comment on PR for failure
         if: ${{ failure() }}
-        uses: marocchino/sticky-pull-request-comment@67d0dec7b07ed060a405f9b2a64b8ab319fdd7db # v2.9.2
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
         with:
           header: deploy-pr-preview-failed
           hide_and_recreate: true
@@ -168,7 +171,7 @@ jobs:
 
       - name: 🫣 Hide failed comment
         if: ${{ success() }}
-        uses: marocchino/sticky-pull-request-comment@67d0dec7b07ed060a405f9b2a64b8ab319fdd7db # v2.9.2
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
         with:
           header: deploy-pr-preview-failed
           hide: true
