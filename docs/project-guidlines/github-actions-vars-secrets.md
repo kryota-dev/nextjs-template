@@ -45,7 +45,16 @@ GitHub Actionsでは、機密情報や環境固有の設定を安全に管理す
   - `deploy-ftp-server.yml`
 - **説明**: mainブランチでは設定値に依存、その他のブランチでは常に`true`
 
-### 5. `ADD_LABELS_BRANCH`
+### 5. `FTP_DRY_RUN`
+
+- **用途**: FTP操作のドライラン実行
+- **設定値**: `true` または `false`（デフォルトは `false`）
+- **使用ワークフロー**:
+  - `delete-ftp-server.yml`
+  - `deploy-ftp-server.yml`
+- **説明**: `true`に設定すると、実際のファイル転送や削除を行わずにログ出力のみを実行
+
+### 6. `ADD_LABELS_BRANCH`
 
 - **用途**: GitHubラベル自動追加の対象ブランチ
 - **設定値**: `develop`（デフォルト）
@@ -178,12 +187,12 @@ GitHub Actionsでは、機密情報や環境固有の設定を安全に管理す
 
 ### `delete-ftp-server.yml`
 
-- **Variables**: `DEPLOY_TYPE`, `NEXT_PUBLIC_BASE_PATH`
+- **Variables**: `DEPLOY_TYPE`, `NEXT_PUBLIC_BASE_PATH`, `FTP_DRY_RUN`
 - **Secrets**: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_PATH`
 
 ### `deploy-ftp-server.yml`
 
-- **Variables**: `DEPLOY_TYPE`, `NEXT_PUBLIC_BASE_PATH`, `NEXT_PUBLIC_HOME_URL`, `NEXT_PUBLIC_FEATURE_FLAG`
+- **Variables**: `DEPLOY_TYPE`, `NEXT_PUBLIC_BASE_PATH`, `NEXT_PUBLIC_HOME_URL`, `NEXT_PUBLIC_FEATURE_FLAG`, `FTP_DRY_RUN`
 - **Secrets**: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_PATH`, `NEXT_PUBLIC_GTM_ID`, `NEXT_PUBLIC_MICROCMS_SERVICE_DOMAIN`, `NEXT_PUBLIC_MICROCMS_API_KEY`, `SERVER_ONLY_MICROCMS_API_KEY`
 
 ### `chromatic.yml`
