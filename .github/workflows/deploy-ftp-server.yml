@@ -55,7 +55,7 @@ jobs:
         env:
           NEXT_PUBLIC_BASE_PATH: ${{ vars.NEXT_PUBLIC_BASE_PATH || '' }}
         run: |
-          echo "base_path=${NEXT_PUBLIC_BASE_PATH}${{ github.event_name == 'pull_request' && format('/pr-{0}', github.event.pull_request.number) || github.ref_name != 'main' && format('/{0}', github.ref_name) || '' }}" >> $GITHUB_OUTPUT
+          echo "base_path=${NEXT_PUBLIC_BASE_PATH}${{ github.event_name == 'pull_request' && format('/_feature/pr-{0}', github.event.pull_request.number) || github.ref_name != 'main' && format('/_feature/{0}', github.ref_name) || '' }}" >> $GITHUB_OUTPUT
 
       - name: 🍳 Build next
         env:
