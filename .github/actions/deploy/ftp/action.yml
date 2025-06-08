@@ -24,6 +24,10 @@ inputs:
     description: 'Whether to run in dry-run mode (default: false)'
     required: false
     default: 'false'
+  is-production:
+    description: 'Whether this is a production deployment'
+    required: false
+    default: 'false'
 
 runs:
   using: 'composite'
@@ -48,6 +52,7 @@ runs:
         BASE_PATH: ${{ inputs.base-path }}
         DRY_RUN: ${{ inputs.dry-run }}
         DEBUG: ${{ runner.debug }}
+        IS_PRODUCTION: ${{ inputs.is-production }}
       run: |
         TARGET_PATH="${FTP_PATH}"
         SOURCE_PATH="./out${BASE_PATH}"
@@ -90,13 +95,16 @@ runs:
           
           # Note: SSL disabled due to server configuration compatibility
           # Consider upgrading to FTPS if server supports it
+          MIRROR_OPTS="--reverse --delete"
+          if [ "$IS_PRODUCTION" == "true" ]; then
+            MIRROR_OPTS="${MIRROR_OPTS} -x \".htaccess\" \"_feature/\""
+          fi
+
           if lftp${{ env.DEBUG == '1' && ' -d' || '' }} -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e"\
           set ftp:ssl-allow no; \
           set net:timeout 30; \
           mirror \
-          --reverse \
-          --delete \
-          -x \".htaccess\" \
+          ${MIRROR_OPTS} \
           ${SOURCE_PATH} ${TARGET_PATH}; \
           exit"; then
             echo "[SUCCESS] ✅ Deployment completed successfully"

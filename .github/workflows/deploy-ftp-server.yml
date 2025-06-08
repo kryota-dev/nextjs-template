@@ -57,6 +57,13 @@ jobs:
         run: |
           echo "base_path=${NEXT_PUBLIC_BASE_PATH}${{ github.event_name == 'pull_request' && format('/_feature/pr-{0}', github.event.pull_request.number) || github.ref_name != 'main' && format('/_feature/{0}', github.ref_name) || '' }}" >> $GITHUB_OUTPUT
 
+      - name: 📝 Create .htaccess for PR preview
+        if: ${{ github.ref_name != 'main' }}
+        env:
+          BASE_PATH: ${{ steps.set-base-path.outputs.base_path }}
+        run: |
+          echo "ErrorDocument 404 ${BASE_PATH}/404.html" > ./public/.htaccess
+
       - name: 🍳 Build next
         env:
           NEXT_PUBLIC_GTM_ID: ${{ secrets.NEXT_PUBLIC_GTM_ID }}
@@ -74,6 +81,7 @@ jobs:
           name: build-assets-${{ github.workflow_sha }}
           path: ./out
           retention-days: 1
+          include-hidden-files: true
 
   deploy:
     name: 🚚 Deploy
@@ -82,7 +90,6 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       contents: read
-      pull-requests: write
     environment:
       name: ${{ github.event_name == 'repository_dispatch' && 'main' || github.ref_name }}-app
       url: "${{ vars.NEXT_PUBLIC_HOME_URL }}${{ vars.NEXT_PUBLIC_BASE_PATH || '' }}/${{ github.event_name == 'repository_dispatch' && '' || github.ref_name != 'main' && github.ref_name || '' }}"
@@ -109,6 +116,7 @@ jobs:
           ftp-password: ${{ secrets.FTP_PASSWORD }}
           ftp-path: ${{ secrets.FTP_PATH }}${{ needs.build.outputs.base_path }}
           dry-run: ${{ vars.FTP_DRY_RUN || 'false' }}
+          is-production: ${{ github.ref_name == 'main' && 'true' || 'false' }}
 
   deploy-pr-preview:
     name: 🚚 Deploy - PR preview
