@@ -150,7 +150,7 @@ jobs:
 
       - name: 💬 Comment on PR
         if: ${{ success() }}
-        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        uses: marocchino/sticky-pull-request-comment@d2ad0de260ae8b0235ce059e63f2949ba9e05943 # v2.9.3
         env:
           DEPLOY_URL: ${{ vars.NEXT_PUBLIC_HOME_URL }}${{ needs.build.outputs.base_path }}/
           RESULT_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -166,7 +166,7 @@ jobs:
 
       - name: 🫠 Comment on PR for failure
         if: ${{ failure() }}
-        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        uses: marocchino/sticky-pull-request-comment@d2ad0de260ae8b0235ce059e63f2949ba9e05943 # v2.9.3
         with:
           header: deploy-pr-preview-failed
           hide_and_recreate: true
@@ -179,7 +179,7 @@ jobs:
 
       - name: 🫣 Hide failed comment
         if: ${{ success() }}
-        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        uses: marocchino/sticky-pull-request-comment@d2ad0de260ae8b0235ce059e63f2949ba9e05943 # v2.9.3
         with:
           header: deploy-pr-preview-failed
           hide: true
