@@ -30,7 +30,7 @@ jobs:
         uses: ./.github/actions/pnpm-setup
 
       - name: 🌈 Chromatic
-        uses: chromaui/action@8536229ee904071f8edce292596f6dbe0da96b9b # v12.1.1
+        uses: chromaui/action@4d8ebd13658d795114f8051e25c28d66f14886c6 # v13.1.2
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           buildScriptName: 'build:storybook'
